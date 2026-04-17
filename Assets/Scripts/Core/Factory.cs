@@ -18,6 +18,18 @@ public enum PoolObjectType
     Monster_Skull,
     Monster_Skull_Archer,
     Monster_Skull_Warrior,
+
+    Monster_Skull_Poison,
+    Monster_Skull_Poison_Archer,
+    Monster_Skull_Poison_Warrior,
+
+    Monster_Slime_Green,
+    Monster_Slime_Green_Stone,
+    Monster_Slime_Green_King,
+    
+    Monster_Slime_Orange,
+    Monster_Slime_Orange_Stone,
+    Monster_Slime_Orange_King,
 }
 
 public class Factory : Singleton<Factory>
@@ -34,6 +46,18 @@ public class Factory : Singleton<Factory>
     Monster_Skull_Pool monster_Skull;
     Monster_Skull_Archer_Pool monster_Skull_Archer;
     Monster_Skull_Warrior_Pool monster_Skull_Warrior;
+
+    Monster_Skull_Poison_Pool monster_Skull_Poison;
+    Monster_Skull_Poison_Archer_Pool monster_Skull_Poison_Archer;
+    Monster_Skull_Poison_Warrior_Pool monster_Skull_Poison_Warrior;
+
+    Monster_Slime_Green_Pool monster_Slime_Green;
+    Monster_Slime_Green_Stone_Pool monster_Slime_Green_Stone;
+    Monster_Slime_Green_King_Pool monster_Slime_Green_King;
+
+    Monster_Slime_Orange_Pool monster_Slime_Orange;
+    Monster_Slime_Orange_Stone_Pool monster_Slime_Orange_Stone;
+    Monster_Slime_Orange_King_Pool monster_Slime_Orange_King;
 
     /// <summary>
     /// 씬이 로딩 완료될 때마다 실행되는 초기화 함수
@@ -156,6 +180,118 @@ public class Factory : Singleton<Factory>
             Debug.LogError("Monster_Skull_Warrior_Pool 을 찾을 수 없습니다.");
         }
 
+
+
+        // 스컬 포이즌
+        monster_Skull_Poison = GetComponentInChildren<Monster_Skull_Poison_Pool>();
+        if (monster_Skull_Poison != null)
+        {
+            Debug.Log("Monster_Skull_Poison_Pool 초기화");
+            monster_Skull_Poison.Initialize();
+        }
+        else
+        {
+            Debug.LogError("Monster_Skull_Poison_Pool 을 찾을 수 없습니다.");
+        }
+
+        // 스컬 포이즌 아처
+        monster_Skull_Poison_Archer = GetComponentInChildren<Monster_Skull_Poison_Archer_Pool>();
+        if (monster_Skull_Poison_Archer != null)
+        {
+            Debug.Log("Monster_Skull_Poison_Archer_Pool 초기화");
+            monster_Skull_Poison_Archer.Initialize();
+        }
+        else
+        {
+            Debug.LogError("Monster_Skull_Poison_Archer_Pool 을 찾을 수 없습니다.");
+        }
+
+        // 스컬 포이즌 워리어
+        monster_Skull_Poison_Warrior = GetComponentInChildren<Monster_Skull_Poison_Warrior_Pool>();
+        if (monster_Skull_Poison_Warrior != null)
+        {
+            Debug.Log("Monster_Skull_Poison_Warrior_Pool 초기화");
+            monster_Skull_Poison_Warrior.Initialize();
+        }
+        else
+        {
+            Debug.LogError("Monster_Skull_Poison_Warrior_Pool 을 찾을 수 없습니다.");
+        }
+
+
+        // 초록 슬라임
+        monster_Slime_Green = GetComponentInChildren<Monster_Slime_Green_Pool>();
+        if (monster_Slime_Green != null)
+        {
+            Debug.Log("Monster_Slime_Green_Pool 초기화");
+            monster_Slime_Green.Initialize();
+        }
+        else
+        {
+            Debug.LogError("Monster_Slime_Green 을 찾을 수 없습니다.");
+        }
+
+        // 초록 슬라임 스톤
+        monster_Slime_Green_Stone = GetComponentInChildren<Monster_Slime_Green_Stone_Pool>();
+        if (monster_Slime_Green_Stone != null)
+        {
+            Debug.Log("Monster_Slime_Green_Stone_Pool 초기화");
+            monster_Slime_Green_Stone.Initialize();
+        }
+        else
+        {
+            Debug.LogError("Monster_Slime_Green_Stone_Pool 을 찾을 수 없습니다.");
+        }
+
+        // 초록 슬라임 킹
+        monster_Slime_Green_King = GetComponentInChildren<Monster_Slime_Green_King_Pool>();
+        if (monster_Slime_Green_King != null)
+        {
+            Debug.Log("Monster_Slime_Green_King_Pool 초기화");
+            monster_Slime_Green_King.Initialize();
+        }
+        else
+        {
+            Debug.LogError("Monster_Slime_Green_King_Pool 을 찾을 수 없습니다.");
+        }
+
+
+
+        // 오렌지 슬라임
+        monster_Slime_Orange = GetComponentInChildren<Monster_Slime_Orange_Pool>();
+        if (monster_Slime_Orange != null)
+        {
+            Debug.Log("Monster_Slime_Orange_Pool 초기화");
+            monster_Slime_Orange.Initialize();
+        }
+        else
+        {
+            Debug.LogError("Monster_Slime_Orange 을 찾을 수 없습니다.");
+        }
+
+        // 오렌지 슬라임 스톤
+        monster_Slime_Orange_Stone = GetComponentInChildren<Monster_Slime_Orange_Stone_Pool>();
+        if (monster_Slime_Orange_Stone != null)
+        {
+            Debug.Log("Monster_Slime_Orange_Stone_Pool 초기화");
+            monster_Slime_Orange_Stone.Initialize();
+        }
+        else
+        {
+            Debug.LogError("Monster_Slime_Orange_Stone_Pool 을 찾을 수 없습니다.");
+        }
+
+        // 오렌지 슬라임 킹
+        monster_Slime_Orange_King = GetComponentInChildren<Monster_Slime_Orange_King_Pool>();
+        if (monster_Slime_Orange_King != null)
+        {
+            Debug.Log("Monster_Slime_Orange_King_Pool 초기화");
+            monster_Slime_Orange_King.Initialize();
+        }
+        else
+        {
+            Debug.LogError("Monster_Slime_Orange_King_Pool 을 찾을 수 없습니다.");
+        }
     }
 
     /// <summary>
@@ -208,6 +344,48 @@ public class Factory : Singleton<Factory>
 
             case PoolObjectType.Monster_Skull_Warrior:                               // 스컬 워리어
                 result = monster_Skull_Warrior.GetObject(position, euler).gameObject;
+                break;
+
+
+            
+            case PoolObjectType.Monster_Skull_Poison:                                       // 스컬 포이즌
+                result = monster_Skull_Poison.GetObject(position, euler).gameObject;
+                break;
+
+            case PoolObjectType.Monster_Skull_Poison_Archer:                                // 스컬 포이즌 아처
+                result = monster_Skull_Poison_Archer.GetObject(position, euler).gameObject;
+                break;
+
+            case PoolObjectType.Monster_Skull_Poison_Warrior:                               // 스컬 포이즌 워리어
+                result = monster_Skull_Poison_Warrior.GetObject(position, euler).gameObject;
+                break;
+            
+            
+            
+            case PoolObjectType.Monster_Slime_Green:                                        // 초록 슬라임
+                result = monster_Slime_Green.GetObject(position, euler).gameObject;
+                break;
+
+            case PoolObjectType.Monster_Slime_Green_Stone:                                  // 초록 슬라임 스톤
+                result = monster_Slime_Green_Stone.GetObject(position, euler).gameObject;
+                break;
+
+            case PoolObjectType.Monster_Slime_Green_King:                                   // 초록 슬라임 킹
+                result = monster_Slime_Green_King.GetObject(position, euler).gameObject;
+                break;
+            
+            
+            
+            case PoolObjectType.Monster_Slime_Orange:                                        // 오렌지 슬라임
+                result = monster_Slime_Orange.GetObject(position, euler).gameObject;
+                break;
+
+            case PoolObjectType.Monster_Slime_Orange_Stone:                                  // 오렌지 슬라임 스톤
+                result = monster_Slime_Orange_Stone.GetObject(position, euler).gameObject;
+                break;
+
+            case PoolObjectType.Monster_Slime_Orange_King:                                   // 오렌지 슬라임 킹
+                result = monster_Slime_Orange_King.GetObject(position, euler).gameObject;
                 break;
         }
 
@@ -409,4 +587,202 @@ public class Factory : Singleton<Factory>
     }
 
     // 스컬 끝 --------------------------------------------------------------------------------------------------------------------------
+
+
+
+    // 스컬 포이즌 --------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Monster_Skull_Poison 하나 가져오는 함수
+    /// </summary>
+    /// <returns></returns>
+    public Monster_Skull_Poison GetMonster_Skull_Poison()
+    {
+        return monster_Skull_Poison.GetObject();
+    }
+
+    /// <summary>
+    /// Monster_Skull_Poison 하나 가져와서 특정 위치에 배치하는 함수
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="angle"></param>
+    /// <returns></returns>
+    public Monster_Skull_Poison GetMonster_Skull_Poison(Vector3 position, float angle = 0.0f)
+    {
+        return monster_Skull_Poison.GetObject(position, angle * Vector3.forward);
+    }
+
+    /// <summary>
+    /// Monster_Skull_Poison_Archer 하나 가져오는 함수
+    /// </summary>
+    /// <returns></returns>
+    public Monster_Skull_Poison_Archer GetMonster_Skull_Poison_Archer()
+    {
+        return monster_Skull_Poison_Archer.GetObject();
+    }
+
+    /// <summary>
+    /// Monster_Skull_Poison_Archer 하나 가져와서 특정 위치에 배치하는 함수
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="angle"></param>
+    /// <returns></returns>
+    public Monster_Skull_Poison_Archer GetMonster_Skull_Poison_Archer(Vector3 position, float angle = 0.0f)
+    {
+        return monster_Skull_Poison_Archer.GetObject(position, angle * Vector3.forward);
+    }
+
+    /// <summary>
+    /// Monster_Skull_Poison_Warrior 하나 가져오는 함수
+    /// </summary>
+    /// <returns></returns>
+    public Monster_Skull_Poison_Warrior GetMonster_Skull_Poison_Warrior()
+    {
+        return monster_Skull_Poison_Warrior.GetObject();
+    }
+
+    /// <summary>
+    /// Monster_Skull_Poison_Warrior 하나 가져와서 특정 위치에 배치하는 함수
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="angle"></param>
+    /// <returns></returns>
+    public Monster_Skull_Poison_Warrior GetMonster_Skull_Poison_Warrior(Vector3 position, float angle = 0.0f)
+    {
+        return monster_Skull_Poison_Warrior.GetObject(position, angle * Vector3.forward);
+    }
+
+    // 스컬 포이즌 끝 --------------------------------------------------------------------------------------------------------------------------
+
+
+
+    // 초록 슬라임 --------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Monster_Slime_Green 하나 가져오는 함수
+    /// </summary>
+    /// <returns></returns>
+    public Monster_Slime_Green GetMonster_Slime_Green()
+    {
+        return monster_Slime_Green.GetObject();
+    }
+
+    /// <summary>
+    /// Monster_Slime_Green 하나 가져와서 특정 위치에 배치하는 함수
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="angle"></param>
+    /// <returns></returns>
+    public Monster_Slime_Green GetMonster_Slime_Green(Vector3 position, float angle = 0.0f)
+    {
+        return monster_Slime_Green.GetObject(position, angle * Vector3.forward);
+    }
+
+    /// <summary>
+    /// Monster_Slime_Green_Stone 하나 가져오는 함수
+    /// </summary>
+    /// <returns></returns>
+    public Monster_Slime_Green_Stone GetMonster_Slime_Green_Stone()
+    {
+        return monster_Slime_Green_Stone.GetObject();
+    }
+
+    /// <summary>
+    /// Monster_Slime_Green_Stone 하나 가져와서 특정 위치에 배치하는 함수
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="angle"></param>
+    /// <returns></returns>
+    public Monster_Slime_Green_Stone GetMonster_Slime_Green_Stone(Vector3 position, float angle = 0.0f)
+    {
+        return monster_Slime_Green_Stone.GetObject(position, angle * Vector3.forward);
+    }
+
+    /// <summary>
+    /// Monster_Slime_Green_King 하나 가져오는 함수
+    /// </summary>
+    /// <returns></returns>
+    public Monster_Slime_Green_King GetMonster_Slime_Green_King()
+    {
+        return monster_Slime_Green_King.GetObject();
+    }
+
+    /// <summary>
+    /// Monster_Slime_Green_King 하나 가져와서 특정 위치에 배치하는 함수
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="angle"></param>
+    /// <returns></returns>
+    public Monster_Slime_Green_King GeMonster_Slime_Green_King(Vector3 position, float angle = 0.0f)
+    {
+        return monster_Slime_Green_King.GetObject(position, angle * Vector3.forward);
+    }
+
+    // 초록 슬라임 끝 --------------------------------------------------------------------------------------------------------------------------
+    
+    
+    
+    // 오렌지 슬라임 --------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Monster_Slime_Orange 하나 가져오는 함수
+    /// </summary>
+    /// <returns></returns>
+    public Monster_Slime_Orange GetMonster_Slime_Orange()
+    {
+        return monster_Slime_Orange.GetObject();
+    }
+
+    /// <summary>
+    /// Monster_Slime_Orange 하나 가져와서 특정 위치에 배치하는 함수
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="angle"></param>
+    /// <returns></returns>
+    public Monster_Slime_Orange GetMonster_Slime_Orange(Vector3 position, float angle = 0.0f)
+    {
+        return monster_Slime_Orange.GetObject(position, angle * Vector3.forward);
+    }
+
+    /// <summary>
+    /// Monster_Slime_Orange_Stone 하나 가져오는 함수
+    /// </summary>
+    /// <returns></returns>
+    public Monster_Slime_Orange_Stone GetMonster_Slime_Orange_Stone()
+    {
+        return monster_Slime_Orange_Stone.GetObject();
+    }
+
+    /// <summary>
+    /// Monster_Slime_Orange_Stone 하나 가져와서 특정 위치에 배치하는 함수
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="angle"></param>
+    /// <returns></returns>
+    public Monster_Slime_Orange_Stone GetMonster_Slime_Orange_Stone(Vector3 position, float angle = 0.0f)
+    {
+        return monster_Slime_Orange_Stone.GetObject(position, angle * Vector3.forward);
+    }
+
+    /// <summary>
+    /// Monster_Slime_Orange_King 하나 가져오는 함수
+    /// </summary>
+    /// <returns></returns>
+    public Monster_Slime_Orange_King GetMonster_Slime_Orange_King()
+    {
+        return monster_Slime_Orange_King.GetObject();
+    }
+
+    /// <summary>
+    /// Monster_Slime_Orange_King 하나 가져와서 특정 위치에 배치하는 함수
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="angle"></param>
+    /// <returns></returns>
+    public Monster_Slime_Orange_King GeMonster_Slime_Orange_King(Vector3 position, float angle = 0.0f)
+    {
+        return monster_Slime_Orange_King.GetObject(position, angle * Vector3.forward);
+    }
+
+    // 오렌지 슬라임 끝 --------------------------------------------------------------------------------------------------------------------------
 }
