@@ -11,9 +11,12 @@ public class BallShooter : MonoBehaviour
 
     private PlayerInputActions inputActions;
 
+    Factory factory;
+
     private void Awake()
     {
         inputActions = new PlayerInputActions();
+        factory = Factory.Instance;
     }
 
     void OnEnable()
@@ -45,9 +48,29 @@ public class BallShooter : MonoBehaviour
 
     void Shoot()
     {
-        Debug.Log("Camera.main: " + Camera.main);
-        Debug.Log("firePoint: " + firePoint);
-        Debug.Log("ballPrefab: " + ballPrefab);
+        //Debug.Log("Camera.main: " + Camera.main);
+        //Debug.Log("firePoint: " + firePoint);
+        //Debug.Log("ballPrefab: " + ballPrefab);
+
+        if (GameManager.Instance == null)
+        {
+            Debug.LogError("GameManager null");
+            return;
+        }
+
+        if (factory == null)
+        {
+            Debug.LogError("Factory null");
+            return;
+        }
+
+        // 발사 위치를 조정
+        //Vector3 startPos = new Vector3(GameManager.Instance.firstGroundHitPos.x, GameManager.Instance.firstGroundHitPos.y, -1.3f);
+        //firePoint.position = startPos;
+        //Debug.Log(startPos);
+
+        // 👉 라운드 시작 시 상태 초기화
+        GameManager.Instance.ResetRound();
 
         Ray ray = Camera.main.ScreenPointToRay(endPos);
 
@@ -60,11 +83,22 @@ public class BallShooter : MonoBehaviour
             Vector3 dir = (hitPoint - firePoint.position);
             dir.y = 0;
 
-            GameObject ballObj = Instantiate(ballPrefab, firePoint.position, Quaternion.identity);
-            var ball = ballObj.GetComponent<Ball>();
-            Debug.Log("ball component: " + ball);
+            // 여기부터 공 발사 부분
+            /*GameObject ballObj = Instantiate(ballPrefab, firePoint.position, Quaternion.identity);
+            var ball = ballObj.GetComponent<Ball>();*/
+            //Debug.Log("ball component: " + ball);
 
-            ball.Init(dir);
+            /*Ball ball = factory.GeBall(firePoint.position);
+
+            if (ball == null)
+            {
+                Debug.LogError("Factory returned null Ball");
+                return;
+            }
+
+            ball.Init(dir);*/
+
+            factory.GetBall(firePoint.position, 0f);
         }
     }
 }

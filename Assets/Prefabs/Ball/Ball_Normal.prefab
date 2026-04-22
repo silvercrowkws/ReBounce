@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 4487958594926645947}
   - component: {fileID: 3825567104428233974}
   - component: {fileID: 5395314302132016371}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ball_Normal
-  m_TagString: Untagged
+  m_TagString: Ball
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -146,4 +146,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a59ddc86a8e216409576f8b63eaa603, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  elementals: 0
   speed: 3
