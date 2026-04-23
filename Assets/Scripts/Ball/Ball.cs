@@ -124,7 +124,7 @@ public class Ball : RecycleObject
         sphereCollider.enabled = true;
 
         // 이동값 초기화
-        direction = Vector3.zero;
+        direction = Vector3.zero; 
         //isFirstGroundHit 는 static 변수라서 OnDisable에서 초기화 하면 안되고.
         // 스테이지 초기화? 내 경우에는 다음 발사 직전에 초기화 하면 될듯
     }
