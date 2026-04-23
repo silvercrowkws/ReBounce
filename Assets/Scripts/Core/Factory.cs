@@ -32,6 +32,8 @@ public enum PoolObjectType
     Monster_Slime_Orange_King,
 
     Ball,
+    Ball_Yellow,
+
 }
 
 public class Factory : Singleton<Factory>
@@ -62,6 +64,7 @@ public class Factory : Singleton<Factory>
     Monster_Slime_Orange_King_Pool monster_Slime_Orange_King;
 
     Ball_Pool ball;
+    Ball_Yellow_Pool ball_Yellow;
 
     /// <summary>
     /// 씬이 로딩 완료될 때마다 실행되는 초기화 함수
@@ -310,6 +313,19 @@ public class Factory : Singleton<Factory>
         {
             Debug.LogError("Ball_Pool 을 찾을 수 없습니다.");
         }
+
+
+
+        ball_Yellow = GetComponentInChildren<Ball_Yellow_Pool>();
+        if (ball_Yellow != null)
+        {
+            Debug.Log("Ball_Yellow_Pool 초기화");
+            ball_Yellow.Initialize();
+        }
+        else
+        {
+            Debug.LogError("Ball_Yellow_Pool 을 찾을 수 없습니다.");
+        }
     }
 
     /// <summary>
@@ -410,6 +426,10 @@ public class Factory : Singleton<Factory>
 
             case PoolObjectType.Ball:                                                       // 볼
                 result = ball.GetObject(position, euler).gameObject;
+                break;
+
+            case PoolObjectType.Ball_Yellow:
+                result = ball_Yellow.GetObject(position, euler).gameObject;
                 break;
         }
 
@@ -834,4 +854,27 @@ public class Factory : Singleton<Factory>
     }
 
     // 볼 끝 --------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+    /// <summary>
+    /// Ball_Yellow 하나 가져오는 함수
+    /// </summary>
+    /// <returns></returns>
+    public Ball_Yellow GetBall_Yellow()
+    {
+        return ball_Yellow.GetObject();
+    }
+
+    /// <summary>
+    /// Ball_Yellow 하나 가져와서 특정 위치에 배치하는 함수
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="angle"></param>
+    /// <returns></returns>
+    public Ball_Yellow GetBall_Yellow(Vector3 position, float angle = 0.0f)
+    {
+        return ball_Yellow.GetObject(position, angle * Vector3.forward);
+    }
 }

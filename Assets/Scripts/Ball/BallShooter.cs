@@ -65,8 +65,8 @@ public class BallShooter : MonoBehaviour
         }
 
         // 발사 위치를 조정
-        //Vector3 startPos = new Vector3(GameManager.Instance.firstGroundHitPos.x, GameManager.Instance.firstGroundHitPos.y, -1.3f);
-        //firePoint.position = startPos;
+        Vector3 startPos = new Vector3(GameManager.Instance.firstGroundHitPos.x, GameManager.Instance.firstGroundHitPos.y, -1.3f);
+        firePoint.position = startPos;
         //Debug.Log(startPos);
 
         // 👉 라운드 시작 시 상태 초기화
@@ -88,7 +88,7 @@ public class BallShooter : MonoBehaviour
             var ball = ballObj.GetComponent<Ball>();*/
             //Debug.Log("ball component: " + ball);
 
-            /*Ball ball = factory.GeBall(firePoint.position);
+            Ball ball = factory.GetBall(firePoint.position, 0f);
 
             if (ball == null)
             {
@@ -96,9 +96,10 @@ public class BallShooter : MonoBehaviour
                 return;
             }
 
-            ball.Init(dir);*/
+            ball.Init(dir);
 
-            factory.GetBall(firePoint.position, 0f);
+            /*Debug.Log("공 발사 실행");
+            factory.GetBall(firePoint.position, 0f);*/
         }
     }
 }

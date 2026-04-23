@@ -1,7 +1,8 @@
-using Unity.VisualScripting;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-/*public enum BallElementals
+public enum BallElementals
 {
     Normal = 0,     // 기본
     Fire,           // 불
@@ -9,24 +10,19 @@ using UnityEngine;
     Wind,           // 바람, 공기
     Electric,       // 전기
     Earth,          // 흙, 땅?
-}*/
+}
 
-public class Ball : RecycleObject
+public class Ball_Yellow : RecycleObject
 {
     /// <summary>
     /// 이 공의 속성(인스펙터에서 설정 가능)
     /// </summary>
-    public BallElementals elementals = BallElementals.Normal;
+    public BallElementals elementals = BallElementals.Wind;
 
     /// <summary>
     /// 공의 속도
     /// </summary>
     public float speed = 10f;
-
-    private Vector3 direction;
-
-    /*private static bool isFirstGroundHit = false;
-    private static Vector3 firstGroundHitPos;*/
 
     /// <summary>
     /// 콜라이더
@@ -37,6 +33,8 @@ public class Ball : RecycleObject
     /// 리지드바디
     /// </summary>
     Rigidbody rb;
+
+    private Vector3 direction;
 
     private void Awake()
     {
