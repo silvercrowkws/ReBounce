@@ -6,6 +6,7 @@ TagManager:
   tags:
   - DownBrick
   - Ball
+  - SideBrick
   layers:
   - Default
   - TransparentFX
