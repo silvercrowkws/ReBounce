@@ -1708,6 +1708,7 @@ MonoBehaviour:
   ballPrefab: {fileID: 7582856613385523719, guid: d6527d94ef099074fa77e6b5890fee46, type: 3}
   firePoint: {fileID: 618011188}
   lineLength: 2
+  maxAngle: 75
 --- !u!120 &618011190
 LineRenderer:
   serializedVersion: 2

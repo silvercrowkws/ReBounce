@@ -20,6 +20,9 @@ public class BallShooter : MonoBehaviour
     Factory factory;
     GameManager gameManager;
 
+    [Header("좌우 허용 각도")]
+    public float maxAngle = 75f; // 좌우 최대 각도 (도 단위)
+
     private void Awake()
     {
         inputActions = new PlayerInputActions();
@@ -94,6 +97,7 @@ public class BallShooter : MonoBehaviour
             Vector3 hitPoint = ray.GetPoint(distance);
             Vector3 dir = (hitPoint - firePoint.position).normalized;
             dir.y = 0;
+            dir = ClampDirection(dir.normalized);       // 각도 제한 추가
 
             float yOffset = 0.05f;
             Vector3 currentOrigin = firePoint.position + (Vector3.up * yOffset);
@@ -179,6 +183,7 @@ public class BallShooter : MonoBehaviour
 
             Vector3 dir = (hitPoint - firePoint.position);
             dir.y = 0;
+            dir = ClampDirection(dir.normalized);       // 각도 제한 추가
 
             // 여기부터 공 발사 부분
             /*GameObject ballObj = Instantiate(ballPrefab, firePoint.position, Quaternion.identity);
@@ -197,5 +202,26 @@ public class BallShooter : MonoBehaviour
     {
         Vector3 shootStartPos = new Vector3(gameManager.firstGroundHitPos.x, gameManager.firstGroundHitPos.y, -1.3f);
         firePoint.position = shootStartPos;
+    }
+
+    /// <summary>
+    /// 발사각을 제한하는 함수
+    /// </summary>
+    /// <param name="dir"></param>
+    /// <returns></returns>
+    Vector3 ClampDirection(Vector3 dir)
+    {
+        // 기준 방향 (예: 전방 z+ 방향)
+        Vector3 forward = Vector3.forward;
+
+        // 현재 각도 계산
+        float angle = Vector3.SignedAngle(forward, dir, Vector3.up);
+
+        // 각도 제한
+        float clampedAngle = Mathf.Clamp(angle, -maxAngle, maxAngle);
+
+        // 제한된 방향 다시 계산
+        Quaternion rot = Quaternion.AngleAxis(clampedAngle, Vector3.up);
+        return rot * forward;
     }
 }

@@ -94,6 +94,8 @@ public class Ball : RecycleObject
             sphereCollider.enabled = false;     // 바닥에 닿으면 콜라이더 끄고
 
             HandleGroundHit();
+            
+            gameObject.SetActive(false);
             return;
         }
 
@@ -116,9 +118,9 @@ public class Ball : RecycleObject
     public void ResetBall()
     {
         // 물리 상태 복구
+        rb.isKinematic = false;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
-        rb.isKinematic = false;
 
         // 콜라이더 복구
         sphereCollider.enabled = true;
