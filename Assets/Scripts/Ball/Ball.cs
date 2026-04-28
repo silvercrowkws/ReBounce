@@ -105,10 +105,14 @@ public class Ball : RecycleObject
         // Ball이 아닌 대상과 충돌하면
         if (!collision.gameObject.CompareTag("Ball"))
         {
-            if(collision.gameObject.name == "Monster_Goblin_Green_Warrior")
+            IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
+
+            // 충돌한 대상에게 damageable 인터페이스가 있으면
+            if (damageable != null)
             {
-                Debug.Log($"{collision.gameObject.name} 반사 처리");
+                damageable.TakeDamage(1f);
             }
+            
             // 반사 처리
             Vector3 normal = collision.contacts[0].normal;
 
