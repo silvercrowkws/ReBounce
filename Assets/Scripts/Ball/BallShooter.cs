@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -22,6 +23,16 @@ public class BallShooter : MonoBehaviour
 
     [Header("좌우 허용 각도")]
     public float maxAngle = 75f; // 좌우 최대 각도 (도 단위)
+
+    /// <summary>
+    /// 발사 중인지 체크하는 변수
+    /// </summary>
+    private bool isShooting = false;
+
+    /// <summary>
+    /// 발사 횟수
+    /// </summary>
+    public int shootCount;
 
     private void Awake()
     {
@@ -190,17 +201,45 @@ public class BallShooter : MonoBehaviour
             var ball = ballObj.GetComponent<Ball>();*/
             //Debug.Log("ball component: " + ball);
 
-            Ball ball = factory.GetBall(firePoint.position, 0f);
-            if (ball != null) ball.Init(dir);
+
+            /*Ball ball = factory.GetBall(firePoint.position, 0f);
+            if (ball != null) ball.Init(dir);*/
+            StartCoroutine(ShootCoroutine(dir));
 
             /*Debug.Log("공 발사 실행");
             factory.GetBall(firePoint.position, 0f);*/
         }
     }
 
+    IEnumerator ShootCoroutine(Vector3 dir)
+    {
+        isShooting = true;      // 발사 시작
+        for (int i = 0; i < shootCount; i++)
+        {
+            Ball ball = factory.GetBall(firePoint.position, 0f);
+            if (ball != null) ball.Init(dir);
+            yield return new WaitForSeconds(0.1f);
+        }
+        isShooting = false;     // 발사 종료
+    }
+
     private void OnFirstGroundHitPos(Vector3 vector)
     {
         Vector3 shootStartPos = new Vector3(gameManager.firstGroundHitPos.x, gameManager.firstGroundHitPos.y, -1.3f);
+        //firePoint.position = shootStartPos;
+
+        StartCoroutine(FirePointChange(shootStartPos));
+    }
+
+    IEnumerator FirePointChange(Vector3 shootStartPos)
+    {
+        // 발사 중인 동안 반복
+        while (isShooting)
+        {
+            yield return null;
+        }
+
+        // 발사가 끝났으면
         firePoint.position = shootStartPos;
     }
 

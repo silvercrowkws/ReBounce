@@ -42,6 +42,7 @@ public class Ball : RecycleObject
     {
         sphereCollider = GetComponent<SphereCollider>();
         rb = GetComponent<Rigidbody>();
+        rb.collisionDetectionMode = CollisionDetectionMode.Continuous;      // 빠른 속도의 물체가 콜라이더를 뚫는 것 방지
 
         int ballLayer = LayerMask.NameToLayer("Ball");
 
@@ -61,7 +62,8 @@ public class Ball : RecycleObject
     void FixedUpdate()
     {
         Move();
-    }
+    }    
+
 
     void Move()
     {
@@ -81,6 +83,7 @@ public class Ball : RecycleObject
         // 바닥 체크
         if (collision.gameObject.CompareTag("DownBrick"))
         {
+            //Debug.Log("바닥 충돌");
             // 물리 완전 정지
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
@@ -102,11 +105,18 @@ public class Ball : RecycleObject
         // Ball이 아닌 대상과 충돌하면
         if (!collision.gameObject.CompareTag("Ball"))
         {
+            if(collision.gameObject.name == "Monster_Goblin_Green_Warrior")
+            {
+                Debug.Log($"{collision.gameObject.name} 반사 처리");
+            }
             // 반사 처리
             Vector3 normal = collision.contacts[0].normal;
 
             // 반사 공식
             direction = Vector3.Reflect(direction, normal);
+
+            // 살짝 밀어내기
+            transform.position += normal * 0.02f;
         }
     }
 
