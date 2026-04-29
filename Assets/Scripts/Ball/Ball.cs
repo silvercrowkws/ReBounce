@@ -23,6 +23,11 @@ public class Ball : RecycleObject
     /// </summary>
     public float speed = 10f;
 
+    /// <summary>
+    /// 이 공의 데미지
+    /// </summary>
+    public float damage;
+
     private Vector3 direction;
 
     /*private static bool isFirstGroundHit = false;
@@ -110,7 +115,9 @@ public class Ball : RecycleObject
             // 충돌한 대상에게 damageable 인터페이스가 있으면
             if (damageable != null)
             {
-                damageable.TakeDamage(15f);
+                // 데미지 적용 함수
+                CalculateDamage(damageable);
+                //damageable.TakeDamage(damage);
                 // 나중에 속성 상성 이런 것 별로 기능하도록 수정 필요
             }
             
@@ -144,5 +151,14 @@ public class Ball : RecycleObject
         direction = Vector3.zero; 
         //isFirstGroundHit 는 static 변수라서 OnDisable에서 초기화 하면 안되고.
         // 스테이지 초기화? 내 경우에는 다음 발사 직전에 초기화 하면 될듯
+    }
+
+    /// <summary>
+    /// 데미지 계산 함수
+    /// </summary>
+    private void CalculateDamage(IDamageable damageable)
+    {
+        // 데미지 적용 함수
+        damageable.TakeDamage(damage);
     }
 }
