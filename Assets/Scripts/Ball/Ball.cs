@@ -110,7 +110,7 @@ public class Ball : RecycleObject
             // 충돌한 대상에게 damageable 인터페이스가 있으면
             if (damageable != null)
             {
-                damageable.TakeDamage(10f);
+                damageable.TakeDamage(15f);
                 // 나중에 속성 상성 이런 것 별로 기능하도록 수정 필요
             }
             

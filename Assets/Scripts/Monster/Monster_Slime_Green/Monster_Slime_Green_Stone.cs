@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Monster_Slime_Green_Stone : RecycleObject
+public class Monster_Slime_Green_Stone : MonsterBase//RecycleObject
 {
-    /// <summary>
+    /*/// <summary>
     /// 이 이펙트의 수명
     /// </summary>
     //public float lifeTime = 3.0f;
@@ -13,5 +13,5 @@ public class Monster_Slime_Green_Stone : RecycleObject
     {
         base.OnEnable();
         //StartCoroutine(LifeOver(lifeTime));
-    }
+    }*/
 }

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class Monster_Goblin_Green : RecycleObject, IDamageable
+public class Monster_Goblin_Green : MonsterBase //RecycleObject, IDamageable
 {
-    [SerializeField] private float maxHP = 100f;
+    /*[SerializeField] private float maxHP = 100f;
     private float currentHP;
     
     public float CurrentHP
@@ -62,15 +62,15 @@ public class Monster_Goblin_Green : RecycleObject, IDamageable
         CurrentHP -= amount;
         Debug.Log($"{gameObject.name}이 {amount}의 데미지를 입음. 남은 HP: {CurrentHP}");
 
-        /*if (currentHP <= 0)
+        *//*if (currentHP <= 0)
         {
             OnDie();
-        }*/
+        }*//*
     }
 
     public void OnDie()
     {
         Debug.Log($"{gameObject.name} 사망!");
         gameObject.SetActive(false); // 또는 오브젝트 풀로 반환
-    }
+    }*/
 }
