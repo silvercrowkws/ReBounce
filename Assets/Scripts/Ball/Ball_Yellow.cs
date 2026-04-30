@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum BallElementals
+/*public enum BallElementals
 {
     Normal = 0,     // 기본
     Fire,           // 불
@@ -10,7 +10,7 @@ public enum BallElementals
     Wind,           // 바람, 공기
     Electric,       // 전기
     Earth,          // 흙, 땅?
-}
+}*/
 
 public class Ball_Yellow : RecycleObject
 {

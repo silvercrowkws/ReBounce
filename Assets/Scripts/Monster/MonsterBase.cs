@@ -3,6 +3,23 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+public enum MonsterElementals
+{
+    Normal = 0,     // 기본
+    Fire,           // 불
+    Water,          // 물
+    Earth,          // 흙
+    Electric,       // 전기
+    Wind,           // 바람
+
+    // 공과 몬스터의 상성 구조가
+    // 불 < 물 < 흙 < 번개 < 바람 < 불
+    // 불은   바람에 강하고    물에 약함
+    // 물은   불에 강하고      흙에 약함
+    // 흙은   물에 강하고      번개에 약함
+    // 바람은 번개에 강하고    불에 약함
+}
+
 public class MonsterBase : RecycleObject, IDamageable
 {
     [SerializeField] protected float maxHP = 100f;

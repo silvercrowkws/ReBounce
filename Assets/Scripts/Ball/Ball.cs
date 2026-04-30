@@ -1,15 +1,21 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
-/*public enum BallElementals
+public enum BallElementals
 {
     Normal = 0,     // 기본
-    Fire,           // 불
-    Water,          // 물
-    Wind,           // 바람, 공기
-    Electric,       // 전기
-    Earth,          // 흙, 땅?
-}*/
+    Fire,           // 불            =>  화상을 남겨 지속피해를 n초동안 준다거나
+    Water,          // 물            =>  피격 시 '젖음' 디버프 부여
+    Earth,          // 흙, 땅?       =>  방어를 무시하는 고정피해?
+    Electric,       // 번개          =>  주변 블록으로 데미지의 일부가 전이된다거나
+    Wind,           // 바람          =>  추가 타격이나 뒤의 몬스터도 맞는 관통 공격?
+
+    // '젖음' 디버프 효과는
+    // - 불과 만나면 남은 화상 데미지를 한번에 주고 n초 갱신?
+    // - 흙과 만나면 진흙 상태로 변해서 몬스터의 방어율 감소?
+    // - 번개와 만나면 전이 범위 증가?
+    // - 바람과 만나면 주변 몬스터들에게 '젖음' 확산?
+}
 
 public class Ball : RecycleObject
 {
@@ -158,6 +164,10 @@ public class Ball : RecycleObject
     /// </summary>
     private void CalculateDamage(IDamageable damageable)
     {
+        // 충돌한 대상에게 damageable 인터페이스가 있으면 CalculateDamage 이 함수가 실행되는건데,
+        // 일단 공의 속성은 쉽게 알 수 있고,
+        // 충돌한 대상의 태그를 받아와?
+
         // 데미지 적용 함수
         damageable.TakeDamage(damage);
     }
