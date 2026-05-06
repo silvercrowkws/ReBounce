@@ -2,6 +2,8 @@ using System;
 using System.Threading;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
+using UnityEngine.XR;
 
 public enum BallElementals
 {
@@ -174,7 +176,6 @@ public class Ball : RecycleObject
         // 기본 데미지 * 상성 테이블
         float multipliedDamage =  damage * elementalTable[(int)ballElementals, (int)monsterElement];
 
-
         // 계산된 데미지 적용
         damageable.TakeDamage(multipliedDamage);
     }
@@ -192,4 +193,23 @@ public class Ball : RecycleObject
         /*Elec*/      {1f,    1f,     1f,     1.5f,   1f,     0.5f,},
         /*Wind*/      {1f,    0.5f,   1f,     1f,     1.5f,   1f,},
     };
+
+    /// <summary>
+    /// Ball의 상태이상 효과 함수
+    /// </summary>
+    private void StatusEffect()
+    {
+        //Normal = 0,     // 기본
+        //Fire,           // 불            =>  화상을 남겨 지속피해를 n초동안 준다거나
+        //Water,          // 물            =>  피격 시 '젖음' 디버프 부여
+        //Land,           // 흙, 땅?       =>  방어를 무시하는 고정피해?
+        //Electric,       // 번개          =>  주변 블록으로 데미지의 일부가 전이된다거나
+        //Wind,           // 바람          =>  추가 타격이나 뒤의 몬스터도 맞는 관통 공격?
+        
+        // '젖음' 디버프 효과는
+        // - 불과 만나면 남은 화상 데미지를 한번에 주고 n초 갱신?
+        // - 흙과 만나면 진흙 상태로 변해서 몬스터의 방어율 감소?
+        // - 번개와 만나면 전이 범위 증가?
+        // - 바람과 만나면 주변 몬스터들에게 '젖음' 확산?
+    }
 }
