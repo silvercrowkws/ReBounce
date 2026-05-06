@@ -8,7 +8,7 @@ public enum MonsterElementals
     Normal = 0,     // 기본
     Fire,           // 불
     Water,          // 물
-    Earth,          // 흙
+    Land,           // 흙
     Electric,       // 전기
     Wind,           // 바람
 
@@ -22,6 +22,18 @@ public enum MonsterElementals
 
 public class MonsterBase : RecycleObject, IDamageable
 {
+    /// <summary>
+    /// 이 몬스터의 속성(인스펙터에서 설정 가능)
+    /// </summary>
+    [SerializeField] 
+    private MonsterElementals monsterElementals = MonsterElementals.Normal;
+
+    /// <summary>
+    /// 외부에서 접근할 때는 프로퍼티로만 사용
+    /// </summary>
+    public MonsterElementals MonsterElement => monsterElementals;
+
+
     [SerializeField] protected float maxHP = 100f;
     protected float currentHP;
 

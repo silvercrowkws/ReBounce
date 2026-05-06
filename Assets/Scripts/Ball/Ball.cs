@@ -1,3 +1,5 @@
+using System;
+using System.Threading;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -6,7 +8,7 @@ public enum BallElementals
     Normal = 0,     // 기본
     Fire,           // 불            =>  화상을 남겨 지속피해를 n초동안 준다거나
     Water,          // 물            =>  피격 시 '젖음' 디버프 부여
-    Earth,          // 흙, 땅?       =>  방어를 무시하는 고정피해?
+    Land,           // 흙, 땅?       =>  방어를 무시하는 고정피해?
     Electric,       // 번개          =>  주변 블록으로 데미지의 일부가 전이된다거나
     Wind,           // 바람          =>  추가 타격이나 뒤의 몬스터도 맞는 관통 공격?
 
@@ -22,7 +24,7 @@ public class Ball : RecycleObject
     /// <summary>
     /// 이 공의 속성(인스펙터에서 설정 가능)
     /// </summary>
-    public BallElementals elementals = BallElementals.Normal;
+    public BallElementals ballElementals = BallElementals.Normal;
 
     /// <summary>
     /// 공의 속도
@@ -32,7 +34,7 @@ public class Ball : RecycleObject
     /// <summary>
     /// 이 공의 데미지
     /// </summary>
-    public float damage;
+    public float damage = 10;
 
     private Vector3 direction;
 
@@ -122,7 +124,7 @@ public class Ball : RecycleObject
             if (damageable != null)
             {
                 // 데미지 적용 함수
-                CalculateDamage(damageable);
+                CalculateDamage(damageable, damageable.MonsterElement);
                 //damageable.TakeDamage(damage);
                 // 나중에 속성 상성 이런 것 별로 기능하도록 수정 필요
             }
@@ -162,13 +164,32 @@ public class Ball : RecycleObject
     /// <summary>
     /// 데미지 계산 함수
     /// </summary>
-    private void CalculateDamage(IDamageable damageable)
+    /// <param name="damageable">IDamageable 인터페이스</param>
+    private void CalculateDamage(IDamageable damageable, MonsterElementals monsterElement)
     {
         // 충돌한 대상에게 damageable 인터페이스가 있으면 CalculateDamage 이 함수가 실행되는건데,
         // 일단 공의 속성은 쉽게 알 수 있고,
-        // 충돌한 대상의 태그를 받아와?
+        // 충돌한 대상의 태그를 받아와? => 태그 대신 인터페이스로 처리해서 몬스터의 속성을 받아왔어.
 
-        // 데미지 적용 함수
-        damageable.TakeDamage(damage);
+        // 기본 데미지 * 상성 테이블
+        float multipliedDamage =  damage * elementalTable[(int)ballElementals, (int)monsterElement];
+
+
+        // 계산된 데미지 적용
+        damageable.TakeDamage(multipliedDamage);
     }
+
+    /// <summary>
+    /// 공과 몬스터 사이의 상성 테이블
+    /// </summary>
+    private static readonly float[,] elementalTable =
+    {
+        //대상:       Normal  Fire    Water   Land    Elec    Wind
+        /*Nomal*/     {1f,    1f,     1f,     1f,     1f,     1f,},
+        /*Fire*/      {1f,    1f,     0.5f,   1f,     1f,     1.5f,},
+        /*Water*/     {1f,    1.5f,   1f,     0.5f,   1f,     1f,},
+        /*Land*/      {1f,    1f,     1.5f,   1f,     0.5f,   1f,},
+        /*Elec*/      {1f,    1f,     1f,     1.5f,   1f,     0.5f,},
+        /*Wind*/      {1f,    0.5f,   1f,     1f,     1.5f,   1f,},
+    };
 }
