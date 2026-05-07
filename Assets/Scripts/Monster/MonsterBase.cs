@@ -105,6 +105,50 @@ public class MonsterBase : RecycleObject, IDamageable
         Debug.Log($"{gameObject.name}이 {amount}의 데미지. 남은 HP: {CurrentHP}");
     }
 
+    public virtual void TakeStatusEffect(StatusEffectData effect)
+    {
+        switch (effect.effectType)
+        {
+            // 화상 상태
+            case StatusEffectType.Burn:
+                StartCoroutine(BurnCoroutine(effect));
+                break;
+
+            // 젖음 상태
+            case StatusEffectType.Wet:
+                //isWet = true;
+                break;
+
+            // 진흙 상태
+            case StatusEffectType.Mud:
+                break;
+
+            // 감전 상태
+            case StatusEffectType.Shock:
+                break;
+
+            // 
+            case StatusEffectType.Pierce:
+                break;
+        }
+    }
+
+    IEnumerator BurnCoroutine(StatusEffectData effect)
+    {
+        float elapsedTime = 0f;
+
+        float tickInterval = 1f;   // 1초마다 데미지
+
+        while (elapsedTime < effect.duration)
+        {
+            TakeDamage(effect.value);
+
+            yield return new WaitForSeconds(tickInterval);
+
+            elapsedTime += tickInterval;
+        }
+    }
+
     public virtual void OnDie()
     {
         Debug.Log($"{gameObject.name} 사망!");

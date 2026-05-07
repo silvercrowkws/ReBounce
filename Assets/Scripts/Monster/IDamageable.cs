@@ -13,6 +13,8 @@ public interface IDamageable
     // 데미지를 받는 메서드
     void TakeDamage(float amount);
 
+    void TakeStatusEffect(StatusEffectData effect);
+
     // 사망 시 실행될 로직
     void OnDie();
 }

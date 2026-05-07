@@ -176,7 +176,10 @@ public class Ball : RecycleObject
         // 기본 데미지 * 상성 테이블
         float multipliedDamage =  damage * elementalTable[(int)ballElementals, (int)monsterElement];
 
-        // 계산된 데미지 적용
+        // 효과 적용 함수 실행
+        StatusEffect(damageable);
+
+        // 최종적으로 계산된 데미지 적용
         damageable.TakeDamage(multipliedDamage);
     }
 
@@ -197,7 +200,7 @@ public class Ball : RecycleObject
     /// <summary>
     /// Ball의 상태이상 효과 함수
     /// </summary>
-    private void StatusEffect()
+    private void StatusEffect(IDamageable target)
     {
         //Normal = 0,     // 기본
         //Fire,           // 불            =>  화상을 남겨 지속피해를 n초동안 준다거나
@@ -205,11 +208,54 @@ public class Ball : RecycleObject
         //Land,           // 흙, 땅?       =>  방어를 무시하는 고정피해?
         //Electric,       // 번개          =>  주변 블록으로 데미지의 일부가 전이된다거나
         //Wind,           // 바람          =>  추가 타격이나 뒤의 몬스터도 맞는 관통 공격?
-        
+
         // '젖음' 디버프 효과는
         // - 불과 만나면 남은 화상 데미지를 한번에 주고 n초 갱신?
         // - 흙과 만나면 진흙 상태로 변해서 몬스터의 방어율 감소?
         // - 번개와 만나면 전이 범위 증가?
         // - 바람과 만나면 주변 몬스터들에게 '젖음' 확산?
+
+        switch (ballElementals)
+        {
+            case BallElementals.Normal:
+                break;
+
+            case BallElementals.Fire:
+                // 화상 디버프 부여
+                ApplyBurn(target);
+                break;
+
+            case BallElementals.Water:
+                // 젖음 디버프 부여
+                //ApplyWet(target);
+                break;
+
+            case BallElementals.Land:
+                // 방어를 무시하는 고정 피해
+                //ApplyArmorBreak(target);
+                break;
+
+            case BallElementals.Electric:
+                // 주변 블록으로 데미지 일부 전이
+                //ApplyChainLightning(target);
+                break;
+
+            case BallElementals.Wind:
+                // 추가 타격 및 뒤의 몬스터도 맞는 관통 공격
+                //ApplyPierce(target);
+                break;
+        }
+    }
+
+    private void ApplyBurn(IDamageable target)
+    {
+        StatusEffectData burn = new StatusEffectData
+        {
+            effectType = StatusEffectType.Burn,
+            duration = 5f,
+            value = 5f
+        };
+
+        target.TakeStatusEffect(burn);
     }
 }

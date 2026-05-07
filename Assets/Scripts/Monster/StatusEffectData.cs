@@ -1,0 +1,28 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+/// <summary>
+/// 상태이상 enum
+/// </summary>
+public enum StatusEffectType
+{
+    Burn,
+    Wet,
+    Mud,
+    Shock,
+    Pierce,
+}
+
+/// <summary>
+/// 상태이상 데이터 클래스
+/// </summary>
+[System.Serializable]
+public class StatusEffectData
+{
+    public StatusEffectType effectType;
+
+    public float duration;
+
+    public float value;
+}
