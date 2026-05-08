@@ -327,6 +327,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Monster_Goblin_Green_Archer
       objectReference: {fileID: 0}
+    - target: {fileID: 6715322287445968402, guid: 26b40f14427dd5d48ad208ec09360361, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 676873226, guid: c336d03abfdfac74085bdf78408523eb, type: 3}
     - target: {fileID: 7746877697026466237, guid: 26b40f14427dd5d48ad208ec09360361, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
