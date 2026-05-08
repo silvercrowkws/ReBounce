@@ -10,8 +10,8 @@ public enum StatusEffectType
     Burn,
     Wet,
     Mud,
-    Shock,
-    Pierce,
+    //Shock,
+    //Pierce,
 }
 
 /// <summary>

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum MonsterElementals
 {
@@ -40,7 +41,7 @@ public class MonsterBase : RecycleObject, IDamageable
     /// <summary>
     /// HP 텍스트
     /// </summary>
-    protected TextMeshProUGUI hpText;
+    protected TextMeshProUGUI hpText;    
 
     public float CurrentHP
     {
@@ -69,18 +70,33 @@ public class MonsterBase : RecycleObject, IDamageable
         get => maxHP;
     }
 
+    /// <summary>
+    /// 상태 이상 표시용 이미지
+    /// </summary>
+    Image statusEffectImage;
+
     protected virtual void Awake()
     {
         //currentHP = maxHP;    => 활성화 시 처리
 
         if (transform.childCount > 1)
         {
-            Transform child = transform.GetChild(1);
-            hpText = child.GetChild(0).GetComponent<TextMeshProUGUI>();
+            Transform child = transform.GetChild(1);        // 캔버스 위치
+            hpText = child.GetChild(1).GetComponent<TextMeshProUGUI>();
 
             if (hpText != null)
             {
                 hpText.text = currentHP.ToString();
+            }
+
+            statusEffectImage = child.GetChild(0).GetComponent<Image>();
+
+            if(statusEffectImage != null)
+            {
+                statusEffectImage.sprite = null;        // 이미지 비우고
+                Color color = statusEffectImage.color;
+                color.a = 0f;
+                statusEffectImage.color = color;        // 투명 처리
             }
         }
     }
@@ -97,6 +113,14 @@ public class MonsterBase : RecycleObject, IDamageable
 
         if (hpText != null)
             hpText.text = currentHP.ToString();
+
+        if (statusEffectImage != null)
+        {
+            statusEffectImage.sprite = null;        // 이미지 비우고
+            Color color = statusEffectImage.color;
+            color.a = 0f;
+            statusEffectImage.color = color;        // 투명 처리
+        }
     }
 
     public virtual void TakeDamage(float amount)
@@ -123,13 +147,13 @@ public class MonsterBase : RecycleObject, IDamageable
             case StatusEffectType.Mud:
                 break;
 
-            // 감전 상태
+            /*// 감전 상태
             case StatusEffectType.Shock:
                 break;
 
             // 
             case StatusEffectType.Pierce:
-                break;
+                break;*/
         }
     }
 
