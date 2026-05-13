@@ -44,7 +44,15 @@ public class BallShooter : MonoBehaviour
 
         // 시작할 때는 가이드라인을 숨김
         lineRenderer = GetComponent<LineRenderer>();
-        if (lineRenderer != null) lineRenderer.enabled = false;
+
+        if (lineRenderer != null)
+        {
+            // 두께 설정
+            lineRenderer.startWidth = 0.05f;
+            lineRenderer.endWidth = 0.05f;
+
+            lineRenderer.enabled = false;
+        }
     }
 
     void OnEnable()

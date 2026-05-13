@@ -53,6 +53,41 @@ public class Ball : RecycleObject
     /// </summary>
     Rigidbody rb;
 
+    /// <summary>
+    /// 매쉬 렌더러
+    /// </summary>
+    MeshRenderer meshRenderer;
+
+    /// <summary>
+    /// 무속성 공
+    /// </summary>
+    Color whiteBall = new Color(1f, 1f, 1f, 1f);
+    
+    /// <summary>
+    /// 불속성 공
+    /// </summary>
+    Color fireBall = new Color(1f, 0.1f, 0.1f, 1f);
+
+    /// <summary>
+    /// 물속성 공
+    /// </summary>
+    Color waterBall = new Color(0.1f, 0.1f, 1f, 1f);
+    
+    /// <summary>
+    /// 땅속성 공
+    /// </summary>
+    Color landBall = new Color(0.45f, 0.3f, 0.15f, 1f);
+    
+    /// <summary>
+    /// 전기속성 공
+    /// </summary>
+    Color electricBall = new Color(1f, 0.95f, 0.2f, 1f);
+    
+    /// <summary>
+    /// 바람속성 공
+    /// </summary>
+    Color windcBall = new Color(0.25f, 0.95f, 0.7f, 1f);
+
     private void Awake()
     {
         sphereCollider = GetComponent<SphereCollider>();
@@ -62,11 +97,14 @@ public class Ball : RecycleObject
         int ballLayer = LayerMask.NameToLayer("Ball");
 
         Physics.IgnoreLayerCollision(ballLayer, ballLayer, true);
+
+        meshRenderer = GetComponent<MeshRenderer>();
     }
 
     protected override void OnEnable()
     {
         ResetBall();
+        ResetBallElementals();
     }
 
     public void Init(Vector3 dir)
@@ -147,7 +185,7 @@ public class Ball : RecycleObject
         GameManager.Instance.RegisterFirstGroundHit(transform.position);
     }
 
-    public void ResetBall()
+    private void ResetBall()
     {
         // 물리 상태 복구
         rb.isKinematic = false;
@@ -161,6 +199,36 @@ public class Ball : RecycleObject
         direction = Vector3.zero; 
         //isFirstGroundHit 는 static 변수라서 OnDisable에서 초기화 하면 안되고.
         // 스테이지 초기화? 내 경우에는 다음 발사 직전에 초기화 하면 될듯
+    }
+
+    private void ResetBallElementals()
+    {
+        switch (ballElementals)
+        {
+            case BallElementals.Normal:
+                meshRenderer.material.color = whiteBall;
+                break;
+
+            case BallElementals.Fire:
+                meshRenderer.material.color = fireBall;
+                break;
+
+            case BallElementals.Water:
+                meshRenderer.material.color = waterBall;
+                break;
+            
+            case BallElementals.Land:
+                meshRenderer.material.color = landBall;
+                break;
+            
+            case BallElementals.Electric:
+                meshRenderer.material.color = electricBall;
+                break;
+            
+            case BallElementals.Wind:
+                meshRenderer.material.color = windcBall;
+                break;
+        }
     }
 
     /// <summary>
