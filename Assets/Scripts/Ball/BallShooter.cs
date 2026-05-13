@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -34,6 +35,11 @@ public class BallShooter : MonoBehaviour
     /// </summary>
     public int shootCount;
 
+    /// <summary>
+    /// 발사될 공의 리스트(속성)
+    /// </summary>    
+    public List<BallElementals> shootBalls = new List<BallElementals>();
+
     private void Awake()
     {
         inputActions = new PlayerInputActions();
@@ -41,6 +47,17 @@ public class BallShooter : MonoBehaviour
         gameManager = GameManager.Instance;
         gameManager.onFirstGroundHitPos += OnFirstGroundHitPos;
         factory = Factory.Instance;
+
+
+        // 기본 공 shootCount개 추가
+        for (int i = 0; i < shootCount; i++)
+        {
+            shootBalls.Add(BallElementals.Normal);
+        }
+
+        // 첫 번째 공부터 속성 변경
+        shootBalls[0] = BallElementals.Fire;       
+
 
         // 시작할 때는 가이드라인을 숨김
         lineRenderer = GetComponent<LineRenderer>();
@@ -221,14 +238,32 @@ public class BallShooter : MonoBehaviour
 
     IEnumerator ShootCoroutine(Vector3 dir)
     {
-        isShooting = true;      // 발사 시작
+        /*isShooting = true;      // 발사 시작
         for (int i = 0; i < shootCount; i++)
         {
             Ball ball = factory.GetBall(firePoint.position, 0f);
             if (ball != null) ball.Init(dir);
             yield return new WaitForSeconds(0.1f);
         }
-        isShooting = false;     // 발사 종료
+        isShooting = false;     // 발사 종료*/
+
+        isShooting = true;
+
+        for (int i = 0; i < shootBalls.Count; i++)
+        {
+            BallElementals elemental = shootBalls[i];
+
+            Ball ball = factory.GetBall(firePoint.position, elemental, 0f);
+
+            if (ball != null)
+            {
+                ball.Init(dir);
+            }
+
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        isShooting = false;
     }
 
     private void OnFirstGroundHitPos(Vector3 vector)

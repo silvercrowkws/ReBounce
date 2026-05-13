@@ -848,9 +848,16 @@ public class Factory : Singleton<Factory>
     /// <param name="position"></param>
     /// <param name="angle"></param>
     /// <returns></returns>
-    public Ball GetBall(Vector3 position, float angle = 0.0f)
+    public Ball GetBall(Vector3 position, BallElementals elemental, float angle = 0.0f)
     {
-        return ball.GetObject(position, angle * Vector3.forward);
+        //return ball.GetObject(position, angle * Vector3.forward);
+
+        Ball result = ball.GetObject(position, angle * Vector3.forward);
+
+        //result.ballElementals = elemental;
+        result.SetElemental(elemental);
+
+        return result;
     }
 
     // 볼 끝 --------------------------------------------------------------------------------------------------------------------------

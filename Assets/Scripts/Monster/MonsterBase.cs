@@ -75,6 +75,16 @@ public class MonsterBase : RecycleObject, IDamageable
     /// </summary>
     Image statusEffectImage;
 
+    /// <summary>
+    /// 화상 상태이상 스프라이트
+    /// </summary>
+    private Sprite burnSprite;
+
+    /// <summary>
+    /// 젖음 상태이상 스프라이트
+    /// </summary>
+    private Sprite wetSprite;
+
     protected virtual void Awake()
     {
         //currentHP = maxHP;    => 활성화 시 처리
@@ -99,6 +109,9 @@ public class MonsterBase : RecycleObject, IDamageable
                 statusEffectImage.color = color;        // 투명 처리
             }
         }
+
+        burnSprite = Resources.Load<Sprite>("StatusEffect/BurnState");
+        wetSprite = Resources.Load<Sprite>("StatusEffect/WetState");
     }
 
     protected override void OnEnable()
@@ -114,12 +127,38 @@ public class MonsterBase : RecycleObject, IDamageable
         if (hpText != null)
             hpText.text = currentHP.ToString();
 
-        if (statusEffectImage != null)
+        /*if (statusEffectImage != null)
         {
             statusEffectImage.sprite = null;        // 이미지 비우고
             Color color = statusEffectImage.color;
             color.a = 0f;
             statusEffectImage.color = color;        // 투명 처리
+        }*/
+        StateEffectColorControl(false);
+    }
+
+    /// <summary>
+    /// 상태이상 이미지 컨트롤 함수
+    /// </summary>
+    /// <param name="tf"></param>
+    private void StateEffectColorControl(bool tf)
+    {
+        // 비활성화 처리
+        if (!tf)
+        {
+            if (statusEffectImage != null)
+            {
+                statusEffectImage.sprite = null;        // 이미지 비우고
+                Color color = statusEffectImage.color;
+                color.a = 0f;
+                statusEffectImage.color = color;        // 투명 처리
+            }
+        }
+        else
+        {
+            Color color = statusEffectImage.color;
+            color.a = 1f;
+            statusEffectImage.color = color;
         }
     }
 
@@ -140,6 +179,7 @@ public class MonsterBase : RecycleObject, IDamageable
 
             // 젖음 상태
             case StatusEffectType.Wet:
+                StartCoroutine(WetCoroutine(effect));
                 //isWet = true;
                 break;
 
@@ -157,11 +197,26 @@ public class MonsterBase : RecycleObject, IDamageable
         }
     }
 
+    /// <summary>
+    /// 화상 중첩 개수
+    /// </summary>
+    private int burnStackCount = 0;
+
     IEnumerator BurnCoroutine(StatusEffectData effect)
     {
+        burnStackCount++;       // 화상 중첩 개수 증가
+
         float elapsedTime = 0f;
 
         float tickInterval = 1f;   // 1초마다 데미지
+
+        // 첫 화상이면 이미지 활성화
+        if(burnStackCount == 1)
+        {
+            StateEffectColorControl(true);
+            // 상태 이상 이미지 변경
+            statusEffectImage.sprite = burnSprite;
+        }
 
         while (elapsedTime < effect.duration)
         {
@@ -171,6 +226,20 @@ public class MonsterBase : RecycleObject, IDamageable
 
             elapsedTime += tickInterval;
         }
+
+        burnStackCount--;       // while 문 종료시 화상 중첩 개수 감소
+
+        // 화상 중첩이 하나도 안남았을 때만 끄기
+        if (burnStackCount <= 0)
+        {
+            burnStackCount = 0;
+            StateEffectColorControl(false);
+        }
+    }
+
+    IEnumerator WetCoroutine(StatusEffectData effect)
+    {
+        yield return null;
     }
 
     public virtual void OnDie()

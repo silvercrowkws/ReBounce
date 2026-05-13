@@ -104,7 +104,7 @@ public class Ball : RecycleObject
     protected override void OnEnable()
     {
         ResetBall();
-        ResetBallElementals();
+        //ResetBallElementals();
     }
 
     public void Init(Vector3 dir)
@@ -201,6 +201,12 @@ public class Ball : RecycleObject
         // 스테이지 초기화? 내 경우에는 다음 발사 직전에 초기화 하면 될듯
     }
 
+    public void SetElemental(BallElementals elemental)
+    {
+        ballElementals = elemental;
+        ResetBallElementals();
+    }
+
     private void ResetBallElementals()
     {
         switch (ballElementals)
@@ -295,6 +301,7 @@ public class Ball : RecycleObject
 
             case BallElementals.Water:
                 // 젖음 디버프 부여
+                ApplyWet(target);
                 //ApplyWet(target);
                 break;
 
@@ -325,5 +332,17 @@ public class Ball : RecycleObject
         };
 
         target.TakeStatusEffect(burn);
+    }
+
+    private void ApplyWet(IDamageable target)
+    {
+        StatusEffectData wet = new StatusEffectData
+        {
+            effectType = StatusEffectType.Wet,
+            duration = 10f,
+            value = 0f
+        };
+
+        target.TakeStatusEffect(wet);
     }
 }
