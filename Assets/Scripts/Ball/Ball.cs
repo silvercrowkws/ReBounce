@@ -307,7 +307,7 @@ public class Ball : RecycleObject
 
             case BallElementals.Land:
                 // 방어를 무시하는 고정 피해
-                //ApplyArmorBreak(target);
+                ApplyLand(target);
                 break;
 
             case BallElementals.Electric:
@@ -344,5 +344,17 @@ public class Ball : RecycleObject
         };
 
         target.TakeStatusEffect(wet);
+    }
+
+    private void ApplyLand(IDamageable target)
+    {
+        StatusEffectData land = new StatusEffectData
+        {
+            //effectType = StatusEffectType.,
+            duration = 10f,
+            value = 0f
+        };
+
+        target.TakeStatusEffect(land);
     }
 }
