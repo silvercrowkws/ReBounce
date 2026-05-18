@@ -1831,7 +1831,7 @@ MonoBehaviour:
   firePoint: {fileID: 618011188}
   lineLength: 2
   maxAngle: 75
-  shootCount: 1
+  shootCount: 2
   shootBalls: 
 --- !u!120 &618011190
 LineRenderer:
