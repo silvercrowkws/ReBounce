@@ -312,7 +312,7 @@ public class Ball : RecycleObject
 
             case BallElementals.Electric:
                 // 주변 블록으로 데미지 일부 전이
-                //ApplyChainLightning(target);
+                ApplyElectric(target);
                 break;
 
             case BallElementals.Wind:
@@ -358,5 +358,76 @@ public class Ball : RecycleObject
         };
 
         target.TakeStatusEffect(ignoreDefense);
+    }
+
+    private void ApplyElectric(IDamageable target)
+    {
+        /*MonoBehaviour targetObject = target as MonoBehaviour;
+
+        if (targetObject == null)
+            return;
+
+        Vector3 center = targetObject.transform.position;
+
+        // 전이 범위
+        float chainRange = 0.31f;
+
+        // 전이 피해량 (원본 데미지의 30%)
+        float chainDamage = Mathf.Ceil(damage * 0.3f);
+
+        // 몬스터 레이어만 탐색
+        Collider[] hits = Physics.OverlapSphere(
+            center,
+            chainRange,
+            LayerMask.GetMask("Monster"));
+
+        foreach (Collider hit in hits)
+        {
+            // 자기 자신 제외
+            if (hit.gameObject == targetObject.gameObject)
+                continue;
+
+            IDamageable other = hit.GetComponent<IDamageable>();
+
+            if (other == null)
+                continue;
+
+            // 방향 벡터
+            Vector3 dir = hit.transform.position - center;
+
+            // Y축 제거 (2D 평면 느낌으로)
+            dir.y = 0f;
+
+            dir.Normalize();
+
+            // 상하좌우 판정
+            float horizontal = Mathf.Abs(Vector3.Dot(dir, Vector3.right));
+            float vertical = Mathf.Abs(Vector3.Dot(dir, Vector3.forward));
+
+            // 축 방향에 충분히 가까운 경우만 허용
+            bool isCrossDirection =
+                horizontal > 0.9f ||
+                vertical > 0.9f;
+
+            if (!isCrossDirection)
+                continue;
+
+            // 전이 데미지 적용
+            other.TakeDamage(chainDamage);
+            //other.TakeStatusEffect(chainLightning);
+
+            Debug.Log($"{hit.name} 에게 번개 전이 피해 : {chainDamage}");
+        }*/
+        // =>  다른 함수들 처럼 MonsterBase 에서 처리하도록 수정
+
+        StatusEffectData chainLightning = new StatusEffectData
+        {
+            effectType = StatusEffectType.ChainLightning,
+            duration = 0f,
+            value = 0.3f,   // 전이 대미지
+            baseDamage = damage
+        };
+
+        target.TakeStatusEffect(chainLightning);
     }
 }

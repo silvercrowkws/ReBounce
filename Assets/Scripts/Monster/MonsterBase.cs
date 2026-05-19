@@ -233,12 +233,13 @@ public class MonsterBase : RecycleObject, IDamageable
                 Debug.Log($"땅 속성 추가 피해 : {bonusDamage}");
                 break;
 
-            /*// 감전 상태
-            case StatusEffectType.Shock:
+            // 번개 속성 감전
+            case StatusEffectType.ChainLightning:
+                ApplyChainLightning(effect);
                 break;
 
             // 
-            case StatusEffectType.Pierce:
+            /*case StatusEffectType.Pierce:
                 break;*/
         }
     }
@@ -360,5 +361,54 @@ public class MonsterBase : RecycleObject, IDamageable
     {
         Debug.Log($"{gameObject.name} 사망!");
         gameObject.SetActive(false);
+    }
+
+    private void ApplyChainLightning(StatusEffectData effect)
+    {
+        Vector3 center = transform.position;
+
+        float chainRange = 0.31f;
+
+        float chainDamage =
+            Mathf.Ceil(effect.baseDamage * effect.value);
+
+        Collider[] hits = Physics.OverlapSphere(
+            center,
+            chainRange,
+            LayerMask.GetMask("Monster"));
+
+        foreach (Collider hit in hits)
+        {
+            if (hit.gameObject == gameObject)
+                continue;
+
+            IDamageable other = hit.GetComponent<IDamageable>();
+
+            if (other == null)
+                continue;
+
+            Vector3 dir = hit.transform.position - center;
+
+            dir.y = 0f;
+            dir.Normalize();
+
+            float horizontal =
+                Mathf.Abs(Vector3.Dot(dir, Vector3.right));
+
+            float vertical =
+                Mathf.Abs(Vector3.Dot(dir, Vector3.forward));
+
+            bool isCrossDirection =
+                horizontal > 0.9f ||
+                vertical > 0.9f;
+
+            if (!isCrossDirection)
+                continue;
+
+            other.TakeDamage(chainDamage);
+
+            Debug.Log(
+                $"{hit.name} 에게 번개 전이 피해 : {chainDamage}");
+        }
     }
 }

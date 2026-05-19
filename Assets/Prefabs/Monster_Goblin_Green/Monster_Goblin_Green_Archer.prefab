@@ -431,7 +431,7 @@ GameObject:
   - component: {fileID: 3699983678894047506}
   - component: {fileID: 4752714731604435288}
   - component: {fileID: 7276818949897115739}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Monster_Goblin_Green_Archer
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7790752325721948670}
   - component: {fileID: 8329312582574255128}
   - component: {fileID: 6215963991905858358}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Monster_Goblin_Green
   m_TagString: Untagged
   m_Icon: {fileID: 0}

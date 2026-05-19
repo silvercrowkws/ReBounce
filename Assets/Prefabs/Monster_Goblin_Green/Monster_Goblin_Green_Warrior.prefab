@@ -431,7 +431,7 @@ GameObject:
   - component: {fileID: 4451194131888706717}
   - component: {fileID: 5065936033179910030}
   - component: {fileID: 4888511043393367423}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Monster_Goblin_Green_Warrior
   m_TagString: Untagged
   m_Icon: {fileID: 0}

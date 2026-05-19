@@ -116,7 +116,7 @@ GameObject:
   - component: {fileID: 1670497649167534158}
   - component: {fileID: 3688529821031260066}
   - component: {fileID: 4587268598179179583}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Monster_Skull_Archer
   m_TagString: Untagged
   m_Icon: {fileID: 0}

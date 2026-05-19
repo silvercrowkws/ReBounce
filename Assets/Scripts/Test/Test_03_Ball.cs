@@ -6,7 +6,8 @@ using UnityEngine.InputSystem;
 public class Test_03_Ball : TestBase
 {
     public GameObject[] monsters;
-    private Vector3[] monsterPos = { new (-0.31f,0.033f, -0.31f), new(0f, 0.033f, -0.31f), new(0.31f, 0.033f, -0.31f) };
+    private Vector3[] monsterPos = { new (-0.31f,0.033f, -0.31f), new(0f, 0.033f, -0.31f), new(0.31f, 0.033f, -0.31f), 
+        new(0f, 0.033f, 0.31f), new(0.61f, 0.033f, -0.31f) };
 
     BallShooter ballShooter;
 

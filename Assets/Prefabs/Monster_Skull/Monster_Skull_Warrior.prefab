@@ -328,7 +328,7 @@ GameObject:
   - component: {fileID: 4485194242864653820}
   - component: {fileID: 7363903329389569970}
   - component: {fileID: 3928134941700584963}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Monster_Skull_Warrior
   m_TagString: Untagged
   m_Icon: {fileID: 0}
