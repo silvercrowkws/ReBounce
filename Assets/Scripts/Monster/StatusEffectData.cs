@@ -10,8 +10,10 @@ public enum StatusEffectType
     Burn,
     Wet,
     Mud,
-    //Shock,
-    //Pierce,
+
+    IgnoreDefense,
+    ChainLightning,
+    Pierce,
 }
 
 /// <summary>
@@ -25,4 +27,6 @@ public class StatusEffectData
     public float duration;
 
     public float value;
+
+    public float baseDamage;
 }

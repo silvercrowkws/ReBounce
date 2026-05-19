@@ -251,7 +251,7 @@ public class Ball : RecycleObject
         float multipliedDamage =  damage * elementalTable[(int)ballElementals, (int)monsterElement];
 
         // 효과 적용 함수 실행
-        StatusEffect(damageable);
+        ApplyElementalEffect(damageable);
 
         // 최종적으로 계산된 데미지 적용
         damageable.TakeDamage(multipliedDamage);
@@ -272,9 +272,9 @@ public class Ball : RecycleObject
     };
 
     /// <summary>
-    /// Ball의 상태이상 효과 함수
+    /// Ball의 상태이상, 특수 공격 효과 함수
     /// </summary>
-    private void StatusEffect(IDamageable target)
+    private void ApplyElementalEffect(IDamageable target)
     {
         //Normal = 0,     // 기본
         //Fire,           // 불            =>  화상을 남겨 지속피해를 n초동안 준다거나
@@ -348,13 +348,15 @@ public class Ball : RecycleObject
 
     private void ApplyLand(IDamageable target)
     {
-        StatusEffectData land = new StatusEffectData
+        // 적의 방어력을 일부 무시하는 공격
+        StatusEffectData ignoreDefense = new StatusEffectData
         {
-            //effectType = StatusEffectType.,
-            duration = 10f,
-            value = 0f
+            effectType = StatusEffectType.IgnoreDefense,
+            duration = 0f,
+            value = 1f,             // 추가 피해 정도
+            baseDamage = damage     // 원본 대미지
         };
 
-        target.TakeStatusEffect(land);
+        target.TakeStatusEffect(ignoreDefense);
     }
 }

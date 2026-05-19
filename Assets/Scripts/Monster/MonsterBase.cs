@@ -226,8 +226,11 @@ public class MonsterBase : RecycleObject, IDamageable
                 wetCoroutine = StartCoroutine(WetCoroutine(effect));
                 break;
 
-            // 진흙 상태
-            case StatusEffectType.Mud:
+            // 땅 속성 방어 무시 공격
+            case StatusEffectType.IgnoreDefense:
+                float bonusDamage = Mathf.Ceil(effect.baseDamage * effect.value);
+                TakeDamage(bonusDamage);
+                Debug.Log($"땅 속성 추가 피해 : {bonusDamage}");
                 break;
 
             /*// 감전 상태

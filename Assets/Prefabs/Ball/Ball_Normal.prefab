@@ -148,4 +148,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ballElementals: 0
   speed: 3
-  damage: 1
+  damage: 10
