@@ -222,7 +222,7 @@ GameObject:
   - component: {fileID: 1305256489409897950}
   - component: {fileID: 7130256010963529976}
   - component: {fileID: 8020401301419107397}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Monster_Skull_Poison_Archer
   m_TagString: Untagged
   m_Icon: {fileID: 0}

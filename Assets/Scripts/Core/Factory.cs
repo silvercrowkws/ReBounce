@@ -34,6 +34,7 @@ public enum PoolObjectType
     Ball,
     Ball_Yellow,
 
+    ChainLightning,
 }
 
 public class Factory : Singleton<Factory>
@@ -65,6 +66,8 @@ public class Factory : Singleton<Factory>
 
     Ball_Pool ball;
     Ball_Yellow_Pool ball_Yellow;
+
+    ChainLightning_Pool chainLightning;
 
     /// <summary>
     /// 씬이 로딩 완료될 때마다 실행되는 초기화 함수
@@ -326,6 +329,19 @@ public class Factory : Singleton<Factory>
         {
             Debug.LogError("Ball_Yellow_Pool 을 찾을 수 없습니다.");
         }
+
+
+        // 전이 이펙트
+        chainLightning = GetComponentInChildren<ChainLightning_Pool>();
+        if(chainLightning != null)
+        {
+            Debug.Log("ChainLightning_Pool 초기화");
+            chainLightning.Initialize();
+        }
+        else
+        {
+            Debug.LogError("ChainLightning_Poll 을 찾을 수 없습니다.");
+        }
     }
 
     /// <summary>
@@ -430,6 +446,12 @@ public class Factory : Singleton<Factory>
 
             case PoolObjectType.Ball_Yellow:
                 result = ball_Yellow.GetObject(position, euler).gameObject;
+                break;
+
+
+
+            case PoolObjectType.ChainLightning:
+                result = chainLightning.GetObject(position, euler).gameObject;              // 전이 이펙트
                 break;
         }
 
@@ -831,6 +853,7 @@ public class Factory : Singleton<Factory>
     // 오렌지 슬라임 끝 --------------------------------------------------------------------------------------------------------------------------
 
 
+
     // 볼 --------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -860,11 +883,6 @@ public class Factory : Singleton<Factory>
         return result;
     }
 
-    // 볼 끝 --------------------------------------------------------------------------------------------------------------------------
-
-
-
-
     /// <summary>
     /// Ball_Yellow 하나 가져오는 함수
     /// </summary>
@@ -883,5 +901,31 @@ public class Factory : Singleton<Factory>
     public Ball_Yellow GetBall_Yellow(Vector3 position, float angle = 0.0f)
     {
         return ball_Yellow.GetObject(position, angle * Vector3.forward);
+    }
+
+    // 볼 끝 --------------------------------------------------------------------------------------------------------------------------
+
+
+
+    // 전이 이펙트 --------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// ChainLightning 하나 가져오는 함수
+    /// </summary>
+    /// <returns></returns>
+    public ChainLightning GetChainLightning()
+    {
+        return chainLightning.GetObject();
+    }
+
+    /// <summary>
+    /// ChainLightning 하나 가져와서 특정 위치에 배치하는 함수
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="angle"></param>
+    /// <returns></returns>
+    public ChainLightning GetChainLightning(Vector3 position, float angle = 0.0f)
+    {
+        return chainLightning.GetObject(position, angle * Vector3.forward);
     }
 }

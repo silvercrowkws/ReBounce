@@ -356,7 +356,7 @@ GameObject:
   - component: {fileID: 1844355091592998379}
   - component: {fileID: 4332190753457030254}
   - component: {fileID: -3025462956188987272}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Monster_Skull_Poison_Warrior
   m_TagString: Untagged
   m_Icon: {fileID: 0}

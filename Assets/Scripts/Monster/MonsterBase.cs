@@ -372,6 +372,16 @@ public class MonsterBase : RecycleObject, IDamageable
         float chainDamage =
             Mathf.Ceil(effect.baseDamage * effect.value);
 
+        // 전이를 주는 주체 자기 자신 이펙트
+        Factory.Instance.GetChainLightning(
+            new Vector3(
+                transform.position.x,
+                transform.position.y + 0.14f,
+                transform.position.z)
+        ).transform.rotation = Quaternion.Euler(90f, 0f, 0f);
+
+        // 전이 효과음은 여기
+
         Collider[] hits = Physics.OverlapSphere(
             center,
             chainRange,
@@ -404,6 +414,14 @@ public class MonsterBase : RecycleObject, IDamageable
 
             if (!isCrossDirection)
                 continue;
+
+            // 전이 대상 위치에 이펙트 생성
+            Factory.Instance.GetChainLightning(
+                new Vector3(
+                    hit.transform.position.x,
+                    hit.transform.position.y + 0.14f,
+                    hit.transform.position.z)
+            ).transform.rotation = Quaternion.Euler(90f, 0f, 0f);
 
             other.TakeDamage(chainDamage);
 

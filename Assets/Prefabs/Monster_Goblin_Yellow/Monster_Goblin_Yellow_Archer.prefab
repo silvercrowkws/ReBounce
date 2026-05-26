@@ -431,7 +431,7 @@ GameObject:
   - component: {fileID: 5175487878822746135}
   - component: {fileID: 953917506682830068}
   - component: {fileID: 5611956926304912860}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Monster_Goblin_Yellow_Archer
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -431,7 +431,7 @@ GameObject:
   - component: {fileID: 1844355091592998379}
   - component: {fileID: 4332190753457030254}
   - component: {fileID: -8417057553617180825}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Monster_Slime_Green_Stone
   m_TagString: Untagged
   m_Icon: {fileID: 0}

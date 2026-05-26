@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 5604989578697259991}
   - component: {fileID: 6277330658008427430}
   - component: {fileID: 207768707589565825}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Monster_Goblin_Yellow_Warrior
   m_TagString: Untagged
   m_Icon: {fileID: 0}

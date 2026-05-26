@@ -194,7 +194,7 @@ GameObject:
   - component: {fileID: 4480254805925377272}
   - component: {fileID: 2042284881731512576}
   - component: {fileID: -4578425773026550137}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Monster_Skull_Poison
   m_TagString: Untagged
   m_Icon: {fileID: 0}
