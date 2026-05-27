@@ -22,7 +22,7 @@ public class SoundManager : MonoBehaviour
 
     public void PlayChainLightning()
     {
-        sfxSource.PlayOneShot(chainLightningClip);
+        sfxSource.PlayOneShot(chainLightningClip); 
     }
 
     public void PlayBurn()
