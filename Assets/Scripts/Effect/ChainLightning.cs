@@ -7,7 +7,7 @@ public class ChainLightning : RecycleObject
     /// <summary>
     /// 이 이펙트의 수명
     /// </summary>
-    public float lifeTime = 0.5f;
+    public float lifeTime = 0.7f;
 
     protected override void OnEnable()
     {

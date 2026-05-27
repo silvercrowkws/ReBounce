@@ -381,6 +381,7 @@ public class MonsterBase : RecycleObject, IDamageable
         ).transform.rotation = Quaternion.Euler(90f, 0f, 0f);
 
         // 전이 효과음은 여기
+        SoundManager.Instance.PlayChainLightning();
 
         Collider[] hits = Physics.OverlapSphere(
             center,
