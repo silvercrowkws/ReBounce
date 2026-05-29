@@ -7,6 +7,7 @@ using UnityEngine;
 /// </summary>
 public enum StatusEffectType
 {
+    Normal = 0,
     Burn,
     Wet,
     Mud,

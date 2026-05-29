@@ -9,7 +9,9 @@ public class SoundManager : MonoBehaviour
     [Header("SFX")]
     [SerializeField] private AudioClip chainLightningClip;
     [SerializeField] private AudioClip burnClip;
-    [SerializeField] private AudioClip hitClip;
+    [SerializeField] private AudioClip explosionClip;
+    [SerializeField] private AudioClip normalHitClip;
+    [SerializeField] private AudioClip wetClip;
 
     [SerializeField]
     private AudioSource sfxSource;
@@ -22,16 +24,26 @@ public class SoundManager : MonoBehaviour
 
     public void PlayChainLightning()
     {
-        sfxSource.PlayOneShot(chainLightningClip); 
+        sfxSource.PlayOneShot(chainLightningClip, 0.5f); 
     }
 
     public void PlayBurn()
     {
-        sfxSource.PlayOneShot(burnClip);
+        sfxSource.PlayOneShot(burnClip, 0.5f);
     }
 
-    public void PlayHit()
+    public void PlayExplosion()
     {
-        sfxSource.PlayOneShot(hitClip);
+        sfxSource.PlayOneShot(explosionClip, 0.5f);
+    }
+
+    public void PlayNormalHit()
+    {
+        sfxSource.PlayOneShot(normalHitClip, 3f);
+    }
+    
+    public void PlayWet()
+    {
+        sfxSource.PlayOneShot(wetClip, 1f);
     }
 }

@@ -172,6 +172,10 @@ public class MonsterBase : RecycleObject, IDamageable
     {
         switch (effect.effectType)
         {
+            case StatusEffectType.Normal:
+                SoundManager.Instance.PlayNormalHit();
+                break;
+
             // 화상 상태
             case StatusEffectType.Burn:
                 //StartCoroutine(BurnCoroutine(effect));
@@ -185,6 +189,9 @@ public class MonsterBase : RecycleObject, IDamageable
 
                     Debug.Log($"젖음 상태에서 화상 반응! 즉시 데미지 : {instantDamage}");
 
+                    // 폭발 소리는 여기
+                    SoundManager.Instance.PlayExplosion();
+
                     return;
                 }
 
@@ -196,11 +203,16 @@ public class MonsterBase : RecycleObject, IDamageable
             case StatusEffectType.Wet:
                 //StartCoroutine(WetCoroutine(effect));
 
+                SoundManager.Instance.PlayWet();
+
                 if (burnStackCount > 0)
                 {
                     TakeDamage(remainBurnDamage);
 
-                    Debug.Log($"젖음 반응! 남은 화상 데미지 폭발 : {remainBurnDamage}");
+                    Debug.Log($"화상 상태에서 젖음 반응! 남은 화상 데미지 폭발 : {remainBurnDamage}");
+
+                    // 폭발 소리는 여기
+                    SoundManager.Instance.PlayExplosion();
 
                     // 모든 화상 제거
                     foreach (Coroutine coroutine in burnCoroutines)
@@ -222,6 +234,9 @@ public class MonsterBase : RecycleObject, IDamageable
                 {
                     StopCoroutine(wetCoroutine);
                 }
+
+                if (CurrentHP <= 0)
+                    return;
 
                 wetCoroutine = StartCoroutine(WetCoroutine(effect));
                 break;
@@ -287,6 +302,9 @@ public class MonsterBase : RecycleObject, IDamageable
 
             // 실제 들어간 데미지만큼 감소
             remainBurnDamage -= effect.value;
+
+            // 화상 효과음은 여기
+            SoundManager.Instance.PlayBurn();
 
             yield return new WaitForSeconds(tickInterval);
 
@@ -360,6 +378,7 @@ public class MonsterBase : RecycleObject, IDamageable
     public virtual void OnDie()
     {
         Debug.Log($"{gameObject.name} 사망!");
+        StopAllCoroutines();
         gameObject.SetActive(false);
     }
 

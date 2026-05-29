@@ -888,8 +888,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chainLightningClip: {fileID: 8300000, guid: b614b4b65c15b364099a0239b0b31d77, type: 3}
-  burnClip: {fileID: 0}
-  hitClip: {fileID: 0}
+  burnClip: {fileID: 8300000, guid: f8b0eeea29348c8488f337a457180640, type: 3}
+  explosionClip: {fileID: 8300000, guid: dbf1542c0d82dab43864275a028c794e, type: 3}
+  normalHitClip: {fileID: 8300000, guid: 023ea3ddeaa8dd146b7633a0800e5a0e, type: 3}
+  wetClip: {fileID: 8300000, guid: 1eb7cbaf61d23a64bbd36c0a38b5cb0c, type: 3}
   sfxSource: {fileID: 249033355}
 --- !u!4 &249033354
 Transform:
@@ -2024,7 +2026,7 @@ MonoBehaviour:
   firePoint: {fileID: 618011188}
   lineLength: 2
   maxAngle: 75
-  shootCount: 1
+  shootCount: 2
   shootBalls: 
 --- !u!120 &618011190
 LineRenderer:

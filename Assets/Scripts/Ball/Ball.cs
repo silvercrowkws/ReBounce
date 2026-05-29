@@ -292,6 +292,7 @@ public class Ball : RecycleObject
         switch (ballElementals)
         {
             case BallElementals.Normal:
+                ApplyNormal(target);
                 break;
 
             case BallElementals.Fire:
@@ -317,9 +318,21 @@ public class Ball : RecycleObject
 
             case BallElementals.Wind:
                 // 추가 타격 및 뒤의 몬스터도 맞는 관통 공격
-                //ApplyPierce(target);
+                ApplyPierce(target);
                 break;
         }
+    }
+
+    private void ApplyNormal(IDamageable target)
+    {
+        StatusEffectData normal = new StatusEffectData
+        {
+            effectType = StatusEffectType.Normal,
+            duration = 0f,
+            value = 0f
+        };
+
+        target.TakeStatusEffect(normal);
     }
 
     private void ApplyBurn(IDamageable target)
@@ -429,5 +442,10 @@ public class Ball : RecycleObject
         };
 
         target.TakeStatusEffect(chainLightning);
+    }
+
+    private void ApplyPierce(IDamageable target)
+    {
+
     }
 }

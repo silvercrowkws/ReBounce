@@ -57,7 +57,7 @@ public class BallShooter : MonoBehaviour
 
         // 첫 번째 공부터 속성 변경
         shootBalls[0] = BallElementals.Fire;
-        //shootBalls[1] = BallElementals.Water;
+        shootBalls[1] = BallElementals.Electric;
 
 
         // 시작할 때는 가이드라인을 숨김
