@@ -245,6 +245,9 @@ public class MonsterBase : RecycleObject, IDamageable
             case StatusEffectType.IgnoreDefense:
                 float bonusDamage = Mathf.Ceil(effect.baseDamage * effect.value);
                 TakeDamage(bonusDamage);
+
+                SoundManager.Instance.PlayIgnoreDefenseClip();
+
                 Debug.Log($"땅 속성 추가 피해 : {bonusDamage}");
                 break;
 
