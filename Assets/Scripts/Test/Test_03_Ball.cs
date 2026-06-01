@@ -43,7 +43,7 @@ public class Test_03_Ball : TestBase
 
         ballShooter.shootBalls.Add(BallElementals.Fire);
         ballShooter.shootBalls.Add(BallElementals.Land);
-        ballShooter.shootBalls.Add(BallElementals.Electric);
+        ballShooter.shootBalls.Add(BallElementals.Electric); 
         ballShooter.shootBalls.Add(BallElementals.Water);
         ballShooter.shootBalls.Add(BallElementals.Wind);
         ballShooter.shootBalls.Add(BallElementals.Normal);
