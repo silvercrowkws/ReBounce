@@ -35,6 +35,7 @@ public enum PoolObjectType
     Ball_Yellow,
 
     ChainLightning,
+    WindPierce,
 }
 
 public class Factory : Singleton<Factory>
@@ -68,6 +69,7 @@ public class Factory : Singleton<Factory>
     Ball_Yellow_Pool ball_Yellow;
 
     ChainLightning_Pool chainLightning;
+    WindPierce_Pool windPierce;
 
     /// <summary>
     /// 씬이 로딩 완료될 때마다 실행되는 초기화 함수
@@ -331,6 +333,7 @@ public class Factory : Singleton<Factory>
         }
 
 
+
         // 전이 이펙트
         chainLightning = GetComponentInChildren<ChainLightning_Pool>();
         if(chainLightning != null)
@@ -341,6 +344,20 @@ public class Factory : Singleton<Factory>
         else
         {
             Debug.LogError("ChainLightning_Poll 을 찾을 수 없습니다.");
+        }
+
+
+
+        // 바람 속성 관통 이펙트
+        windPierce = GetComponentInChildren<WindPierce_Pool>();
+        if(windPierce != null)
+        {
+            Debug.Log("WindPierce_Pool 초기화");
+            windPierce.Initialize();
+        }
+        else
+        {
+            Debug.LogError("WindPierce_Pool 을 찾을 수 없습니다.");
         }
     }
 
@@ -450,8 +467,12 @@ public class Factory : Singleton<Factory>
 
 
 
-            case PoolObjectType.ChainLightning:
-                result = chainLightning.GetObject(position, euler).gameObject;              // 전이 이펙트
+            case PoolObjectType.ChainLightning:                                             // 전이 이펙트
+                result = chainLightning.GetObject(position, euler).gameObject;
+                break;
+
+            case PoolObjectType.WindPierce:                                                 // 바람 관통 이펙트
+                result = windPierce.GetObject(position, euler).gameObject;
                 break;
         }
 
@@ -928,4 +949,30 @@ public class Factory : Singleton<Factory>
     {
         return chainLightning.GetObject(position, angle * Vector3.forward);
     }
+
+    // 전이 이펙트 끝 --------------------------------------------------------------------------------------------------------------------------
+
+    // 바람 관통 이펙트 --------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// WindPierce 하나 가져오는 함수
+    /// </summary>
+    /// <returns></returns>
+    public WindPierce GetWindPierce()
+    {
+        return windPierce.GetObject();
+    }
+
+    /// <summary>
+    /// WindPierce 하나 가져와서 특정 위치에 배치하는 함수
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="angle"></param>
+    /// <returns></returns>
+    public WindPierce GetWindPierce(Vector3 position, float angle = 0.0f)
+    {
+        return windPierce.GetObject(position, angle * Vector3.forward);
+    }
+
+    // 바람 관통 이펙트 끝--------------------------------------------------------------------------------------------------------------------------
 }

@@ -256,9 +256,10 @@ public class MonsterBase : RecycleObject, IDamageable
                 ApplyChainLightning(effect);
                 break;
 
-            // 
-            /*case StatusEffectType.Pierce:
-                break;*/
+            // 바람 속성 관통 공격
+            case StatusEffectType.Pierce:
+                ApplyPierce(effect);
+                break;
         }
     }
 
@@ -450,6 +451,67 @@ public class MonsterBase : RecycleObject, IDamageable
 
             Debug.Log(
                 $"{hit.name} 에게 번개 전이 피해 : {chainDamage}");
+        }
+    }
+
+    private void ApplyPierce(StatusEffectData effect)
+    {
+        float pierceDamage =
+            Mathf.Ceil(effect.baseDamage * effect.value);
+
+        // 맞은 몬스터 이펙트
+        Factory.Instance.GetWindPierce(
+            new Vector3(
+                transform.position.x,
+                transform.position.y + 0.14f,
+                transform.position.z)
+        ).transform.rotation = Quaternion.Euler(90f, 0f, 0f);
+
+        // 효과음 재생
+        SoundManager.Instance.PlayPierce();
+
+        // 위로 이동 중이었다면 위쪽 탐색
+        Vector3 searchPos;
+
+        // 공이 위쪽으로 이동중 블록과 충돌했다면 위쪽으로 관통
+        if (effect.directionValue.z > 0f)
+        {
+            searchPos = transform.position + Vector3.forward * 0.31f;
+        }
+        else
+        {
+            searchPos = transform.position + Vector3.back * 0.31f;
+        }
+
+        Collider[] hits = Physics.OverlapSphere(
+            searchPos,
+            0.1f,
+            LayerMask.GetMask("Monster"));
+
+        foreach (Collider hit in hits)
+        {
+            if (hit.gameObject == gameObject)
+                continue;
+
+            IDamageable other = hit.GetComponent<IDamageable>();
+
+            if (other == null)
+                continue;
+
+            // 관통 대상 몬스터 위치에 이펙트 생성
+            Factory.Instance.GetWindPierce(
+                new Vector3(
+                    hit.transform.position.x,
+                    hit.transform.position.y + 0.14f,
+                    hit.transform.position.z)
+            ).transform.rotation = Quaternion.Euler(90f, 0f, 0f);
+
+            other.TakeDamage(pierceDamage);
+
+            Debug.Log(
+                $"{hit.name} 에게 관통 피해 : {pierceDamage}");
+
+            break;  // 한 칸만 공격이지만 추후에 여기 수정해서 2칸으로 늘릴지도?
         }
     }
 }

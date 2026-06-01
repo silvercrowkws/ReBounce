@@ -13,6 +13,7 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClip normalHitClip;
     [SerializeField] private AudioClip wetClip;
     [SerializeField] private AudioClip ignoreDefenseClip;
+    [SerializeField] private AudioClip pierceClip;
 
     [SerializeField]
     private AudioSource sfxSource;
@@ -51,5 +52,10 @@ public class SoundManager : MonoBehaviour
     public void PlayIgnoreDefenseClip()
     {
         sfxSource.PlayOneShot(ignoreDefenseClip);
+    }
+
+    public void PlayPierce()
+    {
+        sfxSource.PlayOneShot(pierceClip);
     }
 }

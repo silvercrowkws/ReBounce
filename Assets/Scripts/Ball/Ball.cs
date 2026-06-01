@@ -446,6 +446,17 @@ public class Ball : RecycleObject
 
     private void ApplyPierce(IDamageable target)
     {
+        StatusEffectData pierce = new StatusEffectData
+        {
+            effectType = StatusEffectType.Pierce,
+            duration = 0f,
+            value = 1f,   // 100% 관통 대미지
+            baseDamage = damage,
 
+            // 위로 날아가는지 여부만 전달
+            directionValue = direction
+        };
+
+        target.TakeStatusEffect(pierce);
     }
 }
