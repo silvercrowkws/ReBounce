@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Materials
+  m_EditorClassIdentifier: 
+  m_GroupName: Materials
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 7d8cb45c4b3de4d43a1cde35b43273e9
+  m_SerializeEntries:
+  - m_GUID: 03e773ca795491a4c801e1f69842b137
+    m_Address: 0_Normal
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Material
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 657bc4a3f7b2e754eb44a4089d53b54a
+    m_Address: 1_Fire
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Material
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 649475832e3574240a2154c4640a3840
+    m_Address: 2_Water
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Material
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0e59dd01349356947bc8b8f6a136db0a
+    m_Address: 3_Land
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Material
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ef95e57c833ca304f8bcebef9591094f
+    m_Address: 4_Electric
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Material
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8e3af77b9e4c31542b15366eba6669c8
+    m_Address: 5_Wind
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Material
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: aaa9a53eff846e54b934ebe23bad3604, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 38d0fe4434270014d9468093e02c88d5, type: 2}
+    - {fileID: 11400000, guid: 89e3f3b3489e25f45ac981fd27d8b4f3, type: 2}

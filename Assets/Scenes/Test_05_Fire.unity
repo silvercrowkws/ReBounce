@@ -4656,6 +4656,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4485194242864653820, guid: fa039e9eeaf2ca644863aee97f364aad, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 6d113a54433c6784daf062b23304e6e9, type: 2}
     - target: {fileID: 5499685786414753123, guid: fa039e9eeaf2ca644863aee97f364aad, type: 3}
       propertyPath: m_Name
       value: Monster_Skull_Warrior

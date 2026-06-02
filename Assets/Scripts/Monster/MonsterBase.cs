@@ -85,6 +85,11 @@ public class MonsterBase : RecycleObject, IDamageable
     /// </summary>
     private Sprite wetSprite;
 
+    /// <summary>
+    /// 매쉬 렌더러
+    /// </summary>
+    private MeshRenderer meshRenderer;    
+
     protected virtual void Awake()
     {
         //currentHP = maxHP;    => 활성화 시 처리
@@ -112,6 +117,16 @@ public class MonsterBase : RecycleObject, IDamageable
 
         burnSprite = Resources.Load<Sprite>("StatusEffect/BurnState");
         wetSprite = Resources.Load<Sprite>("StatusEffect/WetState");
+
+        meshRenderer = GetComponent<MeshRenderer>();
+        GameManager.Instance.onMaterialLoaded += ApplyMaterial;
+    }
+
+    private void ApplyMaterial()
+    {
+        meshRenderer.sharedMaterial =
+            GameManager.Instance.GetMonsterMaterial(
+                monsterElementals);
     }
 
     protected override void OnEnable()
@@ -125,14 +140,24 @@ public class MonsterBase : RecycleObject, IDamageable
         currentHP = maxHP;
 
         if (hpText != null)
+        {
             hpText.text = currentHP.ToString();
+        }
+
+        // 몬스터 속성 랜덤 결정(0 ~ MonsterElementals의 길이 만큼)
+        int randomElements = UnityEngine.Random.Range(0, System.Enum.GetValues(typeof(MonsterElementals)).Length);
+        monsterElementals = (MonsterElementals)randomElements;
+        if (GameManager.Instance.IsMaterialLoaded)
+        {
+            ApplyMaterial();
+        }
 
         /*if (statusEffectImage != null)
         {
             statusEffectImage.sprite = null;        // 이미지 비우고
             Color color = statusEffectImage.color;
             color.a = 0f;
-            statusEffectImage.color = color;        // 투명 처리
+            statusEffectImage.color = color;        // 상태이상 이미지 투명 처리
         }*/
         StateEffectColorControl(false);
     }
