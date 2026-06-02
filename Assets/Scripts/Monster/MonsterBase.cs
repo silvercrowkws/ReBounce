@@ -187,7 +187,7 @@ public class MonsterBase : RecycleObject, IDamageable
         if (rand < 90)
             return MonsterElementals.Electric;  // 10% 확률로 전기
 
-        return MonsterElementals.Wind;          // 10% 확률로 바람
+        return MonsterElementals.Wind;          // 10% 확률로 바람 
     }
 
     /// <summary>
