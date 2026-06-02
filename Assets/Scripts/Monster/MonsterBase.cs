@@ -145,8 +145,10 @@ public class MonsterBase : RecycleObject, IDamageable
         }
 
         // 몬스터 속성 랜덤 결정(0 ~ MonsterElementals의 길이 만큼)
-        int randomElements = UnityEngine.Random.Range(0, System.Enum.GetValues(typeof(MonsterElementals)).Length);
-        monsterElementals = (MonsterElementals)randomElements;
+        /*int randomElements = UnityEngine.Random.Range(0, System.Enum.GetValues(typeof(MonsterElementals)).Length);
+        monsterElementals = (MonsterElementals)randomElements;*/    //=> 가중치 방식으로 변경
+
+        monsterElementals = GetRandomElement();
         if (GameManager.Instance.IsMaterialLoaded)
         {
             ApplyMaterial();
@@ -160,6 +162,32 @@ public class MonsterBase : RecycleObject, IDamageable
             statusEffectImage.color = color;        // 상태이상 이미지 투명 처리
         }*/
         StateEffectColorControl(false);
+    }
+
+    /// <summary>
+    /// 가중치 랜덤 속성 결정 함수
+    /// </summary>
+    /// <returns></returns>
+    private MonsterElementals GetRandomElement()
+    {
+        int rand = UnityEngine.Random.Range(0, 100);
+
+        if (rand < 50)
+            return MonsterElementals.Normal;    // 50% 확률로 노말
+
+        if (rand < 60)
+            return MonsterElementals.Fire;      // 10% 확률로 불
+
+        if (rand < 70)
+            return MonsterElementals.Water;     // 10% 확률로 물
+
+        if (rand < 80)
+            return MonsterElementals.Land;      // 10% 확률로 땅
+
+        if (rand < 90)
+            return MonsterElementals.Electric;  // 10% 확률로 전기
+
+        return MonsterElementals.Wind;          // 10% 확률로 바람
     }
 
     /// <summary>
