@@ -230,6 +230,11 @@ public class BallShooter : MonoBehaviour
 
             /*Ball ball = factory.GetBall(firePoint.position, 0f);
             if (ball != null) ball.Init(dir);*/
+
+            
+            
+            
+            TurnManager.Instance.StartShot();
             StartCoroutine(ShootCoroutine(dir));
 
             /*Debug.Log("공 발사 실행");

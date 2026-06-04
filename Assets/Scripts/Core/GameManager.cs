@@ -30,6 +30,11 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public bool IsMaterialLoaded { get; private set; }
 
+    /// <summary>
+    /// 턴 매니저
+    /// </summary>
+    TurnManager turnManager;
+
     private void Awake()
     {
         monsterElementMaterials =
@@ -39,6 +44,16 @@ public class GameManager : Singleton<GameManager>
     private void Start()
     {
         StartCoroutine(LoadMonsterMaterials());
+
+        turnManager = TurnManager.Instance;
+        if (turnManager != null)
+        {
+            turnManager.OnTurnInitialize();        // 턴 초기화
+        }
+        else
+        {
+            Debug.LogError("턴 매니저를 못찾는다고?");
+        }
     }
 
     private IEnumerator LoadMonsterMaterials()

@@ -83,6 +83,11 @@ public class Ball : RecycleObject
     /// </summary>
     Color windcBall = new Color(0.25f, 0.95f, 0.7f, 1f);
 
+    /// <summary>
+    /// 턴 매니저
+    /// </summary>
+    TurnManager turnManager;
+
     private void Awake()
     {
         sphereCollider = GetComponent<SphereCollider>();
@@ -94,13 +99,22 @@ public class Ball : RecycleObject
         Physics.IgnoreLayerCollision(ballLayer, ballLayer, true);
 
         meshRenderer = GetComponent<MeshRenderer>();
+
+        turnManager = TurnManager.Instance;
     }
 
     protected override void OnEnable()
     {
         ResetBall();
-        //ResetBallElementals();
+        ResetBallElementals();
+
+        turnManager.RegisterBall();
     }
+
+    /*protected override void OnDisable()
+    {
+        turnManager.UnregisterBall();
+    }*/
 
     public void Init(Vector3 dir)
     {
@@ -146,6 +160,7 @@ public class Ball : RecycleObject
 
             HandleGroundHit();
             
+            turnManager.UnregisterBall();       // 땅에 닿은 공 카운팅에서 빼기
             gameObject.SetActive(false);
             return;
         }
