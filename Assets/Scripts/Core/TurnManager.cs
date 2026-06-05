@@ -71,9 +71,16 @@ public class TurnManager : Singleton<TurnManager>
     public int ActiveBallCount { get; private set; }
 
     /// <summary>
-    /// 공을 발사 할 수 있는지 확인하는 변수(true : 발사 가능, false : 발사 불가능)
+    /// 현재 공을 발사했고, 아직 턴이 안 끝난 상태인가?(true : 발사 함, false : 발사 안함)
     /// </summary>
     bool isShotInProgress = false;
+    public bool IsShotInProgress => isShotInProgress;
+
+    /*/// <summary>
+    /// 한 턴에 한번만 발사 가능하도록 조절하는 변수
+    /// 이번 턴에 발사 했는가?(true: 발사 했다, false : 발사 안했다)
+    /// </summary>
+    bool hasShotThisTurn = false;*/
 
     private void Start()
     {
@@ -114,6 +121,7 @@ public class TurnManager : Singleton<TurnManager>
             //turnState = TurnProcessState.Start;     // 턴 시작 상태
 
             isShotInProgress = false;               // 아직 발사 안함
+            //hasShotThisTurn = false;                // 아직 발사 안함
 
             //Debug.Log("onTurnStart 델리게이트 보냄");
             onTurnStart?.Invoke(turnNumber);        // 턴이 시작되었음을 알림
@@ -150,6 +158,9 @@ public class TurnManager : Singleton<TurnManager>
     /// </summary>
     public void StartShot()
     {
+        if (isShotInProgress)
+            return;
+
         ActiveBallCount = 0;
         isShotInProgress = true;
     }

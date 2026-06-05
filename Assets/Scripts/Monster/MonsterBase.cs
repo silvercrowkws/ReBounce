@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -88,7 +89,12 @@ public class MonsterBase : RecycleObject, IDamageable
     /// <summary>
     /// 매쉬 렌더러
     /// </summary>
-    private MeshRenderer meshRenderer;    
+    private MeshRenderer meshRenderer;
+
+    /// <summary>
+    /// 턴 매니저
+    /// </summary>
+    //TurnManager turnManager;
 
     protected virtual void Awake()
     {
@@ -132,6 +138,10 @@ public class MonsterBase : RecycleObject, IDamageable
     protected override void OnEnable()
     {
         base.OnEnable();
+
+        //TurnManager.Instance.onTurnEnd += OnTurnEnd;
+        // => MonsterSpawner 에서 처리하도록 수정
+
         Init();     // 초기화 처리
     }
 
@@ -436,7 +446,21 @@ public class MonsterBase : RecycleObject, IDamageable
     {
         Debug.Log($"{gameObject.name} 사망!");
         StopAllCoroutines();
+
+        // 활성화된 몬스터 리스트에서 제거
+        MonsterSpawner.Instance.UnregisterMonster(this);
+
         gameObject.SetActive(false);
+
+        /*// 턴 매니저 구독 취소
+        if (TurnManager.Instance != null)
+            TurnManager.Instance.onTurnEnd -= OnTurnEnd;*/
+        //=> MonsterSpawner에서 처리하도록 수정
+    }
+
+    private void OnTurnEnd()
+    {
+        transform.position += new Vector3(0f, 0f, -0.31f);
     }
 
     private void ApplyChainLightning(StatusEffectData effect)

@@ -102,6 +102,9 @@ public class BallShooter : MonoBehaviour
 
     private void OnPressStarted(InputAction.CallbackContext context)
     {
+        if (TurnManager.Instance.IsShotInProgress)
+            return;
+
         isPressing = true;
 
         startPos = inputActions.Actions.Touch.ReadValue<Vector2>();
@@ -186,6 +189,9 @@ public class BallShooter : MonoBehaviour
 
     void Shoot(Vector2 endPos)
     {
+        if (TurnManager.Instance.IsShotInProgress)
+            return;
+
         //Debug.Log("Camera.main: " + Camera.main);
         //Debug.Log("firePoint: " + firePoint);
         //Debug.Log("ballPrefab: " + ballPrefab);
