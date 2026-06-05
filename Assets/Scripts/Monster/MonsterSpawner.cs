@@ -99,7 +99,7 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
     /// </summary>
     public void SpawnMonsters()
     {
-        int spawnCount = Random.Range(4, 7); // 4~6마리
+        int spawnCount = Random.Range(4, 7); // 4 ~ 6마리
 
         List<float> availablePositions = new List<float>(spawnXPositions);
 
