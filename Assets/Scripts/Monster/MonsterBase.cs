@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -128,13 +129,6 @@ public class MonsterBase : RecycleObject, IDamageable
         GameManager.Instance.onMaterialLoaded += ApplyMaterial;
     }
 
-    private void ApplyMaterial()
-    {
-        meshRenderer.sharedMaterial =
-            GameManager.Instance.GetMonsterMaterial(
-                monsterElementals);
-    }
-
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -147,6 +141,8 @@ public class MonsterBase : RecycleObject, IDamageable
 
     protected virtual void Init()
     {
+        maxHP = GetMonsterHPByTurn();
+
         currentHP = maxHP;
 
         if (hpText != null)
@@ -172,6 +168,27 @@ public class MonsterBase : RecycleObject, IDamageable
             statusEffectImage.color = color;        // 상태이상 이미지 투명 처리
         }*/
         StateEffectColorControl(false);
+    }
+
+    private float GetMonsterHPByTurn()
+    {
+        int turn = TurnManager.Instance.turnNumber + 1;
+
+        // 6턴까지는 +8씩 증가
+        if (turn < 7)
+        {
+            return 20f + (turn - 1) * 8f;
+        }
+
+        // 7턴 부터는 +10씩 증가
+        return 60f + (turn - 6) * 10f;
+    }
+
+    private void ApplyMaterial()
+    {
+        meshRenderer.sharedMaterial =
+            GameManager.Instance.GetMonsterMaterial(
+                monsterElementals);
     }
 
     /// <summary>

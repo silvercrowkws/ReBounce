@@ -99,7 +99,10 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
     /// </summary>
     public void SpawnMonsters()
     {
-        int spawnCount = Random.Range(4, 7); // 4 ~ 6마리
+        Debug.Log("몬스터 스폰");
+
+        //int spawnCount = Random.Range(4, 7); // 4 ~ 6마리
+        int spawnCount = GetSpawnCount();
 
         List<float> availablePositions = new List<float>(spawnXPositions);
 
@@ -131,5 +134,23 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
         monster.gameObject.SetActive(true);
 
         RegisterMonster(monster);
+    }
+
+    /// <summary>
+    /// 턴 마다 스폰되는 몬스터의 수를 조절하는 함수
+    /// </summary>
+    /// <returns></returns>
+    private int GetSpawnCount()
+    {
+        // 델리게이트로 받는게 몬스터를 스폰하는 시점보다 느려서 +1 처리
+        int turn = TurnManager.Instance.turnNumber + 1;
+
+        if (turn <= 9)
+            return (turn + 1) / 2;
+
+        if (turn <= 20)
+            return Random.Range(5, 8); // 5~7
+
+        return 7;
     }
 }
