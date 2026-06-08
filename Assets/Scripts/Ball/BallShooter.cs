@@ -33,7 +33,7 @@ public class BallShooter : MonoBehaviour
     /// <summary>
     /// 발사 횟수
     /// </summary>
-    public int shootCount;
+    private int shootCount;
     public int ShootCount => shootBalls.Count;
 
     /// <summary>
