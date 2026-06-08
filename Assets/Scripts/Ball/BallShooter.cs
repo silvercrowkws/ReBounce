@@ -34,6 +34,7 @@ public class BallShooter : MonoBehaviour
     /// 발사 횟수
     /// </summary>
     public int shootCount;
+    public int ShootCount => shootBalls.Count;
 
     /// <summary>
     /// 발사될 공의 리스트(속성)

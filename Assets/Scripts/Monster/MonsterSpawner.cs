@@ -149,7 +149,7 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
             return (turn + 1) / 2;
 
         if (turn <= 20)
-            return Random.Range(5, 8); // 5~7
+            return Random.Range(5, 7); // 5 ~ 6
 
         return 7;
     }

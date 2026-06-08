@@ -51,5 +51,8 @@ public class Test_03_Ball : TestBase
         ballShooter.shootCount = ballShooter.shootBalls.Count;
     }
 
-    
+    protected override void OnTest5(InputAction.CallbackContext context)
+    {
+        
+    }
 }
