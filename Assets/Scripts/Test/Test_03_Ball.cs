@@ -48,7 +48,7 @@ public class Test_03_Ball : TestBase
         ballShooter.shootBalls.Add(BallElementals.Wind);
         ballShooter.shootBalls.Add(BallElementals.Normal);
 
-        ballShooter.shootCount = ballShooter.shootBalls.Count;
+        //ballShooter.shootCount = ballShooter.shootBalls.Count;
     }
 
     protected override void OnTest5(InputAction.CallbackContext context)
