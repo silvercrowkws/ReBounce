@@ -2753,7 +2753,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &566695119
 Transform:
   m_ObjectHideFlags: 0
@@ -2787,7 +2787,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowSprite: {fileID: 2075675738}
-  cardGrade: 2
+  cardGrade: 0
 --- !u!1 &585906904
 GameObject:
   m_ObjectHideFlags: 0
@@ -3410,7 +3410,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &727991519
 Transform:
   m_ObjectHideFlags: 0
@@ -3444,7 +3444,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glowSprite: {fileID: 101637278}
-  cardGrade: 1
+  cardGrade: 0
 --- !u!1001 &728375098
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15830,7 +15830,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4035591434826931820
 Transform:
   m_ObjectHideFlags: 0
