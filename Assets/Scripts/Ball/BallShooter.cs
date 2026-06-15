@@ -241,7 +241,7 @@ public class BallShooter : MonoBehaviour
             
             
             
-            TurnManager.Instance.StartShot();
+            TurnManager.Instance.StartShot();       // 발사 가능하다고 하는 함수
             StartCoroutine(ShootCoroutine(dir));
 
             /*Debug.Log("공 발사 실행");

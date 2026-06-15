@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 /********************************************************************************************
@@ -125,7 +124,197 @@ using UnityEngine;
  - 제트기류 : 바람 공이 반사될 때마다 피해 +30%                 얼마나 튕기는 지 보고 수치 조정 필요
 ********************************************************************************************/
 
+/********************************************************************************************
+ * 카드 확률(사이를 보간 적용)
+ 
+ * 1~5턴
+ - 64 /35 /1
+
+ * 6~10턴
+ - 55 / 40 / 5
+
+ * 11~15턴
+ - 50 / 40 / 10
+
+ * 16~20턴
+ - 40 / 50 / 10
+
+ * 21~25턴
+ - 30 / 55 / 15
+
+ * 26턴 이후
+ - 30 / 55 / 15 고정
+********************************************************************************************/
+public enum CardGrade
+{
+    Rare,
+    Epic,
+    Legendary
+}
+
 public class Card : MonoBehaviour
 {
-    
+    /// <summary>
+    /// 영웅, 전설 카드 반짝이는 효과용 스프라이트
+    /// </summary>
+    [SerializeField] Transform glowSprite;
+
+    /// <summary>
+    /// 이 카드의 등급
+    /// </summary>
+    [SerializeField] private CardGrade cardGrade;
+
+    private CardData cardData;
+
+    private Vector3 originScale;
+    private Color originColor;
+    private SpriteRenderer glowframeSpriteRenderer;
+
+    private SpriteRenderer frameSpriteRenderer;
+
+    Color rareColor = new Color(0.2f, 0.55f, 1f);
+    Color epicColor = new Color(0.65f, 0.3f, 1f);
+    Color legendaryColor = new Color(1f, 0.75f, 0.15f);
+
+    Color legendaryGlowColor = new Color(1f, 0.6f, 0f, 0.4f);
+    Color epicGlowColor = new Color(0.45f, 0.15f, 0.85f, 0.4f);
+
+    /// <summary>
+    /// 타이틀 텍스트
+    /// </summary>
+    TextMeshPro titleText;
+
+    /// <summary>
+    /// 카드 효과 설명 텍스트
+    /// </summary>
+    TextMeshPro descriptionText;
+
+    private void Awake()
+    {
+        Transform child = transform.GetChild(0);
+        frameSpriteRenderer = child.GetComponent<SpriteRenderer>();
+
+        child = transform.GetChild(1);
+        glowframeSpriteRenderer = child.GetComponent<SpriteRenderer>();
+
+        child = transform.GetChild(3);
+        titleText = child.GetComponent<TextMeshPro>();
+
+        child = transform.GetChild(4);
+        descriptionText = child.GetComponent<TextMeshPro>();
+
+        
+        /*switch (cardGrade)
+        {
+            case CardGrade.Rare:
+                frameSpriteRenderer.color = rareColor;
+                titleText.text = "희귀";
+                break;
+
+            case CardGrade.Epic:
+                frameSpriteRenderer.color = epicColor;
+                glowframeSpriteRenderer.color = epicGlowColor;
+                titleText.text = "영웅";
+                break;
+
+            case CardGrade.Legendary:
+                frameSpriteRenderer.color = legendaryColor;
+                glowframeSpriteRenderer.color = legendaryGlowColor;
+                titleText.text = "전설";
+                break;
+        }*/
+    }
+
+    private void OnEnable()
+    {
+        
+    }
+
+    private void OnDisable()
+    {
+        
+    }
+
+    private void Start()
+    {
+        // 희귀 등급이 아니면
+        if(cardGrade != CardGrade.Rare)
+        {
+            originScale = glowSprite.localScale;
+
+            glowframeSpriteRenderer = glowSprite.GetComponent<SpriteRenderer>();
+            originColor = glowframeSpriteRenderer.color;
+        }
+
+        // 영웅 등급은 기본적으로 1.05배 크게
+        if (cardGrade == CardGrade.Epic)
+        {
+            glowSprite.localScale = originScale * 1.05f;
+        }
+    }
+
+    private void Update()
+    {
+        float t = (Mathf.Sin(Time.time * 2f) + 1f) * 0.5f;
+
+        switch (cardGrade)
+        {
+            // 희귀는 아무 효과 없음
+            case CardGrade.Rare:
+                break;
+
+            // 영웅
+            case CardGrade.Epic:
+                {
+                    Color c = originColor;
+                    c.a = Mathf.Lerp(0f, 0.6f, t);
+                    glowframeSpriteRenderer.color = c;
+
+                    break;
+                }
+
+            // 전설
+            case CardGrade.Legendary:
+                {
+                    glowSprite.localScale =
+                        originScale * Mathf.Lerp(1f, 1.1f, t);
+
+                    Color c = originColor;
+                    c.a = Mathf.Lerp(0.2f, 0.6f, t);
+                    glowframeSpriteRenderer.color = c;
+                    break;
+                }
+        }
+    }
+
+    public void Initialize(CardData data)
+    {
+        cardData = data;
+        cardGrade = data.grade;
+
+        titleText.text = data.cardName;
+        descriptionText.text = data.description;
+
+        ApplyGradeVisual();
+    }
+
+    private void ApplyGradeVisual()
+    {
+        switch (cardGrade)
+        {
+            case CardGrade.Rare:
+                frameSpriteRenderer.color = rareColor;
+                break;
+
+            case CardGrade.Epic:
+                frameSpriteRenderer.color = epicColor;
+                glowframeSpriteRenderer.color = epicGlowColor;
+                break;
+
+            case CardGrade.Legendary:
+                frameSpriteRenderer.color = legendaryColor;
+                glowframeSpriteRenderer.color = legendaryGlowColor;
+                break;
+        }
+    }
 }
