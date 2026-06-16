@@ -3316,8 +3316,31 @@ MonoBehaviour:
   cardPrefab: {fileID: 442028874294065710, guid: cd454f50d6ba55b42b8169b5ebc23c24, type: 3}
   allCards:
   - {fileID: 11400000, guid: 3447ee18341e18549bd3b8c1e767d8a5, type: 2}
-  - {fileID: 11400000, guid: 5d7f98c920e20054b916ce4b1ec15716, type: 2}
   - {fileID: 11400000, guid: 56199889fe49d8c4eb9a3ff55b77e691, type: 2}
+  - {fileID: 11400000, guid: 5d7f98c920e20054b916ce4b1ec15716, type: 2}
+  - {fileID: 11400000, guid: d4f839552677c35479fe454e38aeb1b9, type: 2}
+  - {fileID: 11400000, guid: fcf26bbf22f59964ab121e2f245d9f76, type: 2}
+  - {fileID: 11400000, guid: 74e75cf2cbff82a4e980b625333cbd25, type: 2}
+  - {fileID: 11400000, guid: 7181d56a0c3fade4a84a2e7f4ccb1cae, type: 2}
+  - {fileID: 11400000, guid: cad6fec8540f34b48932208c3a3d838e, type: 2}
+  - {fileID: 11400000, guid: abdd284c524e59f46a27ab1d8b7914c4, type: 2}
+  - {fileID: 11400000, guid: 358b25e20ef4caf46b0af114ea8e5461, type: 2}
+  - {fileID: 11400000, guid: 75a91c099a936ba42acd5cd3e6b906d0, type: 2}
+  - {fileID: 11400000, guid: 4e8c973f35bcaaf4ca7972d64178341a, type: 2}
+  - {fileID: 11400000, guid: 2a853a2d2cf6f1345973cde5a84955ad, type: 2}
+  - {fileID: 11400000, guid: 8649273bb317e1c4288ebcf1e552991e, type: 2}
+  - {fileID: 11400000, guid: 2dec1c96c50daca40a2e0eeb51d221e3, type: 2}
+  - {fileID: 11400000, guid: 5d7a95f4180e7814883c791fd1c0868f, type: 2}
+  - {fileID: 11400000, guid: 44cf22aa1b5007a4784dba3da98d8d51, type: 2}
+  - {fileID: 11400000, guid: bbbba17cefd7fda48be75367ff9e90b0, type: 2}
+  - {fileID: 11400000, guid: eeada81a6ba21764e8589d9ce30a0119, type: 2}
+  - {fileID: 11400000, guid: c98623ca75e5e2f4287d0de37a66c37b, type: 2}
+  - {fileID: 11400000, guid: 18b0fe020e353ba448f6b84f57159f35, type: 2}
+  - {fileID: 11400000, guid: 1ee4b52e1af377d44b14109e0cee0718, type: 2}
+  - {fileID: 11400000, guid: a37e4a86e1364154b98e5d8c34455f1c, type: 2}
+  rareCardPool: []
+  epicCardPool: []
+  legendaryCardPool: []
 --- !u!4 &870616224
 Transform:
   m_ObjectHideFlags: 0

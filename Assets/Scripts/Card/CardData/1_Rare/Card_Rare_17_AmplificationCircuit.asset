@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7d25f6f998e3b54b87e4d969d412d15, type: 3}
-  m_Name: Card_Rare_AddNormalBall
+  m_Name: Card_Rare_17_AmplificationCircuit
   m_EditorClassIdentifier: 
-  cardName: "\uCD94\uAC00 \uD0C4\uD658"
-  description: "\uB178\uB9D0 \uACF5 +1\uAC1C \uD68D\uB4DD"
+  cardName: "(\uC804\uAE30)\uC99D\uD3ED \uD68C\uB85C"
+  description: "\uC804\uAE30 \uACF5 \uACF5\uACA9\uB825 +5"
   icon: {fileID: 0}
   grade: 0
-  effectType: 0
-  value1: 1
+  effectType: 18
+  value1: 5
   value2: 0
   value3: 0

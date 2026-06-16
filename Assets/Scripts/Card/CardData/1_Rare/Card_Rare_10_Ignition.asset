@@ -10,13 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7d25f6f998e3b54b87e4d969d412d15, type: 3}
-  m_Name: Card_Rare_IncreaseAllBallDamage
+  m_Name: Card_Rare_10_Ignition
   m_EditorClassIdentifier: 
-  cardName: "\uD0C4\uD658 \uAC1C\uC870"
-  description: "\uBAA8\uB4E0 \uACF5 \uACF5\uACA9\uB825 +2"
+  cardName: "(\uBD88)\uC810\uD654"
+  description: "\uD654\uC0C1 \uC0C1\uD0DC\uC758 \uB300\uC0C1\uC5D0\uAC8C \uAC00\uD558\uB294
+    \uD53C\uD574 +20%"
   icon: {fileID: 0}
   grade: 0
-  effectType: 0
-  value1: 2
+  effectType: 11
+  value1: 20
   value2: 0
   value3: 0

@@ -27,9 +27,29 @@ public class CardManager : Singleton<CardManager>
     /// </summary>
     [SerializeField] private List<CardData> allCards;
 
+    public List<CardData> rareCardPool = new();
+    public List<CardData> epicCardPool = new();
+    public List<CardData> legendaryCardPool = new();
+
     private void Awake()
     {
-        
+        foreach (CardData card in allCards)
+        {
+            switch (card.grade)
+            {
+                case CardGrade.Rare:
+                    rareCardPool.Add(card);
+                    break;
+
+                case CardGrade.Epic:
+                    epicCardPool.Add(card);
+                    break;
+
+                case CardGrade.Legendary:
+                    legendaryCardPool.Add(card);
+                    break;
+            }
+        }
     }
     private void Start()
     {
@@ -185,23 +205,40 @@ public class CardManager : Singleton<CardManager>
 
     private List<CardData> GetCardPool(CardGrade grade)
     {
-        List<CardData> pool = new();
+        /*List<CardData> pool = new();
 
+        // 카드의 등급에 맞는 카드만 찾음
         foreach (CardData card in allCards)
         {
             if (card.grade == grade)
-                pool.Add(card);
+                pool.Add(card);     // 해당 등급에 맞는 카드만 pool에 더하고
         }
 
-        return pool;
+        return pool;*/
+
+        // => allCards에서 각 등급별로 분류(Awake에서)하는 것에서 하도록 수정
+        switch (grade)
+        {
+            case CardGrade.Rare:
+                return rareCardPool;
+
+            case CardGrade.Epic:
+                return epicCardPool;
+
+            case CardGrade.Legendary:
+                return legendaryCardPool;
+        }
+
+        return null;
     }
 
     private CardData GetRandomCard(
     CardGrade grade,
     List<CardData> selectedCards)
     {
-        List<CardData> pool = GetCardPool(grade);
+        /*List<CardData> pool = GetCardPool(grade);
 
+        // 위에서 찾은 pool에서 이미 뽑힌 카드는 제거
         pool.RemoveAll(card =>
             selectedCards.Contains(card));
 
@@ -211,8 +248,25 @@ public class CardManager : Singleton<CardManager>
             return null;
         }
 
+        // 중복이 제외되었으니 남은 카드 중에서 랜덤 선택
         int rand = UnityEngine.Random.Range(0, pool.Count);
 
-        return pool[rand];
+        return pool[rand];*/
+
+        List<CardData> pool =
+        new List<CardData>(GetCardPool(grade));
+
+        // 이미 뽑힌 카드 중복 제거
+        pool.RemoveAll(card =>
+            selectedCards.Contains(card));
+
+        if (pool.Count == 0)
+        {
+            Debug.LogError($"{grade} 카드 풀이 부족합니다.");
+            return null;
+        }
+
+        // 중복이 제외되었으니 남은 카드 중에서 랜덤 선택
+        return pool[UnityEngine.Random.Range(0, pool.Count)];
     }
 }
