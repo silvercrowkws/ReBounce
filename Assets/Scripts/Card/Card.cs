@@ -189,6 +189,11 @@ public class Card : MonoBehaviour
     /// </summary>
     TextMeshPro descriptionText;
 
+    /// <summary>
+    /// 카드의 스프라이트
+    /// </summary>
+    SpriteRenderer windowSprite;
+
     private void Awake()
     {
         Transform child = transform.GetChild(0);
@@ -203,7 +208,9 @@ public class Card : MonoBehaviour
         child = transform.GetChild(4);
         descriptionText = child.GetComponent<TextMeshPro>();
 
-        
+        child = transform.GetChild(2);
+        windowSprite = child.GetChild(0).GetComponent<SpriteRenderer>();
+
         /*switch (cardGrade)
         {
             case CardGrade.Rare:
@@ -294,6 +301,7 @@ public class Card : MonoBehaviour
 
         titleText.text = data.cardName;
         descriptionText.text = data.description;
+        windowSprite.sprite = data.icon;
 
         ApplyGradeVisual();
     }

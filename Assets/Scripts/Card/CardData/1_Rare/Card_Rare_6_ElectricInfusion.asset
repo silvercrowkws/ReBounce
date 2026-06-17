@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: "(\uC804\uAE30)\uC6D0\uC18C \uC8FC\uC785"
   description: "\uC804\uAE30 \uACF5 +1\uAC1C \uD68D\uB4DD"
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: fc58bbc5b43260849a1dac716bb7e5cc, type: 3}
   grade: 0
   effectType: 7
   value1: 1

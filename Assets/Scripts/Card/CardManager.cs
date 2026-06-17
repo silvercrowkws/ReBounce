@@ -147,22 +147,22 @@ public class CardManager : Singleton<CardManager>
         out float epic,
         out float legendary)
     {
-        if (turn < 6)
+        /*if (turn < 6)
         {
             float t = (turn - 1) / 4f;
 
             rare = Mathf.Lerp(70, 64, t);
             epic = Mathf.Lerp(30, 35, t);
             legendary = Mathf.Lerp(0, 1, t);
-        }
-        /*// 테스트용 레어 100%
+        }*/
+        // 테스트용 레어 100%
         if (turn <= 5)
         {
             rare = 100;
             epic = 0;
             legendary = 0;
             return;
-        }*/
+        }
         else if (turn < 11)
         {
             float t = (turn - 5) / 5f;          // 보간을 적용해서 8턴인 경우
