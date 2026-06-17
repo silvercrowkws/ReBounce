@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7d25f6f998e3b54b87e4d969d412d15, type: 3}
+  m_Name: Card_Epic_17_Pulverize
+  m_EditorClassIdentifier: 
+  cardName: "(\uB545)\uBD84\uC1C4"
+  description: "\uB545 \uACF5\uC758 \uCD94\uAC00 \uD53C\uD574 \uBC30\uC728 +50%"
+  icon: {fileID: 0}
+  grade: 1
+  effectType: 41
+  value1: 50
+  value2: 0
+  value3: 0

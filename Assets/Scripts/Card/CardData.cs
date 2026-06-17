@@ -39,15 +39,15 @@ public enum CardEffectType
 
     // 영웅 ----------
 
-    MultiLoad,                  // 다중 장전 : 노말 공 +3
+    MultiLoad,                  // 다중 장전 : 노말 공 +3개 획득
     LargeCaliberBullets,        // 대구경 탄환 : 노말 공 공격력 +15
     ReinforcedBullet,           // 강화 탄환 : 모든 공 공격력 +5
     Sharpshooter,               // 명사수 : 최대 발사 각도 +10
-    FlameBullets,               // 화염 탄환 : 불 공 +2
-    AquaBullets,                // 수류 탄환 : 물 공 +2
-    StoneBullets,               // 암석 탄환 : 땅 공 +2
-    LightningBullets,           // 전류 탄환 : 전기 공 +2
-    SwiftwindBullets,           // 질풍 탄환 : 바람 공 +2
+    FlameBullets,               // 화염 탄환 : 불 공 +2개 획득
+    AquaBullets,                // 수류 탄환 : 물 공 +2개 획득
+    StoneBullets,               // 암석 탄환 : 땅 공 +2개 획득
+    LightningBullets,           // 전류 탄환 : 전기 공 +2개 획득
+    SwiftwindBullets,           // 질풍 탄환 : 바람 공 +2개 획득
 
     SearingHeat,                // 고열 : 화상 피해 +5
     BlazingFlame,               // 타오르는 불꽃 : 화상 지속 시간 +2초
@@ -55,7 +55,7 @@ public enum CardEffectType
 
     Torrent,                    // 급류 : 물 공 공격력 +10
     Freeze,                     // 빙결 : 젖음 상태 적이 받는 피해 +20%
-    Flood,                      // 범람 : 젖음 전파 대상 +1(최대 N중첩)
+    Flood,                      // 범람 : 젖음 상태 부여시 필드 내 다른 적에게 젖음 전파 +1(최대 5중첩)
 
     Monolith,                   // 거암 : 땅 공 공격력 +10
     Collapse,                   // 붕괴 : 체력 50% 미만 적에게 땅 공 피해 +100%

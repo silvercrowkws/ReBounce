@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7d25f6f998e3b54b87e4d969d412d15, type: 3}
+  m_Name: Card_Legendary_4_Earthquake
+  m_EditorClassIdentifier: 
+  cardName: "(\uB545)\uC9C0\uC9C4"
+  description: "\uC88C\uC6B0 \uC801\uC5D0\uAC8C \uD53C\uD574\uC758 50$ \uC801\uC6A9(\uCD5C\uB300
+    2\uC911\uCCA9)"
+  icon: {fileID: 0}
+  grade: 2
+  effectType: 0
+  value1: 50
+  value2: 2
+  value3: 0
