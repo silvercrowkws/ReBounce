@@ -17,6 +17,7 @@ MonoBehaviour:
     1%\uB97C \uCD94\uAC00"
   icon: {fileID: 0}
   grade: 2
+  elementals: 1
   effectType: 0
   value1: 1
   value2: 0

@@ -17,7 +17,8 @@ MonoBehaviour:
     \uACF5 \uD53C\uD574 +50%"
   icon: {fileID: 0}
   grade: 0
-  effectType: 16
+  elementals: 3
+  effectType: 0
   value1: 50
   value2: 50
   value3: 0

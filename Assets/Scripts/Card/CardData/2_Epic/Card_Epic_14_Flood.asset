@@ -17,7 +17,8 @@ MonoBehaviour:
     \uB2E4\uB978 \uC801\uC5D0\uAC8C \uC816\uC74C \uC804\uD30C +1(\uCD5C\uB300 5\uC911\uCCA9)"
   icon: {fileID: 0}
   grade: 1
-  effectType: 38
+  elementals: 2
+  effectType: 0
   value1: 1
   value2: 5
   value3: 0

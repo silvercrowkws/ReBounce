@@ -17,6 +17,7 @@ MonoBehaviour:
     2\uC911\uCCA9)"
   icon: {fileID: 0}
   grade: 2
+  elementals: 3
   effectType: 0
   value1: 50
   value2: 2

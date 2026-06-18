@@ -17,6 +17,7 @@ MonoBehaviour:
     +1(\uC911\uCCA9X)"
   icon: {fileID: 0}
   grade: 2
+  elementals: 4
   effectType: 0
   value1: 1
   value2: 0

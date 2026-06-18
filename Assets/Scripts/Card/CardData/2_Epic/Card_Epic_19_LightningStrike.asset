@@ -16,7 +16,8 @@ MonoBehaviour:
   description: "\uC804\uAE30 \uACF5\uC758 \uC9C1\uC811 \uD53C\uD574 +50%"
   icon: {fileID: 0}
   grade: 1
-  effectType: 43
+  elementals: 4
+  effectType: 0
   value1: 50
   value2: 0
   value3: 0

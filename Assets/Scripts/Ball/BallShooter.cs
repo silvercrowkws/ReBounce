@@ -37,9 +37,16 @@ public class BallShooter : MonoBehaviour
     public int ShootCount => shootBalls.Count;
 
     /// <summary>
-    /// 발사될 공의 리스트(속성)
+    /// 현재 발사될 공 목록
+    /// 같은 속성이 여러 개 존재할 수 있음
     /// </summary>    
     public List<BallElementals> shootBalls = new List<BallElementals>();
+
+    /// <summary>
+    /// 플레이어가 한번이라도 획득하여 해금한 속성 목록
+    /// 카드 등장 조건 판정에 사용
+    /// </summary>
+    public HashSet<BallElementals> unlockedElementals = new();
 
     private void Awake()
     {
@@ -49,6 +56,10 @@ public class BallShooter : MonoBehaviour
         gameManager.onFirstGroundHitPos += OnFirstGroundHitPos;
         factory = Factory.Instance;
 
+
+        // 시작 시 기본 속성 공(Normal) 보유
+        // => 테스트 용으로 턴 매니저에서 턴 시작 시 공 1개씩 지급
+        //AddBall(BallElementals.Normal);
 
         // 기본 공 shootCount개 추가
         for (int i = 0; i < shootCount; i++)
@@ -318,5 +329,20 @@ public class BallShooter : MonoBehaviour
         // 제한된 방향 다시 계산
         Quaternion rot = Quaternion.AngleAxis(clampedAngle, Vector3.up);
         return rot * forward;
+    }
+
+    /// <summary>
+    /// 공 추가 함수
+    /// 새 속성이라면 보유 속성 목록에도 등록
+    public void AddBall(BallElementals elemental)
+    {
+        // 실제 발사될 공 추가
+        shootBalls.Add(elemental);
+
+        // HashSet 특성상 중복이면 자동 무시
+        unlockedElementals.Add(elemental);
+
+        // 만약 FireInfusion 카드 같은 것으로 공을 추가할 때는
+        // ballShooter.AddBall(BallElementals.Fire); 이런 식으로 사용
     }
 }

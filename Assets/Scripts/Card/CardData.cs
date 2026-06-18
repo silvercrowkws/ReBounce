@@ -91,6 +91,16 @@ public enum CardEffectType
     // 전설 끝 ----------
 }
 
+public enum CardElementals
+{
+    Normal,
+    Fire,
+    Water,
+    Land,
+    Electric,
+    Wind,
+}
+
 [CreateAssetMenu(fileName = "Card_", menuName = "Card/Card Data")]
 public class CardData : ScriptableObject
 {
@@ -101,6 +111,7 @@ public class CardData : ScriptableObject
 
     public Sprite icon;
     public CardGrade grade;
+    public CardElementals elementals;
 
     [Header("효과")]
     public CardEffectType effectType;

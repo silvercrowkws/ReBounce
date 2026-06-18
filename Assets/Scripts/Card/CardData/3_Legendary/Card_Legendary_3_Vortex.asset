@@ -17,6 +17,7 @@ MonoBehaviour:
     \uBC29\uC5B4 \uD6A8\uACFC\uB97C 10% \uBB34\uC2DC"
   icon: {fileID: 0}
   grade: 2
+  elementals: 2
   effectType: 0
   value1: 10
   value2: 0

@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "\uC804\uC774 \uD53C\uD574\uAC00 \uC9C1\uC811 \uD53C\uD574\uC640 \uB3D9\uC77C\uD574\uC9C4\uB2E4."
   icon: {fileID: 0}
   grade: 2
+  elementals: 4
   effectType: 0
   value1: 0
   value2: 0

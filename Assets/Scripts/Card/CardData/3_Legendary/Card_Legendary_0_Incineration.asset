@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "\uD654\uC0C1 \uD53C\uD574 100% \uC99D\uAC00"
   icon: {fileID: 0}
   grade: 2
+  elementals: 1
   effectType: 0
   value1: 100
   value2: 0

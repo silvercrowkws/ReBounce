@@ -41,12 +41,19 @@ public class Test_03_Ball : TestBase
         //ballShooter.shootBalls.Insert(0, BallElementals.Water);
         ballShooter.shootBalls.Clear();
 
-        ballShooter.shootBalls.Add(BallElementals.Fire);
+        /*ballShooter.shootBalls.Add(BallElementals.Fire);
         ballShooter.shootBalls.Add(BallElementals.Land);
         ballShooter.shootBalls.Add(BallElementals.Electric);
         ballShooter.shootBalls.Add(BallElementals.Water);
         ballShooter.shootBalls.Add(BallElementals.Wind);
-        ballShooter.shootBalls.Add(BallElementals.Normal);
+        ballShooter.shootBalls.Add(BallElementals.Normal);*/
+
+        ballShooter.AddBall(BallElementals.Fire);
+        ballShooter.AddBall(BallElementals.Land);
+        ballShooter.AddBall(BallElementals.Electric);
+        ballShooter.AddBall(BallElementals.Water);
+        ballShooter.AddBall(BallElementals.Wind);
+        ballShooter.AddBall(BallElementals.Normal);
 
         //ballShooter.shootCount = ballShooter.shootBalls.Count;
     }

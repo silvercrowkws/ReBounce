@@ -17,7 +17,8 @@ MonoBehaviour:
     +100%"
   icon: {fileID: 0}
   grade: 1
-  effectType: 40
+  elementals: 3
+  effectType: 0
   value1: 50
   value2: 100
   value3: 0

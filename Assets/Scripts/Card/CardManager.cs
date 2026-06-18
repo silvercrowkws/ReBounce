@@ -155,7 +155,7 @@ public class CardManager : Singleton<CardManager>
             epic = Mathf.Lerp(30, 35, t);
             legendary = Mathf.Lerp(0, 1, t);
         }*/
-        // 테스트용 레어 100%
+        // 테스트용 확률 조작
         if (turn <= 5)
         {
             rare = 100;
@@ -236,25 +236,13 @@ public class CardManager : Singleton<CardManager>
     CardGrade grade,
     List<CardData> selectedCards)
     {
-        /*List<CardData> pool = GetCardPool(grade);
+        /*List<CardData> pool =
+        new List<CardData>(GetCardPool(grade));*/
 
-        // 위에서 찾은 pool에서 이미 뽑힌 카드는 제거
-        pool.RemoveAll(card =>
-            selectedCards.Contains(card));
-
-        if (pool.Count == 0)
-        {
-            Debug.LogError($"{grade} 카드 풀이 부족합니다.");
-            return null;
-        }
-
-        // 중복이 제외되었으니 남은 카드 중에서 랜덤 선택
-        int rand = UnityEngine.Random.Range(0, pool.Count);
-
-        return pool[rand];*/
-
+        // 현재 보유 속성에 해당하는 카드만 필터링
         List<CardData> pool =
-        new List<CardData>(GetCardPool(grade));
+            new List<CardData>(
+                GetCardPool(grade).FindAll(IsAvailableCard));
 
         // 이미 뽑힌 카드 중복 제거
         pool.RemoveAll(card =>
@@ -268,5 +256,26 @@ public class CardManager : Singleton<CardManager>
 
         // 중복이 제외되었으니 남은 카드 중에서 랜덤 선택
         return pool[UnityEngine.Random.Range(0, pool.Count)];
+    }
+
+    /// <summary>
+    /// 현재 플레이어가 보유한 속성의 카드인지 검사하는 함수
+    /// (보유하지 않은 속성 카드는 등장하지 않도록)
+    /// </summary>
+    /// <param name="card"></param>
+    /// <returns></returns>
+    private bool IsAvailableCard(CardData card)
+    {
+        BallShooter shooter = FindObjectOfType<BallShooter>();
+
+        if (shooter == null)
+            return true;
+
+        // 노말 카드는 항상 등장 가능
+        if (card.elementals == CardElementals.Normal)
+            return true;
+
+        return shooter.unlockedElementals.Contains(
+            (BallElementals)card.elementals);
     }
 }

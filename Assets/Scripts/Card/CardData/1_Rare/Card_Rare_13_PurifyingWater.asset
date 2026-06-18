@@ -17,7 +17,8 @@ MonoBehaviour:
     +5\uCD08"
   icon: {fileID: 0}
   grade: 0
-  effectType: 14
+  elementals: 2
+  effectType: 0
   value1: 5
   value2: 0
   value3: 0

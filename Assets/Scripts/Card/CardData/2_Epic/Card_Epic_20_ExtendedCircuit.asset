@@ -16,7 +16,8 @@ MonoBehaviour:
   description: "\uC804\uC774 \uBC94\uC704 +1(\uC911\uCCA9X)"
   icon: {fileID: 0}
   grade: 1
-  effectType: 44
+  elementals: 4
+  effectType: 0
   value1: 1
   value2: 0
   value3: 0
