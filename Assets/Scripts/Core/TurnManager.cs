@@ -131,7 +131,7 @@ public class TurnManager : Singleton<TurnManager>
 
             BallShooter ballshooter = FindAnyObjectByType<BallShooter>();
             //ballshooter.shootBalls.Add(BallElementals.Normal);
-            ballshooter.AddBall(BallElementals.Normal);
+            ballshooter.AddBall(BallElementals.Normal); 
         }
     }
 
