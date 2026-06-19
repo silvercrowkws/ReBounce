@@ -114,6 +114,9 @@ public class BallShooter : MonoBehaviour
 
     private void OnPressStarted(InputAction.CallbackContext context)
     {
+        if (!CardManager.Instance.IsCardSelected)
+            return;
+
         if (TurnManager.Instance.IsShotInProgress)
             return;
 
@@ -201,6 +204,9 @@ public class BallShooter : MonoBehaviour
 
     void Shoot(Vector2 endPos)
     {
+        if (!CardManager.Instance.IsCardSelected)
+            return;
+
         if (TurnManager.Instance.IsShotInProgress)
             return;
 

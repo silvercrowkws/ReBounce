@@ -165,6 +165,7 @@ public class Card : MonoBehaviour
     [SerializeField] private CardGrade cardGrade;
 
     private CardData cardData;
+    public CardData CardData => cardData;
 
     private Vector3 originScale;
     private Color originColor;
@@ -324,5 +325,11 @@ public class Card : MonoBehaviour
                 glowframeSpriteRenderer.color = legendaryGlowColor;
                 break;
         }
+    }
+
+    //private void OnMouseDown()
+    private void OnMouseUpAsButton()
+    {
+        CardManager.Instance.SelectCard(this);
     }
 }
