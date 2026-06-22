@@ -51,6 +51,16 @@ public class CardManager : Singleton<CardManager>
     private bool isCardSelected;
     public bool IsCardSelected => isCardSelected;
 
+    /// <summary>
+    /// 볼 슈터
+    /// </summary>
+    BallShooter ballShooter;
+
+    /// <summary>
+    /// 중복을 허용하지 않는 이미 획득한 카드 목록
+    /// </summary>
+    private HashSet<CardData> ownedCards = new();
+
     private void Awake()
     {
         foreach (CardData card in allCards)
@@ -75,6 +85,8 @@ public class CardManager : Singleton<CardManager>
     {
         turnManager = TurnManager.Instance;
         turnManager.onTurnStart += OnGenerateCardChoices;
+
+        ballShooter = FindObjectOfType<BallShooter>();
     }
 
     private void OnDestroy()
@@ -271,7 +283,12 @@ public class CardManager : Singleton<CardManager>
             new List<CardData>(
                 GetCardPool(grade).FindAll(IsAvailableCard));
 
-        // 이미 뽑힌 카드 중복 제거
+        // 중복 안되는 카드들 제거
+        pool.RemoveAll(card =>
+            !card.canDuplicate &&
+            ownedCards.Contains(card));
+
+        // 이번 선택지 내 중복 제거
         pool.RemoveAll(card =>
             selectedCards.Contains(card));
 
@@ -306,6 +323,10 @@ public class CardManager : Singleton<CardManager>
             (BallElementals)card.elementals);
     }
 
+    /// <summary>
+    /// 선택한 카드
+    /// </summary>
+    /// <param name="card"></param>
     public void SelectCard(Card card)
     {
         // 이번 턴에 선택한 카드
@@ -313,6 +334,15 @@ public class CardManager : Singleton<CardManager>
 
         Debug.Log($"선택 카드 : {card.CardData.cardName}");
         //Debug.Log($"효과 : {card.CardData.effectType}");
+
+        // 카드 효과 수행
+        ApplyCardEffect(card.CardData);
+
+        // 중복 안되는 카드는 획득 목록에 등록
+        if (!card.CardData.canDuplicate)
+        {
+            ownedCards.Add(card.CardData);
+        }
 
         // 선택 카드 이력 저장
         selectedCardHistory.Add(card.CardData);
@@ -405,6 +435,297 @@ public class CardManager : Singleton<CardManager>
         foreach (Transform child in transform)
         {
             Destroy(child.gameObject);
+        }
+    }
+
+    /// <summary>
+    /// 각 카드의 효과에 맞게 처리하는 함수
+    /// </summary>
+    /// <param name="cardData"></param>
+    private void ApplyCardEffect(CardData cardData)
+    {
+        switch (cardData.effectType)
+        {
+        // 희귀 카드 --------------------
+
+            // 추가 탄환 : 노말 공 +1
+            case CardEffectType.ExtraBullets:
+                Debug.Log("추가 탄환 ApplyCardEffect 진입");
+                ballShooter.AddBall(BallElementals.Normal, 
+                    (int)cardData.value1);
+                break;
+
+            // 안정된 발사 : 최대 발사 각도 +5°
+            case CardEffectType.SteadyShot:
+                ballShooter.maxAngle += (int)cardData.value1;
+                break;
+
+            // 탄환 개조 : 모든 공 공격력 +2
+            case CardEffectType.ModifiedBullets:
+                ballShooter.bonusDamage += (int)cardData.value1;
+                break;
+
+            // (불)원소 주입 : 불 공 +1개 획득
+            case CardEffectType.FireInfusion:
+                ballShooter.AddBall(BallElementals.Fire, 
+                    (int)cardData.value1);
+                break;
+
+            // (물)원소 주입 : 물 공 +1개 획득
+            case CardEffectType.WaterInfusion:
+                ballShooter.AddBall(BallElementals.Water,
+                    (int)cardData.value1);
+                break;
+
+            // (땅)원소 주입 : 땅 공 +1개 획득
+            case CardEffectType.LandInfusion:
+                ballShooter.AddBall(BallElementals.Land,
+                    (int)cardData.value1);
+                break;
+
+            // (전기)원소 주입 : 전기 공 +1개 획득
+            case CardEffectType.ElectricInfusion:
+                ballShooter.AddBall(BallElementals.Electric,
+                    (int)cardData.value1);
+                break;
+
+            // (바람)원소 주입 : 바람 공 +1개 획득
+            case CardEffectType.WindInfusion:
+                ballShooter.AddBall(BallElementals.Wind,
+                    (int)cardData.value1);
+                break;
+
+
+
+            // 강한 화상 : 화상 피해 +2
+            case CardEffectType.StrongBurn:
+                break;
+
+            // 잔불 : 화상 지속 시간 +1초
+            case CardEffectType.ResidualFire:
+                break;
+
+            // 점화 : 화상 상태의 대상에게 가하는 피해 +20%
+            case CardEffectType.Ignition:
+                break;
+
+
+
+            // 수분 축적 : 물 공 공격력 +5
+            case CardEffectType.WaterAccumulation:
+                break;
+
+            // 냉각 : 젖음 상태의 적이 받는 피해 +10%
+            case CardEffectType.Cooling:
+                break;
+
+            // 정화수 : 물 공 적중 시 젖음 지속시간 +5초
+            case CardEffectType.PurifyingWater:
+                break;
+
+
+
+            // 파쇄 : 땅 공 공격력 +5
+            case CardEffectType.Shatter:
+                break;
+
+            // 압괴 : 체력이 50% 미만인 적에게 땅 공 피해 +50%
+            case CardEffectType.Crush:
+                break;
+
+            // 균열 : 땅 공의 추가 피해 배율 +20%
+            case CardEffectType.Crack:
+                break;
+
+
+
+            // 증폭 회로 : 전기 공 공격력 +5
+            case CardEffectType.AmplificationCircuit:
+                break;
+
+            // 과전류 : 전이 피해 +10%
+            case CardEffectType.Overcurrent:
+                break;
+
+            // 전압 집중 : 전기 공의 직접 피해 +20%
+            case CardEffectType.VoltageFocus:
+                break;
+
+
+
+            // 강풍 : 바람 공 공격력 +5
+            case CardEffectType.Gale:
+                break;
+
+            // 날카로운 바람 : 관통 피해 +20%
+            case CardEffectType.SharpWind:
+                break;
+
+            // 난기류 : 바람 공이 반사될 때마다 피해 +10%
+            case CardEffectType.Turbulence:
+                break;
+
+        // 희귀 카드 끝 --------------------
+
+        // 영웅 카드 --------------------
+
+            // 다중 장전 : 노말 공 +3개 획득
+            case CardEffectType.MultiLoad:
+                break;
+
+            // 대구경 탄환 : 노말 공 공격력 +15
+            case CardEffectType.LargeCaliberBullets:
+                break;
+
+            // 강화 탄환 : 모든 공 공격력 +5
+            case CardEffectType.ReinforcedBullet:
+                break;
+
+            // 명사수 : 최대 발사 각도 +10
+            case CardEffectType.Sharpshooter:
+                break;
+
+            // 화염 탄환 : 불 공 +2개 획득
+            case CardEffectType.FlameBullets:
+                break;
+
+            // 수류 탄환 : 물 공 +2개 획득
+            case CardEffectType.AquaBullets:
+                break;
+
+            // 암석 탄환 : 땅 공 +2개 획득
+            case CardEffectType.StoneBullets:
+                break;
+
+            // 전류 탄환 : 전기 공 +2개 획득
+            case CardEffectType.LightningBullets:
+                break;
+
+            // 질풍 탄환 : 바람 공 +2개 획득
+            case CardEffectType.SwiftwindBullets:
+                break;
+
+
+
+            // 고열 : 화상 피해 +5
+            case CardEffectType.SearingHeat:
+                break;
+
+            // 타오르는 불꽃 : 화상 지속 시간 +2초
+            case CardEffectType.BlazingFlame:
+                break;
+
+            // 화력 집중 : 화상 상태의 적이 받는 피해 + 40%
+            case CardEffectType.FocusedFire:
+                break;
+
+
+
+            // 급류 : 물 공 공격력 +10
+            case CardEffectType.Torrent:
+                break;
+
+            // 빙결 : 젖음 상태 적이 받는 피해 +20%
+            case CardEffectType.Freeze:
+                break;
+
+            // 범람 : 젖음 상태 부여시 필드 내 다른 적에게 젖음 전파 +1(최대 5중첩)
+            case CardEffectType.Flood:
+                break;
+
+
+
+            // 거암 : 땅 공 공격력 +10
+            case CardEffectType.Monolith:
+                break;
+
+            // 붕괴 : 체력 50% 미만 적에게 땅 공 피해 +100%
+            case CardEffectType.Collapse:
+                break;
+
+            // 분쇄 : 땅 공의 추가 피해 배율 +50%
+            case CardEffectType.Pulverize:
+                break;
+
+
+
+            // 초전도 : 전기 공 공격력 +10
+            case CardEffectType.Superconductivity:
+                break;
+
+            // 낙뢰 : 전기 공의 직접 피해 +50%
+            case CardEffectType.LightningStrike:
+                break;
+
+            // 확장 회로 : 전이 범위 +1(중접X)
+            case CardEffectType.ExtendedCircuit:
+                break;
+
+
+
+            // 폭풍 : 바람 공 공격력 +10
+            case CardEffectType.Storm:
+                break;
+
+            // 칼바람 : 관통 피해 +50%
+            case CardEffectType.RazorWind:
+                break;
+
+            // 상승 기류 : 관통 범위 +1(중첩X)
+            case CardEffectType.Updraft:
+                break;
+
+        // 영웅 카드 끝 --------------------
+
+        // 전설 카드 --------------------
+
+            // 소각 : 화상 피해 100% 증가
+            case CardEffectType.Incineration:
+                break;
+
+            // 잿더미 : 화상 피해에 대상 최대 체력의 1%를 추가한다.
+            case CardEffectType.Ashes:
+                break;
+
+
+
+            // 해일 : 범람이 모든 젖지 않은 적에게 적용된다.
+            case CardEffectType.Tsunami:
+                break;
+
+            // 와류 : 젖음 상태 적에게 가하는 피해가 방어 효과를 10% 무시한다(수치 조정 필요)
+            case CardEffectType.Vortex:
+                break;
+
+
+
+            // 지진 : 좌우 적에게 피해의 50%(최대 2중첩)
+            case CardEffectType.Earthquake:
+                break;
+
+            // 압쇄 : 땅 공의 추가 피해가 적의 현재 체력의 5%를 추가로 가한다.
+            case CardEffectType.Pulverization:
+                break;
+
+
+
+            // 뇌폭 : 전이 피해가 직접 피해와 동일해짐
+            case CardEffectType.Thunderburst:
+                break;
+
+            // 초고압 : 전기 공 적중 시 추가 전이 +1(중첩X)
+            case CardEffectType.HighVoltage:
+                break;
+
+
+
+            // 태풍 : 관통 거리 무제한
+            case CardEffectType.Typhoon:
+                break;
+
+            // 제트기류 : 바람 공이 반사될 때마다 피해 +30%
+            case CardEffectType.JetStream:
+                break;
         }
     }
 }

@@ -16,7 +16,9 @@ MonoBehaviour:
   description: "\uCD5C\uB300 \uBC1C\uC0AC \uAC01\uB3C4 +5\xB0"
   icon: {fileID: 0}
   grade: 0
-  effectType: 0
+  elementals: 0
+  effectType: 2
   value1: 5
   value2: 0
   value3: 0
+  canDuplicate: 0

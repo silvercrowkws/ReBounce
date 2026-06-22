@@ -23,7 +23,7 @@ public class BallShooter : MonoBehaviour
     GameManager gameManager;
 
     [Header("좌우 허용 각도")]
-    public float maxAngle = 75f; // 좌우 최대 각도 (도 단위)
+    public float maxAngle = 70f; // 좌우 최대 각도 (도 단위)
 
     /// <summary>
     /// 발사 중인지 체크하는 변수
@@ -47,6 +47,11 @@ public class BallShooter : MonoBehaviour
     /// 카드 등장 조건 판정에 사용
     /// </summary>
     public HashSet<BallElementals> unlockedElementals = new();
+
+    /// <summary>
+    /// 공의 보너스 대미지
+    /// </summary>
+    public float bonusDamage = 0;
 
     private void Awake()
     {
@@ -340,12 +345,17 @@ public class BallShooter : MonoBehaviour
     /// <summary>
     /// 공 추가 함수
     /// 새 속성이라면 보유 속성 목록에도 등록
-    public void AddBall(BallElementals elemental)
+    public void AddBall(BallElementals elemental, int count = 1)
     {
         // 실제 발사될 공 추가
-        shootBalls.Add(elemental);
+        //shootBalls.Add(elemental);
 
-        // HashSet 특성상 중복이면 자동 무시
+        for (int i = 0; i < count; i++)
+        {
+            shootBalls.Add(elemental);
+        }
+
+        // 해금 처리(HashSet 특성상 중복이면 자동 무시)
         unlockedElementals.Add(elemental);
 
         // 만약 FireInfusion 카드 같은 것으로 공을 추가할 때는

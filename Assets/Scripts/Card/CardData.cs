@@ -118,4 +118,8 @@ public class CardData : ScriptableObject
     public float value1;        // 탄환 +1 같은거 처리용
     public float value2;        // 받는 피해 +20% 같은거 처리용?
     public float value3;        // 체력 50% 이하 적에게 피해 +100% 같은거 처리용?
+
+    [Header("중복 획득 가능 여부")]
+    [Tooltip("true : 중복 획득 가능\nfalse : 1회만 획득 가능")]
+    public bool canDuplicate = true;
 }

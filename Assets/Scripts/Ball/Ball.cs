@@ -29,9 +29,16 @@ public class Ball : RecycleObject
     public float speed = 10f;
 
     /// <summary>
-    /// 이 공의 데미지
+    /// 이 공의 대미지
     /// </summary>
-    public float damage = 10;
+    public float damage = 10f;
+    public float Damage => damage;
+
+    /// <summary>
+    /// 이 공의 기본 대미지
+    /// </summary>
+    [SerializeField]
+    private float baseDamage = 10f;
 
     private Vector3 direction;
 
@@ -88,6 +95,11 @@ public class Ball : RecycleObject
     /// </summary>
     TurnManager turnManager;
 
+    /// <summary>
+    /// 볼 슈터
+    /// </summary>
+    BallShooter ballShooter;
+
     private void Awake()
     {
         sphereCollider = GetComponent<SphereCollider>();
@@ -101,6 +113,8 @@ public class Ball : RecycleObject
         meshRenderer = GetComponent<MeshRenderer>();
 
         turnManager = TurnManager.Instance;
+
+        ballShooter = FindAnyObjectByType<BallShooter>();
     }
 
     protected override void OnEnable()
@@ -206,9 +220,12 @@ public class Ball : RecycleObject
         sphereCollider.enabled = true;
 
         // 이동값 초기화
-        direction = Vector3.zero; 
+        direction = Vector3.zero;
         //isFirstGroundHit 는 static 변수라서 OnDisable에서 초기화 하면 안되고.
         // 스테이지 초기화? 내 경우에는 다음 발사 직전에 초기화 하면 될듯
+
+        // 공의 대미지 설정
+        damage = baseDamage + ballShooter.bonusDamage;
     }
 
     public void SetElemental(BallElementals elemental)
