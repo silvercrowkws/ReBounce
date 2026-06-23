@@ -533,10 +533,12 @@ public class CardManager : Singleton<CardManager>
 
             // 파쇄 : 땅 공 공격력 +5
             case CardEffectType.Shatter:
+                ballShooter.landBonusDamage += cardData.value1;
                 break;
 
             // 압괴 : 체력이 50% 미만인 적에게 땅 공 피해 +50%
             case CardEffectType.Crush:
+                ballShooter.crushBonusDamage += cardData.value1;
                 break;
 
             // 균열 : 땅 공의 추가 피해 배율 +20%

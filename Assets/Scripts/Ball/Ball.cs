@@ -293,7 +293,7 @@ public class Ball : RecycleObject
             
             case BallElementals.Land:
                 meshRenderer.material.color = landBall;
-                //damage += ballShooter.landBonusDamage;
+                damage += ballShooter.landBonusDamage;
                 break;
             
             case BallElementals.Electric:
@@ -340,6 +340,14 @@ public class Ball : RecycleObject
         {
             finalDamage *=
                 1f + ballShooter.coolingBounsDamage;
+        }
+
+        // 압괴(땅 속성 공이고, 몬스터의 체력이 50% 이하면 적용)
+        if (monster != null && ballElementals == BallElementals.Land &&
+            monster.CurrentHP <= monster.MaxHP * 0.5f)
+        {
+            finalDamage *=
+                ballShooter.crushBonusDamage;
         }
 
         // 효과 적용 함수 실행

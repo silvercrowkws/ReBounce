@@ -90,6 +90,18 @@ public class BallShooter : MonoBehaviour
     [Header("공의 보너스 젖음 지속시간")]
     public float bonusWetDuration = 0;
 
+    /// <summary>
+    /// 땅 공의 보너스 대미지
+    /// </summary>
+    [Header("땅 공의 보너스 대미지")]
+    public float landBonusDamage = 0;
+
+    /// <summary>
+    /// 압괴 추가 피해 배율
+    /// </summary>
+    [Header("체력이 50% 미만인 적에게 땅 공 피해 +50%")]
+    public float crushBonusDamage;
+
     private void Awake()
     {
         inputActions = new PlayerInputActions();
