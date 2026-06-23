@@ -52,7 +52,13 @@ public class MonsterBase : RecycleObject, IDamageable
         {
             if (currentHP != value)
             {
-                currentHP = Mathf.Clamp(value, 0, maxHP);
+                //currentHP = Mathf.Clamp(value, 0, maxHP);
+
+                // HP 깎이는 것 반올림 처리
+                currentHP = Mathf.Clamp(
+                Mathf.Round(value),
+                0,
+                maxHP);
 
                 if (hpText != null)
                 {
@@ -96,6 +102,8 @@ public class MonsterBase : RecycleObject, IDamageable
     /// 턴 매니저
     /// </summary>
     //TurnManager turnManager;
+
+    public bool IsBurning => burnStackCount > 0;
 
     protected virtual void Awake()
     {
@@ -170,8 +178,15 @@ public class MonsterBase : RecycleObject, IDamageable
         StateEffectColorControl(false);
     }
 
+    /// <summary>
+    /// 턴 진행 상황에 따라 스폰되는 몬스터의 체력을 변동하는 함수
+    /// </summary>
+    /// <returns></returns>
     private float GetMonsterHPByTurn()
     {
+        // 테스트용 100 고정
+        //return 100f;
+
         int turn = TurnManager.Instance.turnNumber + 1;
 
         // 6턴까지는 +8씩 증가
@@ -430,6 +445,8 @@ public class MonsterBase : RecycleObject, IDamageable
     /// 현재 젖음 상태 여부
     /// </summary>
     private bool isWet = false;
+
+    public bool IsWet => isWet;
 
     /// <summary>
     /// 젖음 코루틴

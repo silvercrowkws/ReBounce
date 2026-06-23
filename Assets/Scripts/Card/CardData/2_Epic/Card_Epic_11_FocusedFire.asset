@@ -18,7 +18,8 @@ MonoBehaviour:
   icon: {fileID: 0}
   grade: 1
   elementals: 1
-  effectType: 0
+  effectType: 35
   value1: 2
   value2: 0
   value3: 0
+  canDuplicate: 1

@@ -100,6 +100,21 @@ public class Ball : RecycleObject
     /// </summary>
     BallShooter ballShooter;
 
+    /// <summary>
+    /// 기본 화상 대미지
+    /// </summary>
+    public float baseBurnDamage = 5f;
+
+    /// <summary>
+    /// 기본 화상 시간
+    /// </summary>
+    public float baseBurnDuration = 5f;
+
+    /// <summary>
+    /// 기본 젖음 지속시간
+    /// </summary>
+    public float baseWetDuration = 10f;
+
     private void Awake()
     {
         sphereCollider = GetComponent<SphereCollider>();
@@ -226,6 +241,30 @@ public class Ball : RecycleObject
 
         // 공의 대미지 설정
         damage = baseDamage + ballShooter.bonusDamage;
+
+        /*// 각 속성에 따른 추가 대미지 있을 경우 적용
+        switch (ballElementals)
+        {
+            case BallElementals.Fire:
+                break;
+
+            case BallElementals.Water:
+                damage += ballShooter.waterBonusDamage;
+                Debug.Log($"물 공의 최종 공격력 : {damage}");
+                break;
+
+            case BallElementals.Land:
+                //damage += ballShooter.landBonusDamage;
+                break;
+
+            case BallElementals.Electric:
+                //damage += ballShooter.electricBonusDamage;
+                break;
+
+            case BallElementals.Wind:
+                //damage += ballShooter.windBonusDamage;
+                break;
+        }*/
     }
 
     public void SetElemental(BallElementals elemental)
@@ -236,6 +275,7 @@ public class Ball : RecycleObject
 
     private void ResetBallElementals()
     {
+        // 각 속성에 따른 추가 대미지 있을 경우 함께 적용
         switch (ballElementals)
         {
             case BallElementals.Normal:
@@ -248,18 +288,22 @@ public class Ball : RecycleObject
 
             case BallElementals.Water:
                 meshRenderer.material.color = waterBall;
+                damage += ballShooter.waterBonusDamage;
                 break;
             
             case BallElementals.Land:
                 meshRenderer.material.color = landBall;
+                //damage += ballShooter.landBonusDamage;
                 break;
             
             case BallElementals.Electric:
                 meshRenderer.material.color = electricBall;
+                //damage += ballShooter.electricBonusDamage;
                 break;
             
             case BallElementals.Wind:
                 meshRenderer.material.color = windcBall;
+                //damage += ballShooter.windBonusDamage;
                 break;
         }
     }
@@ -275,13 +319,34 @@ public class Ball : RecycleObject
         // 충돌한 대상의 태그를 받아와? => 태그 대신 인터페이스로 처리해서 몬스터의 속성을 받아왔어.
 
         // 기본 데미지 * 상성 테이블
-        float multipliedDamage =  damage * elementalTable[(int)ballElementals, (int)monsterElement];
+        /*float multipliedDamage = 
+            damage * elementalTable[(int)ballElementals, (int)monsterElement];*/
+
+        float finalDamage =
+        damage * elementalTable[(int)ballElementals,
+                                (int)monsterElement];
+
+        MonsterBase monster = damageable as MonsterBase;
+
+        // 화상 상태 적 추가 피해
+        if (monster != null && monster.IsBurning)
+        {
+            finalDamage *=
+                1f + ballShooter.ignitionBonus;
+        }
+
+        // 젖음 상태 적 추가 피해
+        if (monster.IsWet)
+        {
+            finalDamage *=
+                1f + ballShooter.coolingBounsDamage;
+        }
 
         // 효과 적용 함수 실행
         ApplyElementalEffect(damageable);
 
         // 최종적으로 계산된 데미지 적용
-        damageable.TakeDamage(multipliedDamage);
+        damageable.TakeDamage(finalDamage);
     }
 
     /// <summary>
@@ -367,8 +432,10 @@ public class Ball : RecycleObject
         StatusEffectData burn = new StatusEffectData
         {
             effectType = StatusEffectType.Burn,
-            duration = 5f,
-            value = 5f
+            //duration = 5f,
+            //value = 5f
+            duration = baseBurnDuration + ballShooter.bonusBurnDuration,
+            value = baseBurnDamage + ballShooter.bonusBurnDamage,
         };
 
         target.TakeStatusEffect(burn);
@@ -379,7 +446,8 @@ public class Ball : RecycleObject
         StatusEffectData wet = new StatusEffectData
         {
             effectType = StatusEffectType.Wet,
-            duration = 10f,
+            //duration = 10f,
+            duration = baseWetDuration + ballShooter.bonusWetDuration,
             value = 0f
         };
 

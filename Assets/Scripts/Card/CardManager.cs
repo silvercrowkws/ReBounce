@@ -439,7 +439,7 @@ public class CardManager : Singleton<CardManager>
     }
 
     /// <summary>
-    /// 각 카드의 효과에 맞게 처리하는 함수
+    /// 각 카드의 효과에 맞게 적용하는 함수
     /// </summary>
     /// <param name="cardData"></param>
     private void ApplyCardEffect(CardData cardData)
@@ -499,28 +499,34 @@ public class CardManager : Singleton<CardManager>
 
             // 강한 화상 : 화상 피해 +2
             case CardEffectType.StrongBurn:
+                ballShooter.bonusBurnDamage += cardData.value1;
                 break;
 
             // 잔불 : 화상 지속 시간 +1초
             case CardEffectType.ResidualFire:
+                ballShooter.bonusBurnDuration += cardData.value1;
                 break;
 
             // 점화 : 화상 상태의 대상에게 가하는 피해 +20%
             case CardEffectType.Ignition:
+                ballShooter.ignitionBonus += cardData.value1;
                 break;
 
 
 
             // 수분 축적 : 물 공 공격력 +5
             case CardEffectType.WaterAccumulation:
+                ballShooter.waterBonusDamage += cardData.value1;
                 break;
 
             // 냉각 : 젖음 상태의 적이 받는 피해 +10%
             case CardEffectType.Cooling:
+                ballShooter.coolingBounsDamage += cardData.value1;
                 break;
 
             // 정화수 : 물 공 적중 시 젖음 지속시간 +5초
             case CardEffectType.PurifyingWater:
+                ballShooter.bonusWetDuration += cardData.value1;
                 break;
 
 

@@ -17,7 +17,8 @@ MonoBehaviour:
   icon: {fileID: 0}
   grade: 0
   elementals: 3
-  effectType: 0
+  effectType: 17
   value1: 20
   value2: 0
   value3: 0
+  canDuplicate: 1

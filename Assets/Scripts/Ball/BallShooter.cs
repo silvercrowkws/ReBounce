@@ -51,7 +51,44 @@ public class BallShooter : MonoBehaviour
     /// <summary>
     /// 공의 보너스 대미지
     /// </summary>
+    [Header("공의 보너스 대미지")]
     public float bonusDamage = 0;
+
+    /// <summary>
+    /// 공의 보너스 화상 대미지
+    /// </summary>
+    [Header("공의 보너스 화상 대미지")]
+    public float bonusBurnDamage = 0;
+
+    /// <summary>
+    /// 공의 보너스 화상 시간
+    /// </summary>
+    [Header("공의 보너스 화상 시간")]
+    public float bonusBurnDuration = 0;
+
+    /// <summary>
+    /// 점화 카드 보너스
+    /// </summary>
+    [Header("화상 상태 적에게 추가 피해 배율")]
+    public float ignitionBonus = 0;
+
+    /// <summary>
+    /// 물 공의 보너스 대미지
+    /// </summary>
+    [Header("물 공의 보너스 대미지")]
+    public float waterBonusDamage = 0;
+
+    /// <summary>
+    /// 냉각 카드 보너스
+    /// </summary>
+    [Header("젖음 상태 적에게 추가 피해 배율")]
+    public float coolingBounsDamage = 0;
+
+    /// <summary>
+    /// 공의 보너즈 젖음 지속시간
+    /// </summary>
+    [Header("공의 보너스 젖음 지속시간")]
+    public float bonusWetDuration = 0;
 
     private void Awake()
     {
