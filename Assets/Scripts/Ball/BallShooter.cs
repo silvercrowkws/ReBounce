@@ -99,8 +99,51 @@ public class BallShooter : MonoBehaviour
     /// <summary>
     /// 압괴 추가 피해 배율
     /// </summary>
-    [Header("체력이 50% 미만인 적에게 땅 공 피해 +50%")]
+    [Header("체력이 50% 미만인 적에게 땅 공의 추가 피해 +50%")]
     public float crushBonusDamage;
+
+    /// <summary>
+    /// 균열 추가 피해 배율
+    /// </summary>
+    [Header("땅 공의 추가 피해 배율%")]
+    public float crackBonusDamage;
+
+    /// <summary>
+    /// 전기 공의 보너스 대미지
+    /// </summary>
+    [Header("전기 공의 보너스 대미지")]
+    public float electricBonusDamage = 0;
+
+    /// <summary>
+    /// 전기 공의 전이 피해 보너스 대미지
+    /// </summary>
+    [Header("전기 공의 전이 피해 보너스 대미지")]
+    public float chainBonusDamage = 0;
+
+    /// <summary>
+    /// 전기 공의 직접 피해 보너스 대미지
+    /// </summary>
+    [Header("전기 공의 직접 피해 보너스 대미지")]
+    public float electricDirectBonusDamage = 0;
+
+    /// <summary>
+    /// 바람 공의 보너스 대미지
+    /// </summary>
+    [Header("바람 공의 보너스 대미지")]
+    public float windBonusDamage = 0;
+
+    /// <summary>
+    /// 바람 공의 관통 보너스 피해 배율
+    /// </summary>
+    [Header("바람 공의 관통 보너스 피해 배율")]
+    public float pierceBonusDamage = 0;
+    
+    /// <summary>
+    /// 바람 공이 반사될 때마다 관통 피해 배율
+    /// </summary>
+    [Header("바람 공이 반사될 때마다 관통 피해 배율")]
+    public float bouncePierceBonusDamage = 0;
+
 
     private void Awake()
     {

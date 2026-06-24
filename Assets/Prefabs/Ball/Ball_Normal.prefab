@@ -149,4 +149,9 @@ MonoBehaviour:
   ballElementals: 0
   speed: 3
   damage: 10
-  ballShooter: {fileID: 688753021773721265, guid: 7c8dab54a7ccd7b44b66227e8e6d7c80, type: 3}
+  baseDamage: 10
+  baseBurnDamage: 5
+  baseBurnDuration: 5
+  baseWetDuration: 10
+  baseChainValue: 0.3
+  basePierceValue: 1

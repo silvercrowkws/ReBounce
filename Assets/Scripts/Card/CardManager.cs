@@ -536,41 +536,48 @@ public class CardManager : Singleton<CardManager>
                 ballShooter.landBonusDamage += cardData.value1;
                 break;
 
-            // 압괴 : 체력이 50% 미만인 적에게 땅 공 피해 +50%
+            // 압괴 : 체력이 50% 미만인 적에게 땅 공 추가 피해 +50%
             case CardEffectType.Crush:
                 ballShooter.crushBonusDamage += cardData.value1;
                 break;
 
-            // 균열 : 땅 공의 추가 피해 배율 +20%
+            // 균열 : 땅 공의 추가 피해 +20%
             case CardEffectType.Crack:
+                ballShooter.crackBonusDamage += cardData.value1;
                 break;
 
 
 
             // 증폭 회로 : 전기 공 공격력 +5
             case CardEffectType.AmplificationCircuit:
+                ballShooter.electricBonusDamage += cardData.value1;
                 break;
 
             // 과전류 : 전이 피해 +10%
             case CardEffectType.Overcurrent:
+                ballShooter.chainBonusDamage += cardData.value1;
                 break;
 
             // 전압 집중 : 전기 공의 직접 피해 +20%
             case CardEffectType.VoltageFocus:
+                ballShooter.electricDirectBonusDamage += cardData.value1;
                 break;
 
 
 
             // 강풍 : 바람 공 공격력 +5
             case CardEffectType.Gale:
+                ballShooter.windBonusDamage += cardData.value1;
                 break;
 
             // 날카로운 바람 : 관통 피해 +20%
             case CardEffectType.SharpWind:
+                ballShooter.pierceBonusDamage += cardData.value1;
                 break;
 
-            // 난기류 : 바람 공이 반사될 때마다 피해 +10%
+            // 난기류 : 바람 공이 반사될 때마다 관통 피해 +10%
             case CardEffectType.Turbulence:
+                ballShooter.bouncePierceBonusDamage += cardData.value1;
                 break;
 
         // 희귀 카드 끝 --------------------

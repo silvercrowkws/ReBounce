@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum BallElementals
@@ -115,6 +116,22 @@ public class Ball : RecycleObject
     /// </summary>
     public float baseWetDuration = 10f;
 
+    /// <summary>
+    /// 기본 전이 피해 배율
+    /// </summary>
+    public float baseChainValue = 0.3f;
+    
+    /// <summary>
+    /// 기본 관통 피해 배율
+    /// </summary>
+    public float basePierceValue = 1f;
+
+    /// <summary>
+    /// 현재 공이 반사된 횟수
+    /// (첫 충돌부터 배율 적용되지 않도록 -1)
+    /// </summary>
+    private int bounceCount = -1;
+
     private void Awake()
     {
         sphereCollider = GetComponent<SphereCollider>();
@@ -197,6 +214,9 @@ public class Ball : RecycleObject
         // Ball이 아닌 대상과 충돌하면
         if (!collision.gameObject.CompareTag("Ball"))
         {
+            // 반사 횟수++
+            bounceCount++;
+
             IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
 
             // 충돌한 대상에게 damageable 인터페이스가 있으면
@@ -242,6 +262,8 @@ public class Ball : RecycleObject
         // 공의 대미지 설정
         damage = baseDamage + ballShooter.bonusDamage;
 
+        // 반사 횟수 초기화
+        bounceCount = -1;
         /*// 각 속성에 따른 추가 대미지 있을 경우 적용
         switch (ballElementals)
         {
@@ -298,12 +320,12 @@ public class Ball : RecycleObject
             
             case BallElementals.Electric:
                 meshRenderer.material.color = electricBall;
-                //damage += ballShooter.electricBonusDamage;
+                damage += ballShooter.electricBonusDamage;
                 break;
             
             case BallElementals.Wind:
                 meshRenderer.material.color = windcBall;
-                //damage += ballShooter.windBonusDamage;
+                damage += ballShooter.windBonusDamage;
                 break;
         }
     }
@@ -342,14 +364,30 @@ public class Ball : RecycleObject
                 1f + ballShooter.coolingBounsDamage;
         }
 
-        // 압괴(땅 속성 공이고, 몬스터의 체력이 50% 이하면 적용)
-        if (monster != null && ballElementals == BallElementals.Land &&
-            monster.CurrentHP <= monster.MaxHP * 0.5f)
+        // 균열: 땅 공의 추가 피해 배율 + 20%
+        if(monster!= null && ballElementals == BallElementals.Land)
+        {
+            // 압괴 적용?
+            if(monster.CurrentHP <= monster.MaxHP * 0.5f)
+            {
+                finalDamage *=
+                    1f + ballShooter.crushBonusDamage + ballShooter.crackBonusDamage;
+            }
+            // 균열만 적용?
+            else
+            {
+                finalDamage *=
+                    1f + ballShooter.crackBonusDamage;
+            }
+        }
+
+        // 전기 공의 직접 피해
+        if(monster != null && ballElementals == BallElementals.Electric)
         {
             finalDamage *=
-                1f + ballShooter.crushBonusDamage;
-            Debug.LogError($"압괴 적용 {finalDamage}");
+                1f + ballShooter.electricDirectBonusDamage;
         }
+        
 
         // 효과 적용 함수 실행
         ApplyElementalEffect(damageable);
@@ -541,7 +579,8 @@ public class Ball : RecycleObject
         {
             effectType = StatusEffectType.ChainLightning,
             duration = 0f,
-            value = 0.3f,   // 전이 대미지
+            //value = 0.3f,   // 전이 대미지
+            value = baseChainValue + ballShooter.chainBonusDamage,   // 전이 대미지
             baseDamage = damage
         };
 
@@ -550,11 +589,22 @@ public class Ball : RecycleObject
 
     private void ApplyPierce(IDamageable target)
     {
+        float pierceValue =
+        basePierceValue + ballShooter.pierceBonusDamage;
+
+        // 반사 배율 적용 시
+        if (bounceCount > 0)
+        {
+            pierceValue +=
+                bounceCount * ballShooter.bouncePierceBonusDamage;
+        }
+
         StatusEffectData pierce = new StatusEffectData
         {
             effectType = StatusEffectType.Pierce,
             duration = 0f,
-            value = 1f,   // 100% 관통 대미지
+            //value = 1f,   // 100% 관통 대미지
+            value = pierceValue,
             baseDamage = damage,
 
             // 위로 날아가는지 여부만 전달
