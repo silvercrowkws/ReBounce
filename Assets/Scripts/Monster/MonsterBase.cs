@@ -344,7 +344,7 @@ public class MonsterBase : RecycleObject, IDamageable
 
                 SoundManager.Instance.PlayIgnoreDefenseClip();
 
-                Debug.Log($"땅 속성 추가 피해 : {bonusDamage}");
+                Debug.Log($"땅 속성 기본 피해 : {bonusDamage}");
                 break;
 
             // 번개 속성 감전

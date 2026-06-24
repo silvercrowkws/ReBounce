@@ -347,7 +347,8 @@ public class Ball : RecycleObject
             monster.CurrentHP <= monster.MaxHP * 0.5f)
         {
             finalDamage *=
-                ballShooter.crushBonusDamage;
+                1f + ballShooter.crushBonusDamage;
+            Debug.LogError($"압괴 적용 {finalDamage}");
         }
 
         // 효과 적용 함수 실행
