@@ -49,10 +49,10 @@ public class BallShooter : MonoBehaviour
     public HashSet<BallElementals> unlockedElementals = new();
 
     /// <summary>
-    /// 공의 보너스 대미지
+    /// 모든 공의 보너스 대미지
     /// </summary>
-    [Header("공의 보너스 대미지")]
-    public float bonusDamage = 0;
+    [Header("모든 공의 보너스 대미지")]
+    public float allBonusDamage = 0;
 
     /// <summary>
     /// 공의 보너스 화상 대미지
@@ -144,6 +144,11 @@ public class BallShooter : MonoBehaviour
     [Header("바람 공이 반사될 때마다 관통 피해 배율")]
     public float bouncePierceBonusDamage = 0;
 
+    /// <summary>
+    /// 노말 공의 보너스 대미지
+    /// </summary>
+    [Header("노말 공의 보너스 대미지")]
+    public float normalBonusDamage = 0;
 
     private void Awake()
     {

@@ -260,7 +260,8 @@ public class Ball : RecycleObject
         // 스테이지 초기화? 내 경우에는 다음 발사 직전에 초기화 하면 될듯
 
         // 공의 대미지 설정
-        damage = baseDamage + ballShooter.bonusDamage;
+        damage = baseDamage + ballShooter.allBonusDamage;
+        
 
         // 반사 횟수 초기화
         bounceCount = -1;
@@ -386,6 +387,11 @@ public class Ball : RecycleObject
         {
             finalDamage *=
                 1f + ballShooter.electricDirectBonusDamage;
+        }
+
+        if(monster != null && ballElementals == BallElementals.Normal)
+        {
+            finalDamage += ballShooter.normalBonusDamage;
         }
         
 

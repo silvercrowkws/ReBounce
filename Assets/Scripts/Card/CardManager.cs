@@ -455,14 +455,14 @@ public class CardManager : Singleton<CardManager>
                     (int)cardData.value1);
                 break;
 
-            // 안정된 발사 : 최대 발사 각도 +5°
+            // 안정된 발사 : 최대 발사 각도 +5°(중복X)
             case CardEffectType.SteadyShot:
                 ballShooter.maxAngle += (int)cardData.value1;
                 break;
 
             // 탄환 개조 : 모든 공 공격력 +2
             case CardEffectType.ModifiedBullets:
-                ballShooter.bonusDamage += (int)cardData.value1;
+                ballShooter.allBonusDamage += cardData.value1;
                 break;
 
             // (불)원소 주입 : 불 공 +1개 획득
@@ -586,18 +586,23 @@ public class CardManager : Singleton<CardManager>
 
             // 다중 장전 : 노말 공 +3개 획득
             case CardEffectType.MultiLoad:
+                ballShooter.AddBall(BallElementals.Normal,
+                    (int)cardData.value1);
                 break;
 
             // 대구경 탄환 : 노말 공 공격력 +15
             case CardEffectType.LargeCaliberBullets:
+                ballShooter.normalBonusDamage += cardData.value1;
                 break;
 
             // 강화 탄환 : 모든 공 공격력 +5
             case CardEffectType.ReinforcedBullet:
+                ballShooter.allBonusDamage += cardData.value1;
                 break;
 
-            // 명사수 : 최대 발사 각도 +10
+            // 명사수 : 최대 발사 각도 +10°(중복X)
             case CardEffectType.Sharpshooter:
+                ballShooter.maxAngle += (int)cardData.value1;
                 break;
 
             // 화염 탄환 : 불 공 +2개 획득
