@@ -509,7 +509,7 @@ public class CardManager : Singleton<CardManager>
 
             // 점화 : 화상 상태의 대상에게 가하는 피해 +20%
             case CardEffectType.Ignition:
-                ballShooter.ignitionBonus += cardData.value1;
+                ballShooter.ignitedBonusDamage += cardData.value1;
                 break;
 
 
@@ -521,7 +521,7 @@ public class CardManager : Singleton<CardManager>
 
             // 냉각 : 젖음 상태의 적이 받는 피해 +10%
             case CardEffectType.Cooling:
-                ballShooter.coolingBounsDamage += cardData.value1;
+                ballShooter.wetBounsDamage += cardData.value1;
                 break;
 
             // 정화수 : 물 공 적중 시 젖음 지속시간 +5초
@@ -538,12 +538,12 @@ public class CardManager : Singleton<CardManager>
 
             // 압괴 : 체력이 50% 미만인 적에게 땅 공 추가 피해 +50%
             case CardEffectType.Crush:
-                ballShooter.crushBonusDamage += cardData.value1;
+                ballShooter.landHalfHPBonusDamage += cardData.value1;
                 break;
 
             // 균열 : 땅 공의 추가 피해 +20%
             case CardEffectType.Crack:
-                ballShooter.crackBonusDamage += cardData.value1;
+                ballShooter.landExtraBonusDamage += cardData.value1;
                 break;
 
 
@@ -607,92 +607,117 @@ public class CardManager : Singleton<CardManager>
 
             // 화염 탄환 : 불 공 +2개 획득
             case CardEffectType.FlameBullets:
+                ballShooter.AddBall(BallElementals.Fire,
+                    (int)cardData.value1);
                 break;
 
             // 수류 탄환 : 물 공 +2개 획득
             case CardEffectType.AquaBullets:
+                ballShooter.AddBall(BallElementals.Water,
+                    (int)cardData.value1);
                 break;
 
             // 암석 탄환 : 땅 공 +2개 획득
             case CardEffectType.StoneBullets:
+                ballShooter.AddBall(BallElementals.Land,
+                    (int)cardData.value1);
                 break;
 
             // 전류 탄환 : 전기 공 +2개 획득
             case CardEffectType.LightningBullets:
+                ballShooter.AddBall(BallElementals.Electric,
+                    (int)cardData.value1);
                 break;
 
             // 질풍 탄환 : 바람 공 +2개 획득
             case CardEffectType.SwiftwindBullets:
+                ballShooter.AddBall(BallElementals.Wind,
+                    (int)cardData.value1);
                 break;
 
 
 
             // 고열 : 화상 피해 +5
             case CardEffectType.SearingHeat:
+                ballShooter.bonusBurnDamage += cardData.value1;
                 break;
 
             // 타오르는 불꽃 : 화상 지속 시간 +2초
             case CardEffectType.BlazingFlame:
+                ballShooter.bonusBurnDuration += cardData.value1;
                 break;
 
             // 화력 집중 : 화상 상태의 적이 받는 피해 + 40%
             case CardEffectType.FocusedFire:
+                ballShooter.ignitedBonusDamage += cardData.value1;
                 break;
 
 
 
             // 급류 : 물 공 공격력 +10
             case CardEffectType.Torrent:
+                ballShooter.waterBonusDamage += cardData.value1;
                 break;
 
             // 빙결 : 젖음 상태 적이 받는 피해 +20%
             case CardEffectType.Freeze:
+                ballShooter.wetBounsDamage += cardData.value1;
                 break;
 
-            // 범람 : 젖음 상태 부여시 필드 내 다른 적에게 젖음 전파 +1(최대 5중첩)
+            // 범람 : 젖음 상태 부여시 필드 내 다른 적에게 젖음 전파 +1(중첩X)
             case CardEffectType.Flood:
+                ballShooter.wetSpreadCount += (int)cardData.value1;
                 break;
 
 
 
             // 거암 : 땅 공 공격력 +10
             case CardEffectType.Monolith:
+                ballShooter.landBonusDamage += cardData.value1;
                 break;
 
             // 붕괴 : 체력 50% 미만 적에게 땅 공 피해 +100%
             case CardEffectType.Collapse:
+                ballShooter.landHalfHPBonusDamage += cardData.value1;
                 break;
 
             // 분쇄 : 땅 공의 추가 피해 배율 +50%
             case CardEffectType.Pulverize:
+                ballShooter.landExtraBonusDamage += cardData.value1;
                 break;
 
 
 
             // 초전도 : 전기 공 공격력 +10
             case CardEffectType.Superconductivity:
+                ballShooter.electricBonusDamage += cardData.value1;
                 break;
 
             // 낙뢰 : 전기 공의 직접 피해 +50%
             case CardEffectType.LightningStrike:
+                ballShooter.electricDirectBonusDamage += cardData.value1;
                 break;
 
             // 확장 회로 : 전이 범위 +1(중접X)
             case CardEffectType.ExtendedCircuit:
+                ballShooter.chainRangeBonus = (int)cardData.value1;
                 break;
 
 
 
             // 폭풍 : 바람 공 공격력 +10
             case CardEffectType.Storm:
+                ballShooter.windBonusDamage += cardData.value1;
                 break;
 
             // 칼바람 : 관통 피해 +50%
             case CardEffectType.RazorWind:
+                ballShooter.pierceBonusDamage += cardData.value1;
                 break;
 
             // 상승 기류 : 관통 범위 +1(중첩X)
             case CardEffectType.Updraft:
+                ballShooter.pierceRangeBonus = (int)cardData.value1;
                 break;
 
         // 영웅 카드 끝 --------------------

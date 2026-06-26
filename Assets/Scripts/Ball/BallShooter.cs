@@ -70,7 +70,7 @@ public class BallShooter : MonoBehaviour
     /// 점화 카드 보너스
     /// </summary>
     [Header("화상 상태 적에게 추가 피해 배율")]
-    public float ignitionBonus = 0;
+    public float ignitedBonusDamage = 0;
 
     /// <summary>
     /// 물 공의 보너스 대미지
@@ -82,7 +82,7 @@ public class BallShooter : MonoBehaviour
     /// 냉각 카드 보너스
     /// </summary>
     [Header("젖음 상태 적에게 추가 피해 배율")]
-    public float coolingBounsDamage = 0;
+    public float wetBounsDamage = 0;
 
     /// <summary>
     /// 공의 보너즈 젖음 지속시간
@@ -100,13 +100,13 @@ public class BallShooter : MonoBehaviour
     /// 압괴 추가 피해 배율
     /// </summary>
     [Header("체력이 50% 미만인 적에게 땅 공의 추가 피해 +50%")]
-    public float crushBonusDamage;
+    public float landHalfHPBonusDamage;
 
     /// <summary>
     /// 균열 추가 피해 배율
     /// </summary>
     [Header("땅 공의 추가 피해 배율%")]
-    public float crackBonusDamage;
+    public float landExtraBonusDamage;
 
     /// <summary>
     /// 전기 공의 보너스 대미지
@@ -149,6 +149,24 @@ public class BallShooter : MonoBehaviour
     /// </summary>
     [Header("노말 공의 보너스 대미지")]
     public float normalBonusDamage = 0;
+
+    /// <summary>
+    /// 젖음 전파 횟수
+    /// </summary>
+    [Header("젖음 전파 횟수")]
+    public int wetSpreadCount = 0;
+
+    /// <summary>
+    /// 전이 범위 증가(중첩X)
+    /// </summary>
+    [Header("전이 범위 증가(중첩X)")]
+    public int chainRangeBonus = 0;
+
+    /// <summary>
+    /// 관통 범위 증가(중첩X)
+    /// </summary>
+    [Header("관통 범위 증가(중첩X)")]
+    public int pierceRangeBonus = 0;
 
     private void Awake()
     {

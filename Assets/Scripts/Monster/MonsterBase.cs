@@ -502,7 +502,8 @@ public class MonsterBase : RecycleObject, IDamageable
     {
         Vector3 center = transform.position;
 
-        float chainRange = 0.31f;
+        //float chainRange = 0.31f;
+        float chainRange = effect.duration;
 
         float chainDamage =
             Mathf.Ceil(effect.baseDamage * effect.value);
@@ -568,10 +569,14 @@ public class MonsterBase : RecycleObject, IDamageable
 
     private void ApplyPierce(StatusEffectData effect)
     {
+        // 관통 범위
+        float pierceRange = effect.duration;
+
+        // 관통 피해 계산
         float pierceDamage =
             Mathf.Ceil(effect.baseDamage * effect.value);
 
-        // 맞은 몬스터 이펙트
+        // 맞은 몬스터 위치에 관통 이펙트 생성
         Factory.Instance.GetWindPierce(
             new Vector3(
                 transform.position.x,
@@ -582,21 +587,79 @@ public class MonsterBase : RecycleObject, IDamageable
         // 효과음 재생
         SoundManager.Instance.PlayPierce();
 
-        // 위로 이동 중이었다면 위쪽 탐색
-        Vector3 searchPos;
+        // 공이 이동하던 방향 저장(위로 이동 중이었다면 위쪽 탐색)
+        Vector3 direction;
 
-        // 공이 위쪽으로 이동중 블록과 충돌했다면 위쪽으로 관통
+        // 공이 위쪽으로 이동 중 블록과 충돌했다면 위 방향으로 관통
         if (effect.directionValue.z > 0f)
         {
-            searchPos = transform.position + Vector3.forward * 0.31f;
+            //direction = transform.position + Vector3.forward * pierceRange;
+            direction = Vector3.forward;
         }
+        // 아래로 이동 중이었다면 아래 방향으로 관통
         else
         {
-            searchPos = transform.position + Vector3.back * 0.31f;
+            //direction = transform.position + Vector3.back * pierceRange;
+            direction = Vector3.back;
         }
 
-        Collider[] hits = Physics.OverlapSphere(
-            searchPos,
+
+        // 현재 관통 가능한 칸 수 계산
+        // ex)
+        // 0.31f → 1칸
+        // 0.62f → 2칸
+        // 0.93f → 3칸
+        int rangeCount =
+            Mathf.RoundToInt(pierceRange / 0.31f);
+
+        // 1칸부터 최대 관통 거리까지 순서대로 검사
+        for (int i = 1; i <= rangeCount; i++)
+        {
+            // 현재 검사할 위치
+            // i가 증가할수록 한 칸씩 더 멀리 검사
+            Vector3 searchPos =
+                transform.position + direction * 0.31f * i;
+
+            Collider[] hits = Physics.OverlapSphere(
+                searchPos,
+                0.1f,
+                LayerMask.GetMask("Monster"));
+
+            foreach (Collider hit in hits)
+            {
+                // 자기 자신은 제외
+                if (hit.gameObject == gameObject)
+                    continue;
+
+                IDamageable other = hit.GetComponent<IDamageable>();
+
+                if (other == null)
+                    continue;
+
+                // 관통 대상 위치에 이펙트 생성
+                Factory.Instance.GetWindPierce(
+                    new Vector3(
+                        hit.transform.position.x,
+                        hit.transform.position.y + 0.14f,
+                        hit.transform.position.z)
+                ).transform.rotation = Quaternion.Euler(90f, 0f, 0f);
+
+                // 관통 피해 적용
+                other.TakeDamage(pierceDamage);
+
+                Debug.Log(
+                    $"{hit.name} 에게 관통 피해 : {pierceDamage}");
+
+                // 현재 칸에는 한 마리만 공격
+                // 다음 칸도 검사해야 하므로 for문은 계속 진행된다.
+                break;
+            }
+        }
+
+
+
+        /*Collider[] hits = Physics.OverlapSphere(
+            direction,
             0.1f,
             LayerMask.GetMask("Monster"));
 
@@ -624,6 +687,6 @@ public class MonsterBase : RecycleObject, IDamageable
                 $"{hit.name} 에게 관통 피해 : {pierceDamage}");
 
             break;  // 한 칸만 공격이지만 추후에 여기 수정해서 2칸으로 늘릴지도?
-        }
+        }*/
     }
 }

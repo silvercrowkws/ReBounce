@@ -21,4 +21,4 @@ MonoBehaviour:
   value1: 1
   value2: 0
   value3: 0
-  canDuplicate: 1
+  canDuplicate: 0

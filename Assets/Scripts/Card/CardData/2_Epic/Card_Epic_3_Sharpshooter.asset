@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: Card_Epic_3_Sharpshooter
   m_EditorClassIdentifier: 
   cardName: "\uBA85\uC0AC\uC218"
-  description: "\uCD5C\uB300 \uBC1C\uC0AC \uAC01\uB3C4 +10"
+  description: "\uCD5C\uB300 \uBC1C\uC0AC \uAC01\uB3C4 +10\xB0"
   icon: {fileID: 0}
   grade: 1
+  elementals: 0
   effectType: 27
   value1: 10
   value2: 0
   value3: 0
+  canDuplicate: 0

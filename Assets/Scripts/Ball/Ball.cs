@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -131,6 +132,16 @@ public class Ball : RecycleObject
     /// (첫 충돌부터 배율 적용되지 않도록 -1)
     /// </summary>
     private int bounceCount = -1;
+
+    /// <summary>
+    /// 전기 공의 기본 전이 범위
+    /// </summary>
+    private float baseChainRange = 0.31f;
+
+    /// <summary>
+    /// 바람 공의 기본 전이 범위
+    /// </summary>
+    private float basePierceRange = 0.31f;
 
     private void Awake()
     {
@@ -355,14 +366,14 @@ public class Ball : RecycleObject
         if (monster != null && monster.IsBurning)
         {
             finalDamage *=
-                1f + ballShooter.ignitionBonus;
+                1f + ballShooter.ignitedBonusDamage;
         }
 
         // 젖음 상태 적 추가 피해
         if (monster.IsWet)
         {
             finalDamage *=
-                1f + ballShooter.coolingBounsDamage;
+                1f + ballShooter.wetBounsDamage;
         }
 
         // 균열: 땅 공의 추가 피해 배율 + 20%
@@ -372,13 +383,13 @@ public class Ball : RecycleObject
             if(monster.CurrentHP <= monster.MaxHP * 0.5f)
             {
                 finalDamage *=
-                    1f + ballShooter.crushBonusDamage + ballShooter.crackBonusDamage;
+                    1f + ballShooter.landHalfHPBonusDamage + ballShooter.landExtraBonusDamage;
             }
             // 균열만 적용?
             else
             {
                 finalDamage *=
-                    1f + ballShooter.crackBonusDamage;
+                    1f + ballShooter.landExtraBonusDamage;
             }
         }
 
@@ -505,6 +516,9 @@ public class Ball : RecycleObject
         };
 
         target.TakeStatusEffect(wet);
+
+        // 범람
+        SpreadWet(target, wet);
     }
 
     private void ApplyLand(IDamageable target)
@@ -584,7 +598,8 @@ public class Ball : RecycleObject
         StatusEffectData chainLightning = new StatusEffectData
         {
             effectType = StatusEffectType.ChainLightning,
-            duration = 0f,
+            //duration = 0f,    // 지속시간 대신 전이 범위로 재활용
+            duration = baseChainRange * (1 + ballShooter.chainRangeBonus),
             //value = 0.3f,   // 전이 대미지
             value = baseChainValue + ballShooter.chainBonusDamage,   // 전이 대미지
             baseDamage = damage
@@ -608,7 +623,8 @@ public class Ball : RecycleObject
         StatusEffectData pierce = new StatusEffectData
         {
             effectType = StatusEffectType.Pierce,
-            duration = 0f,
+            //duration = 0f,    관통 범위로 재활용
+            duration = basePierceRange * (1 + ballShooter.pierceRangeBonus),
             //value = 1f,   // 100% 관통 대미지
             value = pierceValue,
             baseDamage = damage,
@@ -618,5 +634,47 @@ public class Ball : RecycleObject
         };
 
         target.TakeStatusEffect(pierce);
+    }
+
+    /// <summary>
+    /// 범람 효과 : 다른 몬스터에게 젖음 전파
+    /// </summary>
+    private void SpreadWet(IDamageable target, StatusEffectData wet)
+    {
+        // 범람 카드가 없으면 종료
+        if (ballShooter.wetSpreadCount <= 0)
+            return;
+
+        MonsterBase centerMonster = target as MonsterBase;
+
+        if (centerMonster == null)
+            return;
+
+        // 활성화된 몬스터 리스트 복사
+        List<MonsterBase> monsters =
+            new List<MonsterBase>(MonsterSpawner.Instance.GetActiveMonsters());
+
+        // 맞은 몬스터 제외
+        monsters.Remove(centerMonster);
+
+        // 비활성 또는 null 제거
+        monsters.RemoveAll(monster =>
+            monster == null || !monster.gameObject.activeSelf);
+
+        int spreadCount =
+            Mathf.Min(ballShooter.wetSpreadCount, monsters.Count);
+
+        for (int i = 0; i < spreadCount; i++)
+        {
+            // 랜덤 대상 선택
+            int randomIndex = Random.Range(0, monsters.Count);
+
+            MonsterBase monster = monsters[randomIndex];
+
+            monster.TakeStatusEffect(wet);
+
+            // 같은 몬스터가 또 선택되지 않도록 제거
+            monsters.RemoveAt(randomIndex);
+        }
     }
 }
