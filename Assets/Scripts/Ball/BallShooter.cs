@@ -168,6 +168,55 @@ public class BallShooter : MonoBehaviour
     [Header("관통 범위 증가(중첩X)")]
     public int pierceRangeBonus = 0;
 
+    /// <summary>
+    /// 소각 카드 화상 피해 추가 배율 (1 = +100%)
+    /// </summary>
+    [Header("소각 카드 화상 피해 추가 배율 (1 = +100%)")]
+    public int incinerationBonus = 0;
+
+    /// <summary>
+    /// 잿더미 카드 화상 최대 체력 1% 추가 피해
+    /// </summary>
+    [Header("잿더미 카드 화상 최대 체력 1% 추가 피해")]
+    public float ashesBonus = 0;
+
+    /// <summary>
+    /// 범람이 모든 젖지 않은 적에게 적용되는지 여부
+    /// true : 전체 적용O, false : 전체 적용X
+    /// </summary>
+    [Header("범람 전체 적용 여부")]
+    public bool tsunami = false;
+
+    /// <summary>
+    /// 젖음 상태의 적에게 가하는 피해가 방어 효과를 10% 무시(5중첩)
+    /// </summary>
+    [Header("젖음 상태의 적에게 가하는 피해가 방어 효과를 10% 무시(5중첩)")]
+    public float vortex = 0;
+
+    /// <summary>
+    /// 좌우 적에게 피해의 50%(최대 2중첩)
+    /// </summary>
+    [Header("좌우 적에게 피해의 50%(최대 2중첩)")]
+    public float earthquake = 0f;
+
+    /// <summary>
+    /// 땅 속성 추가 피해에 더해지는 대상 현재 체력 비율
+    /// </summary>
+    [Header("땅 속성 추가 피해에 더해지는 대상 현재 체력 비율")]
+    public float pulverizationBonus = 0f;
+
+    /// <summary>
+    /// 뇌폭 : 기본 전이 피해가 직접 피해와 동일해짐
+    /// </summary>
+    [Header("기본 전이 피해가 직접 피해와 동일해짐")]
+    public bool thunderburst = false;
+
+    /// <summary>
+    /// 초고압 : 전기 공 적중 시 추가 전이 +1(중첩X)
+    /// </summary>
+    [Header("초고압 : 전기 공 적중 시 추가 전이 +1(중첩X)")]
+    public bool highVoltage = false;
+
     private void Awake()
     {
         inputActions = new PlayerInputActions();

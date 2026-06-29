@@ -19,7 +19,7 @@ MonoBehaviour:
   grade: 2
   elementals: 3
   effectType: 52
-  value1: 50
+  value1: 0.5
   value2: 2
   value3: 0
   canDuplicate: 1

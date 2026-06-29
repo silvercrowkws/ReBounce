@@ -13,12 +13,13 @@ MonoBehaviour:
   m_Name: Card_Legendary_6_Thunderburst
   m_EditorClassIdentifier: 
   cardName: "(\uC804\uAE30)\uB1CC\uD3ED"
-  description: "\uC804\uC774 \uD53C\uD574\uAC00 \uC9C1\uC811 \uD53C\uD574\uC640 \uB3D9\uC77C\uD574\uC9C4\uB2E4."
+  description: "\uAE30\uBCF8 \uC804\uC774 \uD53C\uD574\uAC00 \uC9C1\uC811 \uD53C\uD574\uC640
+    \uB3D9\uC77C\uD574\uC9C4\uB2E4.(\uC911\uCCA9X)"
   icon: {fileID: 0}
   grade: 2
   elementals: 4
   effectType: 54
-  value1: 0
+  value1: 1
   value2: 0
   value3: 0
-  canDuplicate: 1
+  canDuplicate: 0

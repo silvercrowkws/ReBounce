@@ -1,6 +1,8 @@
+using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public enum BallElementals
 {
@@ -411,6 +413,11 @@ public class Ball : RecycleObject
 
         // 최종적으로 계산된 데미지 적용
         damageable.TakeDamage(finalDamage);
+
+        if(ballElementals == BallElementals.Land)
+        {
+            ApplyEarthquake(damageable, finalDamage);
+        }
     }
 
     /// <summary>
@@ -493,13 +500,23 @@ public class Ball : RecycleObject
 
     private void ApplyBurn(IDamageable target)
     {
+        float burnDamage =
+        (baseBurnDamage + ballShooter.bonusBurnDamage) *
+        (1 + ballShooter.incinerationBonus);
+
+        // 잿더미 : 최대 체력 비례 피해 추가(소수점 올림처리)
+        burnDamage +=
+            Mathf.Ceil(target.MaxHP * ballShooter.ashesBonus);
+
         StatusEffectData burn = new StatusEffectData
         {
             effectType = StatusEffectType.Burn,
             //duration = 5f,
             //value = 5f
             duration = baseBurnDuration + ballShooter.bonusBurnDuration,
-            value = baseBurnDamage + ballShooter.bonusBurnDamage,
+            /*value = (1 + ballShooter.incinerationBonus) 
+            * (baseBurnDamage + ballShooter.bonusBurnDamage),*/
+            value = burnDamage,
         };
 
         target.TakeStatusEffect(burn);
@@ -523,12 +540,22 @@ public class Ball : RecycleObject
 
     private void ApplyLand(IDamageable target)
     {
+        float value = 1f;
+
+        // 압쇄 : 현재 체력의 n%만큼 추가 피해를 배율로 환산
+        if (ballShooter.pulverizationBonus > 0f)
+        {
+            value +=
+            (target.CurrentHP * ballShooter.pulverizationBonus) / damage;
+        }
+
         // 적의 방어력을 일부 무시하는 공격
         StatusEffectData ignoreDefense = new StatusEffectData
         {
             effectType = StatusEffectType.IgnoreDefense,
             duration = 0f,
-            value = 1f,             // 추가 피해 정도
+            //value = 1f,             // 추가 피해 정도
+            value = value,             // 추가 피해 정도
             baseDamage = damage     // 원본 대미지
         };
 
@@ -594,6 +621,11 @@ public class Ball : RecycleObject
             Debug.Log($"{hit.name} 에게 번개 전이 피해 : {chainDamage}");
         }*/
         // =>  다른 함수들 처럼 MonsterBase 에서 처리하도록 수정
+        
+        if(ballShooter.thunderburst != false)
+        {
+            baseChainValue = 1f;
+        }
 
         StatusEffectData chainLightning = new StatusEffectData
         {
@@ -605,7 +637,15 @@ public class Ball : RecycleObject
             baseDamage = damage
         };
 
-        target.TakeStatusEffect(chainLightning);
+        // 초고압 상태면 전이 2회 하도록
+        if (ballShooter.highVoltage)
+        {
+            StartCoroutine(HighVoltageCoroutine(target, chainLightning));
+        }
+        else
+        {
+            target.TakeStatusEffect(chainLightning);
+        }
     }
 
     private void ApplyPierce(IDamageable target)
@@ -637,7 +677,7 @@ public class Ball : RecycleObject
     }
 
     /// <summary>
-    /// 범람 효과 : 다른 몬스터에게 젖음 전파
+    /// 범람 카드 효과 : 다른 몬스터에게 젖음 전파
     /// </summary>
     private void SpreadWet(IDamageable target, StatusEffectData wet)
     {
@@ -661,8 +701,22 @@ public class Ball : RecycleObject
         monsters.RemoveAll(monster =>
             monster == null || !monster.gameObject.activeSelf);
 
-        int spreadCount =
-            Mathf.Min(ballShooter.wetSpreadCount, monsters.Count);
+        /*int spreadCount =
+            Mathf.Min(ballShooter.wetSpreadCount, monsters.Count);*/
+
+        int spreadCount;
+
+        // 해일이 있다면 모든 몬스터에게 전파
+        if (ballShooter.tsunami)
+        {
+            spreadCount = monsters.Count;
+        }
+        // 없다면 기존 범람 개수만큼만 전파
+        else
+        {
+            spreadCount =
+                Mathf.Min(ballShooter.wetSpreadCount, monsters.Count);
+        }
 
         for (int i = 0; i < spreadCount; i++)
         {
@@ -675,6 +729,75 @@ public class Ball : RecycleObject
 
             // 같은 몬스터가 또 선택되지 않도록 제거
             monsters.RemoveAt(randomIndex);
+        }
+    }
+
+    /// <summary>
+    /// 지진 카드 효과 : 좌우 적에게 피해의 50%(최대 2중첩)
+    /// </summary>
+    /// <param name="target"></param>
+    /// <param name="damage"></param>
+    private void ApplyEarthquake(
+    IDamageable target,
+    float damage)
+    {
+        // 지진 카드가 없으면 종료
+        if (ballShooter.earthquake <= 0f)
+            return;
+
+        MonsterBase centerMonster = target as MonsterBase;
+
+        if (centerMonster == null)
+            return;
+
+        float earthquakeDamage =
+            Mathf.Ceil(damage * ballShooter.earthquake);
+
+        Vector3 center = centerMonster.transform.position;
+
+        Collider[] hits = Physics.OverlapSphere(
+            center,
+            0.35f,
+            LayerMask.GetMask("Monster"));
+
+        foreach (Collider hit in hits)
+        {
+            if (hit.gameObject == centerMonster.gameObject)
+                continue;
+
+            Vector3 dir =
+                hit.transform.position - center;
+
+            dir.y = 0f;
+            dir.Normalize();
+
+            // 좌우만 허용
+            if (Mathf.Abs(Vector3.Dot(dir, Vector3.right)) < 0.9f)
+                continue;
+
+            IDamageable other =
+                hit.GetComponent<IDamageable>();
+
+            if (other == null)
+                continue;
+
+            other.TakeDamage(earthquakeDamage);
+        }
+    }
+
+    /// <summary>
+    /// 초고압 : 0.2초 간격으로 전이를 2회 발생
+    /// </summary>
+    private IEnumerator HighVoltageCoroutine(IDamageable target, StatusEffectData chainLightning)
+    {
+        target.TakeStatusEffect(chainLightning);
+
+        yield return new WaitForSeconds(0.2f);
+
+        // 첫 번째 전이로 죽었을 수도 있으므로 체크
+        if (target != null)
+        {
+            target.TakeStatusEffect(chainLightning);
         }
     }
 }

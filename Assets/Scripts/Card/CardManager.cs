@@ -726,40 +726,54 @@ public class CardManager : Singleton<CardManager>
 
             // 소각 : 화상 피해 100% 증가
             case CardEffectType.Incineration:
+                ballShooter.incinerationBonus += (int)cardData.value1;
                 break;
 
             // 잿더미 : 화상 피해에 대상 최대 체력의 1%를 추가한다.
             case CardEffectType.Ashes:
+                ballShooter.ashesBonus += cardData.value1;
                 break;
 
 
 
             // 해일 : 범람이 모든 젖지 않은 적에게 적용된다.
             case CardEffectType.Tsunami:
+                ballShooter.tsunami = true;
                 break;
 
-            // 와류 : 젖음 상태 적에게 가하는 피해가 방어 효과를 10% 무시한다(수치 조정 필요)
+            // 와류 : 젖음 상태 적에게 가하는 피해가 방어 효과를 10% 무시한다(5중첩)
             case CardEffectType.Vortex:
+                if(ballShooter.vortex < 0.6)
+                {
+                    ballShooter.vortex += cardData.value1;
+                }
                 break;
 
 
 
             // 지진 : 좌우 적에게 피해의 50%(최대 2중첩)
             case CardEffectType.Earthquake:
+                if (ballShooter.earthquake < 1.0f)
+                {
+                    ballShooter.earthquake += cardData.value1;
+                }
                 break;
 
             // 압쇄 : 땅 공의 추가 피해가 적의 현재 체력의 5%를 추가로 가한다.
             case CardEffectType.Pulverization:
+                ballShooter.pulverizationBonus += cardData.value1;
                 break;
 
 
 
-            // 뇌폭 : 전이 피해가 직접 피해와 동일해짐
+            // 뇌폭 : 전이 피해가 직접 피해와 동일해짐(중첩X)
             case CardEffectType.Thunderburst:
+                ballShooter.thunderburst = true;
                 break;
 
             // 초고압 : 전기 공 적중 시 추가 전이 +1(중첩X)
             case CardEffectType.HighVoltage:
+                ballShooter.highVoltage = true;
                 break;
 
 
