@@ -217,6 +217,12 @@ public class BallShooter : MonoBehaviour
     [Header("초고압 : 전기 공 적중 시 추가 전이 +1(중첩X)")]
     public bool highVoltage = false;
 
+    /// <summary>
+    /// 태풍 : 관통 거리 무제한
+    /// </summary>
+    [Header("태풍 : 관통 거리 무제한")]
+    public bool typhoon = false;
+
     private void Awake()
     {
         inputActions = new PlayerInputActions();

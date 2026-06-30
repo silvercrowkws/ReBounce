@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Card_Legendary_9_JetStream
   m_EditorClassIdentifier: 
   cardName: "(\uBC14\uB78C)\uC81C\uD2B8\uAE30\uB958"
-  description: "\uBC14\uB78C \uACF5\uC774 \uBC18\uC0AC\uB420 \uB54C\uB9C8\uB2E4 \uD53C\uD574
-    +30% \uCD94\uAC00"
+  description: "\uBC14\uB78C \uACF5\uC774 \uBC18\uC0AC\uB420 \uB54C\uB9C8\uB2E4 \uAD00\uD1B5
+    \uD53C\uD574 +30% \uCD94\uAC00"
   icon: {fileID: 0}
   grade: 2
   elementals: 5
   effectType: 57
-  value1: 30
+  value1: 0.3
   value2: 0
   value3: 0
   canDuplicate: 1

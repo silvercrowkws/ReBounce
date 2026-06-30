@@ -660,11 +660,22 @@ public class Ball : RecycleObject
                 bounceCount * ballShooter.bouncePierceBonusDamage;
         }
 
+        float pierceRange = 0;
+        if (ballShooter.typhoon)
+        {
+            pierceRange = basePierceRange * 8;
+        }
+        else
+        {
+            pierceRange = basePierceRange * (1 + ballShooter.pierceRangeBonus);
+        }
+
         StatusEffectData pierce = new StatusEffectData
         {
             effectType = StatusEffectType.Pierce,
             //duration = 0f,    관통 범위로 재활용
-            duration = basePierceRange * (1 + ballShooter.pierceRangeBonus),
+            //duration = basePierceRange * (1 + ballShooter.pierceRangeBonus),
+            duration = pierceRange,
             //value = 1f,   // 100% 관통 대미지
             value = pierceValue,
             baseDamage = damage,

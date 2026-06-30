@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Card_Rare_22_Turbulence
   m_EditorClassIdentifier: 
   cardName: "(\uBC14\uB78C)\uB09C\uAE30\uB958"
-  description: "\uBC14\uB78C \uACF5\uC774 \uBC18\uC0AC\uB420 \uB54C\uB9C8\uB2E4 \uD53C\uD574
-    +10%"
+  description: "\uBC14\uB78C \uACF5\uC774 \uBC18\uC0AC\uB420 \uB54C\uB9C8\uB2E4 \uAD00\uD1B5
+    \uD53C\uD574 +10%"
   icon: {fileID: 0}
   grade: 0
   elementals: 5

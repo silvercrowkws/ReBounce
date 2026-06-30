@@ -780,10 +780,12 @@ public class CardManager : Singleton<CardManager>
 
             // 태풍 : 관통 거리 무제한
             case CardEffectType.Typhoon:
+                ballShooter.typhoon = true;
                 break;
 
-            // 제트기류 : 바람 공이 반사될 때마다 피해 +30%
+            // 제트기류 : 바람 공이 반사될 때마다 관통 피해 +30%
             case CardEffectType.JetStream:
+                ballShooter.bouncePierceBonusDamage += cardData.value1;
                 break;
         }
     }
