@@ -129,6 +129,7 @@ public class TurnManager : Singleton<TurnManager>
 
 
             // 테스트용 턴 마다 노말 공 1개 부여
+             
             /*BallShooter ballshooter = FindAnyObjectByType<BallShooter>();
             //ballshooter.shootBalls.Add(BallElementals.Normal);
             ballshooter.AddBall(BallElementals.Normal);*/
