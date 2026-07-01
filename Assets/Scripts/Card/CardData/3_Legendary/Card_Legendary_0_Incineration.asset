@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Card_Legendary_0_Incineration
   m_EditorClassIdentifier: 
   cardName: "(\uBD88)\uC18C\uAC01"
-  description: "\uD654\uC0C1 \uD53C\uD574 100% \uC99D\uAC00"
+  description: "\uD654\uC0C1 \uD53C\uD574 50% \uC99D\uAC00"
   icon: {fileID: 0}
   grade: 2
   elementals: 1
   effectType: 48
-  value1: 1
+  value1: 0.5
   value2: 0
   value3: 0
   canDuplicate: 1

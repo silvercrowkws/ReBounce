@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Card_Legendary_4_Earthquake
   m_EditorClassIdentifier: 
   cardName: "(\uB545)\uC9C0\uC9C4"
-  description: "\uC88C\uC6B0 \uC801\uC5D0\uAC8C \uD53C\uD574\uC758 50$ \uC801\uC6A9(\uCD5C\uB300
+  description: "\uC88C\uC6B0 \uC801\uC5D0\uAC8C \uD53C\uD574\uC758 50% \uC801\uC6A9(\uCD5C\uB300
     2\uC911\uCCA9)"
   icon: {fileID: 0}
   grade: 2

@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: Card_Epic_2_ReinforcedBullet
   m_EditorClassIdentifier: 
   cardName: "\uAC15\uD654 \uD0C4\uD658"
-  description: "\uBAA8\uB4E0 \uACF5 \uACF5\uACA9\uB825 +5"
+  description: "\uBAA8\uB4E0 \uACF5 \uACF5\uACA9\uB825 +3"
   icon: {fileID: 0}
   grade: 1
+  elementals: 0
   effectType: 26
-  value1: 5
+  value1: 3
   value2: 0
   value3: 0
+  canDuplicate: 1

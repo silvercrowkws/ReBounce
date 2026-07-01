@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Card_Rare_8_StrongBurn
   m_EditorClassIdentifier: 
   cardName: "(\uBD88)\uAC15\uD55C \uD654\uC0C1"
-  description: "\uD654\uC0C1 \uD53C\uD574 +2"
+  description: "\uD654\uC0C1 \uD53C\uD574 +1"
   icon: {fileID: 0}
   grade: 0
   elementals: 1
   effectType: 9
-  value1: 2
+  value1: 1
   value2: 0
   value3: 0
   canDuplicate: 1

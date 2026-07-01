@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Card_Epic_18_Superconductivity
   m_EditorClassIdentifier: 
   cardName: "(\uC804\uAE30)\uCD08\uC804\uB3C4"
-  description: "\uC804\uAE30 \uACF5 \uACF5\uACA9\uB825 +10"
+  description: "\uC804\uAE30 \uACF5 \uACF5\uACA9\uB825 +6"
   icon: {fileID: 0}
   grade: 1
   elementals: 4
   effectType: 42
-  value1: 10
+  value1: 6
   value2: 0
   value3: 0
   canDuplicate: 1

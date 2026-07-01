@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: "(\uB545)\uBD95\uAD34"
   description: "\uCCB4\uB825 50% \uBBF8\uB9CC \uC801\uC5D0\uAC8C \uB545 \uACF5 \uD53C\uD574
-    +100%"
+    +60%"
   icon: {fileID: 0}
   grade: 1
   elementals: 3
   effectType: 40
-  value1: 1
+  value1: 0.6
   value2: 0
   value3: 0
   canDuplicate: 1

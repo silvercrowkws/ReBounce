@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: Card_Rare_2_ModifiedBullets
   m_EditorClassIdentifier: 
   cardName: "\uD0C4\uD658 \uAC1C\uC870"
-  description: "\uBAA8\uB4E0 \uACF5 \uACF5\uACA9\uB825 +2"
+  description: "\uBAA8\uB4E0 \uACF5 \uACF5\uACA9\uB825 +1"
   icon: {fileID: 0}
   grade: 0
   elementals: 0
   effectType: 3
-  value1: 2
+  value1: 1
   value2: 0
   value3: 0
+  canDuplicate: 1

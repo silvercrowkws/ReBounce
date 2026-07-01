@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Card_Rare_14_Shatter
   m_EditorClassIdentifier: 
   cardName: "(\uB545)\uD30C\uC1C4"
-  description: "\uB545 \uACF5 \uACF5\uACA9\uB825 +5"
+  description: "\uB545 \uACF5 \uACF5\uACA9\uB825 +3"
   icon: {fileID: 0}
   grade: 0
   elementals: 3
   effectType: 15
-  value1: 5
+  value1: 3
   value2: 0
   value3: 0
   canDuplicate: 1

@@ -180,14 +180,16 @@ public class MonsterBase : RecycleObject, IDamageable
 
     /// <summary>
     /// 턴 진행 상황에 따라 스폰되는 몬스터의 체력을 변동하는 함수
+    /// 초반은 완만하게 증가하고,
+    /// 후반으로 갈수록 증가량이 커져 플레이어 성장 속도를 따라가도록 설계.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>현재 턴의 몬스터 체력</returns>
     private float GetMonsterHPByTurn()
     {
         // 테스트용 100 고정
         //return 100f;
 
-        int turn = TurnManager.Instance.turnNumber + 1;
+        /*int turn = TurnManager.Instance.turnNumber + 1;
 
         // 6턴까지는 +8씩 증가
         if (turn < 7)
@@ -196,7 +198,47 @@ public class MonsterBase : RecycleObject, IDamageable
         }
 
         // 7턴 부터는 +10씩 증가
-        return 60f + (turn - 6) * 10f;
+        return 60f + (turn - 6) * 10f;*/
+
+        // 1~6턴 +8씩 60, 7~10턴 +10씩 100, 11~15턴 +15씩 175
+        // 16~20턴 +25씩 300, 21~25턴 +25씩 475, 26~30턴 +45씩 700
+        // 31턴 이후부터는 +50,55,60...씩 계속 증가
+        int turn = TurnManager.Instance.turnNumber + 1;
+
+        // 1~6턴 : +8
+        if (turn <= 6)
+            return 20f + (turn - 1) * 8f;
+
+        // 7~10턴 : +10
+        if (turn <= 10)
+            return 60f + (turn - 6) * 10f;
+
+        // 11~15턴 : +15
+        if (turn <= 15)
+            return 100f + (turn - 10) * 15f;
+
+        // 16~20턴 : +25
+        if (turn <= 20)
+            return 175f + (turn - 15) * 25f;
+
+        // 21~25턴 : +35
+        if (turn <= 25)
+            return 300f + (turn - 20) * 35f;
+
+        // 26~30턴 : +45
+        if (turn <= 30)
+            return 475f + (turn - 25) * 45f;
+
+        // 31턴 이후
+        float hp = 700f;
+
+        // 31턴부터 증가량 : 50, 55, 60, 65...
+        for (int t = 31; t <= turn; t++)
+        {
+            hp += 50f + (t - 31) * 5f;
+        }
+
+        return hp;
     }
 
     private void ApplyMaterial()

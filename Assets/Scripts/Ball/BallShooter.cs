@@ -234,7 +234,7 @@ public class BallShooter : MonoBehaviour
 
         // 시작 시 기본 속성 공(Normal) 보유
         // => 테스트 용으로 턴 매니저에서 턴 시작 시 공 1개씩 지급
-        //AddBall(BallElementals.Normal);
+        AddBall(BallElementals.Normal);
 
         // 기본 공 shootCount개 추가
         for (int i = 0; i < shootCount; i++)

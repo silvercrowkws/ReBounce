@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Card_Rare_19_VoltageFocus
   m_EditorClassIdentifier: 
   cardName: "(\uC804\uAE30\uC804\uC555 \uC9D1\uC911"
-  description: "\uC804\uAE30 \uACF5\uC758 \uC9C1\uC811 \uD53C\uD574 +20%"
+  description: "\uC804\uAE30 \uACF5\uC758 \uC9C1\uC811 \uD53C\uD574 +15%"
   icon: {fileID: 0}
   grade: 0
   elementals: 4
   effectType: 20
-  value1: 0.2
+  value1: 0.15
   value2: 0
   value3: 0
   canDuplicate: 1

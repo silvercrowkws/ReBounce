@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Card_Epic_12_Torrent
   m_EditorClassIdentifier: 
   cardName: "(\uBB3C)\uAE09\uB958"
-  description: "\uBB3C \uACF5 \uACF5\uACA9\uB825 +10"
+  description: "\uBB3C \uACF5 \uACF5\uACA9\uB825 +8"
   icon: {fileID: 0}
   grade: 1
   elementals: 2
   effectType: 36
-  value1: 10
+  value1: 8
   value2: 0
   value3: 0
   canDuplicate: 1

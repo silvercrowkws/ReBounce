@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Card_Epic_9_SearingHeat
   m_EditorClassIdentifier: 
   cardName: "(\uBD88)\uACE0\uC5F4"
-  description: "\uD654\uC0B4 \uD53C\uD574 +5"
+  description: "\uD654\uC0C1 \uD53C\uD574 +3"
   icon: {fileID: 0}
   grade: 1
   elementals: 1
   effectType: 33
-  value1: 5
+  value1: 3
   value2: 0
   value3: 0
   canDuplicate: 1

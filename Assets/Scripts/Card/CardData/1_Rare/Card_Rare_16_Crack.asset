@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Card_Rare_16_Crack
   m_EditorClassIdentifier: 
   cardName: "(\uB545)\uADE0\uC5F4"
-  description: "\uB545 \uACF5\uC758 \uCD94\uAC00 \uD53C\uD574 \uBC30\uC728 +20%"
+  description: "\uB545 \uACF5\uC758 \uCD94\uAC00 \uD53C\uD574 \uBC30\uC728 +15%"
   icon: {fileID: 0}
   grade: 0
   elementals: 3
   effectType: 17
-  value1: 0.2
+  value1: 0.15
   value2: 0
   value3: 0
   canDuplicate: 1

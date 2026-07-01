@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Card_Epic_21_Storm
   m_EditorClassIdentifier: 
   cardName: "(\uBC14\uB78C)\uD3ED\uD48D"
-  description: "\uBC14\uB78C \uACF5 \uACF5\uACA9\uB825 +10"
+  description: "\uBC14\uB78C \uACF5 \uACF5\uACA9\uB825 +6"
   icon: {fileID: 0}
   grade: 1
   elementals: 5
   effectType: 45
-  value1: 10
+  value1: 6
   value2: 0
   value3: 0
   canDuplicate: 1

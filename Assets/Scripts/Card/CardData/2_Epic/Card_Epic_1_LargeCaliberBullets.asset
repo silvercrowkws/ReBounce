@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: Card_Epic_1_LargeCaliberBullets
   m_EditorClassIdentifier: 
   cardName: "\uB300\uAD6C\uACBD \uD0C4\uD658"
-  description: "\uB178\uB9D0 \uACF5 \uACF5\uACA9\uB825 +15"
+  description: "\uB178\uB9D0 \uACF5 \uACF5\uACA9\uB825 +8"
   icon: {fileID: 0}
   grade: 1
+  elementals: 0
   effectType: 25
-  value1: 15
+  value1: 8
   value2: 0
   value3: 0
+  canDuplicate: 1

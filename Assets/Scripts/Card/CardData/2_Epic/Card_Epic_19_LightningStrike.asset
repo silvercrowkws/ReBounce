@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Card_Epic_19_LightningStrike
   m_EditorClassIdentifier: 
   cardName: "(\uC804\uAE30)\uB099\uB8B0"
-  description: "\uC804\uAE30 \uACF5\uC758 \uC9C1\uC811 \uD53C\uD574 +50%"
+  description: "\uC804\uAE30 \uACF5\uC758 \uC9C1\uC811 \uD53C\uD574 +35%"
   icon: {fileID: 0}
   grade: 1
   elementals: 4
   effectType: 43
-  value1: 0.5
+  value1: 0.35
   value2: 0
   value3: 0
   canDuplicate: 1

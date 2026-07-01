@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Card_Epic_17_Pulverize
   m_EditorClassIdentifier: 
   cardName: "(\uB545)\uBD84\uC1C4"
-  description: "\uB545 \uACF5\uC758 \uCD94\uAC00 \uD53C\uD574 \uBC30\uC728 +50%"
+  description: "\uB545 \uACF5\uC758 \uCD94\uAC00 \uD53C\uD574 \uBC30\uC728 +30%"
   icon: {fileID: 0}
   grade: 1
   elementals: 3
   effectType: 41
-  value1: 0.5
+  value1: 0.3
   value2: 0
   value3: 0
   canDuplicate: 1

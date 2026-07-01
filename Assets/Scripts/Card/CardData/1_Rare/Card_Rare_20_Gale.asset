@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Card_Rare_20_Gale
   m_EditorClassIdentifier: 
   cardName: "(\uBC14\uB78C)\uAC15\uD48D"
-  description: "\uBC14\uB78C \uACF5 \uACF5\uACA9\uB825 +5"
+  description: "\uBC14\uB78C \uACF5 \uACF5\uACA9\uB825 +3"
   icon: {fileID: 0}
   grade: 0
   elementals: 5
   effectType: 21
-  value1: 5
+  value1: 3
   value2: 0
   value3: 0
   canDuplicate: 1

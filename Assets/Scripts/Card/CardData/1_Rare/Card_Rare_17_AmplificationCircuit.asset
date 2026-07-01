@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Card_Rare_17_AmplificationCircuit
   m_EditorClassIdentifier: 
   cardName: "(\uC804\uAE30)\uC99D\uD3ED \uD68C\uB85C"
-  description: "\uC804\uAE30 \uACF5 \uACF5\uACA9\uB825 +5"
+  description: "\uC804\uAE30 \uACF5 \uACF5\uACA9\uB825 +3"
   icon: {fileID: 0}
   grade: 0
   elementals: 4
   effectType: 18
-  value1: 5
+  value1: 3
   value2: 0
   value3: 0
   canDuplicate: 1

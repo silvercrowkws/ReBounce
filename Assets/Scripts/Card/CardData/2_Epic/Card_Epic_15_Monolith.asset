@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Card_Epic_15_Monolith
   m_EditorClassIdentifier: 
   cardName: "(\uB545)\uAC70\uC554"
-  description: "\uB545 \uACF5 \uACF5\uACA9\uB825 +10"
+  description: "\uB545 \uACF5 \uACF5\uACA9\uB825 +6"
   icon: {fileID: 0}
   grade: 1
   elementals: 3
   effectType: 39
-  value1: 10
+  value1: 6
   value2: 5
   value3: 0
   canDuplicate: 1
