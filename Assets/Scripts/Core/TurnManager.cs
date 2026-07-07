@@ -157,7 +157,11 @@ public class TurnManager : Singleton<TurnManager>
             isShotInProgress = false;        // 공 발사 불가능
 
             isEndProcess = false;           // 종료 처리가 끝났다고 표시
-            OnTurnStart();                  // 다음 턴 시작
+
+            if (!gameManager.IsGameOver)
+            {
+                OnTurnStart();                  // 다음 턴 시작
+            }
         }
     }
 

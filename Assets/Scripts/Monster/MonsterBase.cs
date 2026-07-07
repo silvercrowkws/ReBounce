@@ -535,10 +535,10 @@ public class MonsterBase : RecycleObject, IDamageable
         //=> MonsterSpawner에서 처리하도록 수정
     }
 
-    private void OnTurnEnd()
+    /*private void OnTurnEnd()
     {
         transform.position += new Vector3(0f, 0f, -0.31f);
-    }
+    }*/
 
     private void ApplyChainLightning(StatusEffectData effect)
     {

@@ -60,6 +60,8 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
                 new Vector3(0f, 0f, -0.31f);
         }*/
 
+        bool isGameOverCheck = false;
+
         for (int i = activeMonsters.Count - 1; i >= 0; i--)
         {
             MonsterBase monster = activeMonsters[i];
@@ -73,6 +75,17 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
             Vector3 pos = monster.transform.position;
             pos.z -= 0.31f;
             monster.transform.position = pos;
+
+            if (pos.z <= -1.24f)
+            {
+                isGameOverCheck = true;
+            }
+        }
+
+        if(isGameOverCheck)
+        {
+            Debug.Log("게임 오버 체크 확인");
+            GameManager.Instance.IsGameOver = true;
         }
     }
 

@@ -35,6 +35,31 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     TurnManager turnManager;
 
+    /// <summary>
+    /// 게임 오버(true: 게임 오버, false : 게임 진행 중)
+    /// </summary>
+    private bool isGameOver = false;
+    
+    /// <summary>
+    /// 게임 오버 프로퍼티
+    /// </summary>
+    public bool IsGameOver
+    {
+        get => isGameOver;
+        set
+        {
+            if (isGameOver == value)
+                return; // 값이 같으면 아무것도 안 함
+
+            isGameOver = value;
+
+            if (isGameOver)
+            {
+                GameOver();
+            }
+        }
+    }
+
     private void Awake()
     {
         monsterElementMaterials =
@@ -98,7 +123,6 @@ public class GameManager : Singleton<GameManager>
         firstGroundHitPos = Vector3.zero;
     }
 
-
     public void RegisterFirstGroundHit(Vector3 pos)
     {
         if (hasFirstGroundHit) return;
@@ -108,5 +132,13 @@ public class GameManager : Singleton<GameManager>
 
         Debug.Log("첫 바닥 충돌 위치: " + firstGroundHitPos);
         onFirstGroundHitPos?.Invoke(firstGroundHitPos);
+    }
+
+    /// <summary>
+    /// 게임 오버 처리 함수
+    /// </summary>
+    private void GameOver()
+    {
+        Debug.LogError("게임 오버");
     }
 }
