@@ -140,5 +140,6 @@ public class GameManager : Singleton<GameManager>
     private void GameOver()
     {
         Debug.LogError("게임 오버");
+        // UI 처리하면서 재시작 같은 기능 추가해야 함
     }
 }

@@ -23,6 +23,17 @@ public enum MonsterElementals
     // 바람은 번개에 강하고    불에 약함
 }
 
+public enum MonsterGimmicks
+{
+    None,       // 기믹 없음
+    Heal,       // 주위 몬스터를 회복하는 몬스터
+    Barrier,    // 베리어를 가져 댐감을 받는 몬스터(땅 공이나 물속성 카드의 방어율 무시 같은게 유용하도록)
+    Shield,     // 특정 방향에 방패가 있어서 그 방향으로 오는 공격은 피해를 받지 않는 몬스터 
+    Magnetic,   // 주위 공을 끌어당기고 튕기지 않게 하는 자석 같은 몬스터?
+
+    // - 보스 몬스터 여러마리 중에 하나의 기믹으로 필드의 가장 아랫줄을 제외하고 빈 공간에 몬스터를 N마리 스폰하는거지(와 이거 개쩐다)
+}
+
 public class MonsterBase : RecycleObject, IDamageable
 {
     /// <summary>
