@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,7 +29,15 @@ public enum MonsterGimmicks
     Shield,     // 특정 방향에 방패가 있어서 그 방향으로 오는 공격은 피해를 받지 않는 몬스터 
     Magnetic,   // 주위 공을 끌어당기고 튕기지 않게 하는 자석 같은 몬스터?
 
+    // - 각 속성에 면역인 몬스터??
     // - 보스 몬스터 여러마리 중에 하나의 기믹으로 필드의 가장 아랫줄을 제외하고 빈 공간에 몬스터를 N마리 스폰하는거지(와 이거 개쩐다)
+}
+
+public enum SpawnMonsterType
+{
+    Normal,
+    Gimmick,
+    Boss
 }
 
 public class MonsterBase : RecycleObject, IDamageable

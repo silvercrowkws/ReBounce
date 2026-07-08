@@ -10,7 +10,9 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
     public List<MonsterBase> activeMonsters
         = new List<MonsterBase>();
 
-    // 가능한 스폰 위치
+    /// <summary>
+    /// 가능한 X 스폰 위치
+    /// </summary>
     private readonly float[] spawnXPositions =
     {
         -0.93f,
@@ -108,14 +110,23 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
     }
 
     /// <summary>
-    /// 턴 시작 시 몬스터 스폰
+    /// 턴 시작 시 몬스터 스폰 함수
     /// </summary>
     public void SpawnMonsters()
     {
         Debug.Log("몬스터 스폰");
 
+        int turn = TurnManager.Instance.turnNumber + 1;     // 델리게이트로 받는게 몬스터를 스폰하는 시점보다 느려서 +1 처리
+
         //int spawnCount = Random.Range(4, 7); // 4 ~ 6마리
+
+        // 이번 턴의 총 몬스터 스폰 수
         int spawnCount = GetSpawnCount();
+
+        // 보스 / 기믹 / 일반 몬스터 수 계산
+        int bossCount = GetBossCount(turn);
+        int gimmickCount = GetGimmickCount(turn, spawnCount - bossCount);       // 기믹 몬스터 스폰 숫자 결정
+        int normalCount = spawnCount - bossCount - gimmickCount;                // 일반 몬스터 스폰 숫자 결정
 
         List<float> availablePositions = new List<float>(spawnXPositions);
 
@@ -130,13 +141,68 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
 
             availablePositions.RemoveAt(randomIndex);
 
-            SpawnMonsterAt(spawnX);
+            //SpawnMonsterAt(spawnX);
+
+            SpawnMonsterType spawnType = SpawnMonsterType.Normal;
+
+            if (bossCount > 0)
+            {
+                spawnType = SpawnMonsterType.Boss;
+                bossCount--;
+            }
+            else if (gimmickCount > 0)
+            {
+                spawnType = SpawnMonsterType.Gimmick;
+                gimmickCount--;
+            }
+
+            SpawnMonsterAt(spawnX, spawnType);
         }
     }
 
-    private void SpawnMonsterAt(float xPos)
+    /// <summary>
+    /// 팩토리에서 몬스터를 스폰하는 함수
+    /// </summary>
+    /// <param name="xPos">스폰될 X 위치</param>
+    /// /// <param name="spawnType">스폰할 몬스터 종류</param>
+    private void SpawnMonsterAt(float xPos, SpawnMonsterType spawnType)
     {
+        /*// 현재는 테스트로 초록 고블린만 스폰 중
         MonsterBase monster = Factory.Instance.GetMonster_Goblin_Green();
+
+        if (monster == null)
+            return;
+
+        Vector3 spawnPos = new Vector3(xPos, 0.033f, 1.24f);
+
+        monster.transform.position = spawnPos;
+        monster.gameObject.SetActive(true);
+
+        RegisterMonster(monster);*/
+
+        MonsterBase monster = null;
+
+        switch (spawnType)
+        {
+            case SpawnMonsterType.Normal:
+                // 현재는 테스트로 초록 고블린만 스폰
+                monster = Factory.Instance.GetMonster_Goblin_Green();
+                break;
+
+            case SpawnMonsterType.Gimmick:
+                // 테스트용
+                monster = Factory.Instance.GetMonster_Skull_Poison_Warrior();
+                // 추후 :
+                // monster = Factory.Instance.GetHealMonster();
+                break;
+
+            case SpawnMonsterType.Boss:
+                // 테스트용
+                monster = Factory.Instance.GetMonster_Slime_Orange_King();
+                // 추후 :
+                // monster = Factory.Instance.GetBossMonster();
+                break;
+        }
 
         if (monster == null)
             return;
@@ -165,5 +231,47 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
             return Random.Range(5, 7); // 5 ~ 6
 
         return 7;
+    }
+
+    /// <summary>
+    /// 턴 마다 스폰되는 기믹 몬스터의 수를 조절하는 함수
+    /// </summary>
+    /// <param name="turn"></param>
+    /// <param name="spawnCount"></param>
+    /// <returns></returns>
+    private int GetGimmickCount(int turn, int remainCount)
+    {
+        int gimmickCount = 0;
+
+        if (turn > 39)
+            gimmickCount = remainCount;     // 40턴 이후부터는 모든 몬스터 기믹
+        else if (turn > 34)
+            gimmickCount = 6;       // 35턴 부터는 기믹 몬스터 6마리
+        else if (turn > 29)
+            gimmickCount = 5;       // 30턴 부터는 기믹 몬스터 5마리
+        else if (turn > 24)
+            gimmickCount = 4;       // 25턴 부터는 기믹 몬스터 4마리
+        else if (turn > 19)
+            gimmickCount = 3;       // 20턴 부터는 기믹 몬스터 3마리
+        else if (turn > 14)
+            gimmickCount = 2;       // 15턴 부터는 기믹 몬스터 2마리
+        else if (turn > 9)
+            gimmickCount = 1;       // 10턴 부터는 기믹 몬스터 1마리
+
+        return Mathf.Min(gimmickCount, remainCount);
+    }
+
+    /// <summary>
+    /// 10번째 턴마다 보스 몬스터의 스폰 수를 계산하는 함수
+    /// </summary>
+    /// <param name="turn"></param>
+    /// <returns></returns>
+    private int GetBossCount(int turn)
+    {
+        return (turn % 10 == 0) ? 1 : 0;
+
+        // 50턴부터 보스 2마리
+        // 100턴부터 보스 + 엘리트
+        // 같은 규칙이 생겨도 여기서 처리하면 됨
     }
 }
