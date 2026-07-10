@@ -4,6 +4,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// 몬스터의 속성
+/// </summary>
 public enum MonsterElementals
 {
     Normal = 0,     // 기본
@@ -21,6 +24,9 @@ public enum MonsterElementals
     // 바람은 번개에 강하고    불에 약함
 }
 
+/// <summary>
+/// 몬스터의 기믹여부
+/// </summary>
 public enum MonsterGimmicks
 {
     None,       // 기믹 없음
@@ -29,15 +35,18 @@ public enum MonsterGimmicks
     Shield,     // 특정 방향에 방패가 있어서 그 방향으로 오는 공격은 피해를 받지 않는 몬스터 
     Magnetic,   // 주위 공을 끌어당기고 튕기지 않게 하는 자석 같은 몬스터?
 
-    // - 각 속성에 면역인 몬스터??
-    // - 보스 몬스터 여러마리 중에 하나의 기믹으로 필드의 가장 아랫줄을 제외하고 빈 공간에 몬스터를 N마리 스폰하는거지(와 이거 개쩐다)
+    // - 특정 속성에 면역인 몬스터??
+    // - 보스 몬스터 여러마리 중에 하나의 기믹으로 턴마다 필드의 가장 아랫줄을 제외하고 빈 공간에 몬스터를 N마리 스폰하는거지(와 이거 개쩐다)
 }
 
+/// <summary>
+/// 몬스터의 타입
+/// </summary>
 public enum SpawnMonsterType
 {
     Normal,
     Gimmick,
-    Boss
+    Boss,
 }
 
 public class MonsterBase : RecycleObject, IDamageable
@@ -52,6 +61,23 @@ public class MonsterBase : RecycleObject, IDamageable
     /// 외부에서 접근할 때는 프로퍼티로만 사용
     /// </summary>
     public MonsterElementals MonsterElement => monsterElementals;
+
+    /// <summary>
+    /// 이 몬스터의 기믹
+    /// </summary>
+    [SerializeField]
+    private MonsterGimmicks monsterGimmick = MonsterGimmicks.None;
+
+    public MonsterGimmicks MonsterGimmick => monsterGimmick;
+
+
+    /// <summary>
+    /// 이 몬스터의 스폰 타입
+    /// </summary>
+    [SerializeField]
+    private SpawnMonsterType spawnMonsterType = SpawnMonsterType.Normal;
+
+    public SpawnMonsterType SpawnType => spawnMonsterType;
 
 
     [SerializeField] protected float maxHP = 100f;
@@ -164,26 +190,62 @@ public class MonsterBase : RecycleObject, IDamageable
         Init();     // 초기화 처리
     }
 
-    protected virtual void Init()
+    /// <summary>
+    /// 스폰 시 몬스터 정보를 초기화
+    /// 속성 적용, 기믹 적용, 스폰 타입 적용 담당
+    /// </summary>
+    /// <param name="spawnData"></param>
+    public void Initialize(MonsterSpawnData spawnData)
     {
-        maxHP = GetMonsterHPByTurn();
+        monsterElementals = spawnData.element;
+        monsterGimmick = spawnData.gimmick;
+        spawnMonsterType = spawnData.spawnType;
+
+        // 스폰 타입에 따라 체력 배수 적용
+        switch (spawnMonsterType)
+        {
+            case SpawnMonsterType.Normal:
+                break;
+
+            case SpawnMonsterType.Gimmick:
+                maxHP *= 2;
+                break;
+
+            case SpawnMonsterType.Boss:
+                maxHP *= 5;
+                break;
+        }
 
         currentHP = maxHP;
 
         if (hpText != null)
+            hpText.text = currentHP.ToString();
+
+        ApplyMaterial();
+    }
+
+    protected virtual void Init()
+    {
+        maxHP = GetMonsterHPByTurn();
+
+        // Initialize 에서 몬스터 타입에 맞게 변경하도록 수정
+        /*currentHP = maxHP;
+
+        if (hpText != null)
         {
             hpText.text = currentHP.ToString();
-        }
+        }*/
 
         // 몬스터 속성 랜덤 결정(0 ~ MonsterElementals의 길이 만큼)
         /*int randomElements = UnityEngine.Random.Range(0, System.Enum.GetValues(typeof(MonsterElementals)).Length);
         monsterElementals = (MonsterElementals)randomElements;*/    //=> 가중치 방식으로 변경
 
-        monsterElementals = GetRandomElement();
+        // => MonsterSpawner에서 처리하도록 수정
+        /*monsterElementals = GetRandomElement();
         if (GameManager.Instance.IsMaterialLoaded)
         {
             ApplyMaterial();
-        }
+        }*/
 
         /*if (statusEffectImage != null)
         {
@@ -265,8 +327,8 @@ public class MonsterBase : RecycleObject, IDamageable
                 monsterElementals);
     }
 
-    /// <summary>
-    /// 가중치 랜덤 속성 결정 함수
+    /*/// <summary>
+    /// 가중치 랜덤 속성 결정 함수 => MonsterSpawner로 이전
     /// </summary>
     /// <returns></returns>
     private MonsterElementals GetRandomElement()
@@ -289,7 +351,7 @@ public class MonsterBase : RecycleObject, IDamageable
             return MonsterElementals.Electric;  // 10% 확률로 전기
 
         return MonsterElementals.Wind;          // 10% 확률로 바람 
-    }
+    }*/
 
     /// <summary>
     /// 상태이상 이미지 컨트롤 함수

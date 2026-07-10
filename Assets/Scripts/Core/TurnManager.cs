@@ -193,7 +193,7 @@ public class TurnManager : Singleton<TurnManager>
         Debug.Log($"공 제거 : {ActiveBallCount}");
         Debug.Log($"isShotInProgress : {isShotInProgress}");
 
-        if (isShotInProgress && ActiveBallCount <= 0)
+        if (isShotInProgress && ActiveBallCount <= 0 && !gameManager.IsGameOver)
         {
             Debug.Log("턴 종료 조건 만족");
 

@@ -147,12 +147,12 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
 
             if (bossCount > 0)
             {
-                spawnType = SpawnMonsterType.Boss;
+                spawnType = SpawnMonsterType.Boss;      // 보스 몬스터로 타입 변경
                 bossCount--;
             }
             else if (gimmickCount > 0)
             {
-                spawnType = SpawnMonsterType.Gimmick;
+                spawnType = SpawnMonsterType.Gimmick;   // 기믹 몬스터로 타입 변경
                 gimmickCount--;
             }
 
@@ -180,13 +180,12 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
 
         RegisterMonster(monster);*/
 
-        MonsterBase monster = null;
-
+        /*MonsterBase monster = null;
         switch (spawnType)
         {
             case SpawnMonsterType.Normal:
                 // 현재는 테스트로 초록 고블린만 스폰
-                monster = Factory.Instance.GetMonster_Goblin_Green();
+                //monster = Factory.Instance.GetMonster_Goblin_Green();
                 break;
 
             case SpawnMonsterType.Gimmick:
@@ -202,17 +201,34 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
                 // 추후 :
                 // monster = Factory.Instance.GetBossMonster();
                 break;
-        }
+        }*/
+
+        // 각 타입에 맞는 랜덤한 몬스터를 결정
+        /*MonsterBase monster = GetRandomMonster(spawnType);
 
         if (monster == null)
-            return;
+            return;*/
 
+
+        
         Vector3 spawnPos = new Vector3(xPos, 0.033f, 1.24f);
 
+        MonsterSpawnData spawnData = GetRandomMonster(spawnType);
+
+        MonsterBase monster = spawnData.monster;
+
+        monster.Initialize(spawnData);
+
+        // 위치 설정
+        monster.transform.position = spawnPos;
+
+        // 리스트 등록
+        RegisterMonster(monster);
+/*
         monster.transform.position = spawnPos;
         monster.gameObject.SetActive(true);
 
-        RegisterMonster(monster);
+        RegisterMonster(monster);*/
     }
 
     /// <summary>
@@ -273,5 +289,183 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
         // 50턴부터 보스 2마리
         // 100턴부터 보스 + 엘리트
         // 같은 규칙이 생겨도 여기서 처리하면 됨
+    }
+
+    private MonsterSpawnData GetRandomMonster(SpawnMonsterType spawnType)
+    {
+        MonsterSpawnData spawnData = new MonsterSpawnData();
+
+        // 스폰 타입 저장
+        spawnData.spawnType = spawnType;
+
+        // 속성 결정
+        spawnData.element = GetRandomElement();
+
+        // 기믹 결정
+        switch (spawnType)
+        {
+            case SpawnMonsterType.Normal:
+                spawnData.gimmick = MonsterGimmicks.None;
+                spawnData.monster = GetRandomNormalMonster();
+                break;
+
+            case SpawnMonsterType.Gimmick:
+                spawnData.gimmick = GetRandomGimmick();
+                spawnData.monster = GetRandomGimmickMonster();
+                break;
+
+            case SpawnMonsterType.Boss:
+                spawnData.gimmick = MonsterGimmicks.None;   // 일단 보스 기믹은 없는 상태(변경 예정)
+                spawnData.monster = GetRandomBossMonster();
+                break;
+        }
+
+        /*// 몬스터 결정 => 나중에 각 몬스터 별로
+         * Factory.Instance.GetMonster_Skull 은 A 기믹
+         * Instance.GetMonster_Skull_Archer 는 B 기믹
+         * 이런 식으로 변경할 때 쓸지도?
+        switch (spawnType)
+        {
+            case SpawnMonsterType.Normal:
+                switch (Random.Range(0, 6))
+                {
+                    case 0: spawnData.monster = Factory.Instance.GetMonster_Goblin_Green(); break;
+                    case 1: spawnData.monster = Factory.Instance.GetMonster_Goblin_Green_Archer(); break;
+                    case 2: spawnData.monster = Factory.Instance.GetMonster_Goblin_Green_Warrior(); break;
+                    case 3: spawnData.monster = Factory.Instance.GetMonster_Goblin_Yellow(); break;
+                    case 4: spawnData.monster = Factory.Instance.GetMonster_Goblin_Yellow_Archer(); break;
+                    case 5: spawnData.monster = Factory.Instance.GetMonster_Goblin_Yellow_Warrior(); break;
+                }
+                break;
+
+            case SpawnMonsterType.Gimmick:
+                switch (Random.Range(0, 6))
+                {
+                    case 0: spawnData.monster = Factory.Instance.GetMonster_Skull(); break;
+                    case 1: spawnData.monster = Factory.Instance.GetMonster_Skull_Archer(); break;
+                    case 2: spawnData.monster = Factory.Instance.GetMonster_Skull_Warrior(); break;
+                    case 3: spawnData.monster = Factory.Instance.GetMonster_Skull_Poison(); break;
+                    case 4: spawnData.monster = Factory.Instance.GetMonster_Skull_Poison_Archer(); break;
+                    case 5: spawnData.monster = Factory.Instance.GetMonster_Skull_Poison_Warrior(); break;
+                }
+                break;
+
+            case SpawnMonsterType.Boss:
+                switch (Random.Range(0, 6))
+                {
+                    case 0: spawnData.monster = Factory.Instance.GetMonster_Slime_Green(); break;
+                    case 1: spawnData.monster = Factory.Instance.GetMonster_Slime_Green_King(); break;
+                    case 2: spawnData.monster = Factory.Instance.GetMonster_Slime_Green_Stone(); break;
+                    case 3: spawnData.monster = Factory.Instance.GetMonster_Slime_Orange(); break;
+                    case 4: spawnData.monster = Factory.Instance.GetMonster_Slime_Orange_King(); break;
+                    case 5: spawnData.monster = Factory.Instance.GetMonster_Slime_Orange_Stone(); break;
+                }
+                break;
+        }*/
+
+        return spawnData;
+    }
+
+    /// <summary>
+    /// 일반 몬스터 랜덤 결정
+    /// </summary>
+    /// <returns></returns>
+    private MonsterBase GetRandomNormalMonster()
+    {
+        switch (Random.Range(0, 6))
+        {
+            case 0: return Factory.Instance.GetMonster_Goblin_Green();
+            case 1: return Factory.Instance.GetMonster_Goblin_Green_Archer();
+            case 2: return Factory.Instance.GetMonster_Goblin_Green_Warrior();
+            case 3: return Factory.Instance.GetMonster_Goblin_Yellow();
+            case 4: return Factory.Instance.GetMonster_Goblin_Yellow_Archer();
+            case 5: return Factory.Instance.GetMonster_Goblin_Yellow_Warrior();
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// 기믹 몬스터 랜덤 결정
+    /// </summary>
+    /// <returns></returns>
+    private MonsterBase GetRandomGimmickMonster()
+    {
+        switch (Random.Range(0, 6))
+        {
+            case 0: return Factory.Instance.GetMonster_Skull();
+            case 1: return Factory.Instance.GetMonster_Skull_Archer();
+            case 2: return Factory.Instance.GetMonster_Skull_Warrior();
+            case 3: return Factory.Instance.GetMonster_Skull_Poison();
+            case 4: return Factory.Instance.GetMonster_Skull_Poison_Archer();
+            case 5: return Factory.Instance.GetMonster_Skull_Poison_Warrior();
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// 보스 몬스터 랜덤 결정
+    /// </summary>
+    /// <returns></returns>
+    private MonsterBase GetRandomBossMonster()
+    {
+        switch (Random.Range(0, 6))
+        {
+            case 0: return Factory.Instance.GetMonster_Slime_Green();
+            case 1: return Factory.Instance.GetMonster_Slime_Green_King();
+            case 2: return Factory.Instance.GetMonster_Slime_Green_Stone();
+            case 3: return Factory.Instance.GetMonster_Slime_Orange();
+            case 4: return Factory.Instance.GetMonster_Slime_Orange_King();
+            case 5: return Factory.Instance.GetMonster_Slime_Orange_Stone();
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// 가중치 랜덤 속성 결정 함수
+    /// </summary>
+    /// <returns></returns>
+    private MonsterElementals GetRandomElement()
+    {
+        int rand = UnityEngine.Random.Range(0, 100);
+
+        if (rand < 50)
+            return MonsterElementals.Normal;    // 50% 확률로 노말
+
+        if (rand < 60)
+            return MonsterElementals.Fire;      // 10% 확률로 불
+
+        if (rand < 70)
+            return MonsterElementals.Water;     // 10% 확률로 물
+
+        if (rand < 80)
+            return MonsterElementals.Land;      // 10% 확률로 땅
+
+        if (rand < 90)
+            return MonsterElementals.Electric;  // 10% 확률로 전기
+
+        return MonsterElementals.Wind;          // 10% 확률로 바람 
+    }
+
+
+    /// <summary>
+    /// 테스트 용이므로 나중에 수정 필요
+    /// 랜덤 기믹을 결정하는 함수
+    /// </summary>
+    private MonsterGimmicks GetRandomGimmick()
+    {
+        int random = Random.Range(0, 4);
+
+        switch (random)
+        {
+            case 0: return MonsterGimmicks.Heal;
+            case 1: return MonsterGimmicks.Barrier;
+            case 2: return MonsterGimmicks.Shield;
+            case 3: return MonsterGimmicks.Magnetic;
+        }
+
+        return MonsterGimmicks.None;
     }
 }
