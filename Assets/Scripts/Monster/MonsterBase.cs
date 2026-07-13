@@ -776,12 +776,74 @@ public class MonsterBase : RecycleObject, IDamageable
                 break;
             }
         }
+    }
 
+    /// <summary>
+    /// 기믹 수행의 감지 범위
+    /// 상하좌우만 생각하면 0.31이면 충분한데,
+    /// 대각선은 √가 들어가서 약 0.4384
+    /// 넉넉히 0.45 함
+    /// </summary>
+    [SerializeField]
+    private float healGimmickRange = 0.45f;
 
+    /// <summary>
+    /// 턴 종료 시 실행될 기믹
+    /// </summary>
+    public virtual void OnTurnEndGimmick()
+    {
+        switch (monsterGimmick)
+        {
+            case MonsterGimmicks.Heal:
+                ApplyHealGimmick();
+                break;
 
-        /*Collider[] hits = Physics.OverlapSphere(
-            direction,
-            0.1f,
+                // Barrier, Shield, Magnetic은 이 트리거를 쓰지 않으므로 여기 없음
+        }
+    }
+
+    /// <summary>
+    /// 대미지를 받기 전에 실행될 기믹
+    /// </summary>
+    /// <param name="incomingDamage"></param>
+    /// <returns></returns>
+    public virtual float OnBeforeTakeDamageGimmick(float incomingDamage)
+    {
+        switch (monsterGimmick)
+        {
+            case MonsterGimmicks.Barrier:
+                // TODO: 방어율 무시 무효화 등 실제 로직
+                return incomingDamage;
+        }
+
+        return incomingDamage; // 해당 기믹 아니면 원본 그대로
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="attackDirection"></param>
+    /// <returns></returns>
+    public virtual bool OnCheckBlockGimmick(Vector3 attackDirection)
+    {
+        switch (monsterGimmick)
+        {
+            case MonsterGimmicks.Shield:
+                // TODO: 방패 방향과 attackDirection 비교
+                return false;
+        }
+
+        return false; // 해당 기믹 아니면 막지 않음
+    }
+
+    /// <summary>
+    /// 회복 기믹 수행 함수
+    /// </summary>
+    private void ApplyHealGimmick()
+    {
+        Collider[] hits = Physics.OverlapSphere(
+            transform.position,
+            healGimmickRange,
             LayerMask.GetMask("Monster"));
 
         foreach (Collider hit in hits)
@@ -794,20 +856,20 @@ public class MonsterBase : RecycleObject, IDamageable
             if (other == null)
                 continue;
 
-            // 관통 대상 몬스터 위치에 이펙트 생성
-            Factory.Instance.GetWindPierce(
-                new Vector3(
-                    hit.transform.position.x,
-                    hit.transform.position.y + 0.14f,
-                    hit.transform.position.z)
-            ).transform.rotation = Quaternion.Euler(90f, 0f, 0f);
+            float lostHP = other.MaxHP - other.CurrentHP;
 
-            other.TakeDamage(pierceDamage);
+            if (lostHP <= 0f)
+                continue;
 
-            Debug.Log(
-                $"{hit.name} 에게 관통 피해 : {pierceDamage}");
+            // 소수점 발생 시 무조건 내림
+            float healAmount = Mathf.Floor(lostHP * 0.5f);
 
-            break;  // 한 칸만 공격이지만 추후에 여기 수정해서 2칸으로 늘릴지도?
-        }*/
+            if (healAmount <= 0f)
+                continue;   // 내림 결과 0이면 회복 의미 없으니 스킵
+
+            other.CurrentHP += healAmount;
+
+            Debug.Log($"{gameObject.name}의 회복 기믹 → {hit.name} 이(가) {healAmount} 회복");
+        }
     }
 }

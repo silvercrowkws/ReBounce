@@ -42,6 +42,7 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
 
     private void OnTurnEnd()
     {
+        ExecuteTurnEndGimmicks();
         MoveMonstersDown();
         SpawnMonsters();
     }
@@ -461,11 +462,36 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
         switch (random)
         {
             case 0: return MonsterGimmicks.Heal;
-            case 1: return MonsterGimmicks.Barrier;
+            case 1: return MonsterGimmicks.Heal;        // 테스트 용으로 모두 힐 기믹 몬스터
+            case 2: return MonsterGimmicks.Heal;
+            case 3: return MonsterGimmicks.Heal;
+            /*case 1: return MonsterGimmicks.Barrier;
             case 2: return MonsterGimmicks.Shield;
-            case 3: return MonsterGimmicks.Magnetic;
+            case 3: return MonsterGimmicks.Magnetic;*/
         }
 
         return MonsterGimmicks.None;
+    }
+
+    /// <summary>
+    /// 매 턴이 끝날 때, 필드에 있는 기믹 몬스터들을 찾아서
+    /// 각자의 턴 종료 기믹을 실행시켜주는 함수
+    /// </summary>
+    private void ExecuteTurnEndGimmicks()
+    {
+        // 현재 필드에 살아있는 몬스터(activeMonsters) 순회
+        foreach (MonsterBase monster in activeMonsters)
+        {
+            // null 상태의 몬스터나 비활성화된 몬스터는 건너뜀
+            if (monster == null || !monster.gameObject.activeSelf)
+                continue;
+
+            // 기믹이 없는 일반 몬스터 / 보스 몬스터는 건너뜀
+            if (monster.MonsterGimmick == MonsterGimmicks.None)
+                continue;
+
+            // 턴 종료 기믹이 있는 몬스터만 자기 자신의 OnTurnEndGimmick()을 실행
+            monster.OnTurnEndGimmick();
+        }
     }
 }
