@@ -86,7 +86,7 @@ public class MonsterBase : RecycleObject, IDamageable
     /// <summary>
     /// HP 텍스트
     /// </summary>
-    protected TextMeshProUGUI hpText;    
+    protected TextMeshProUGUI hpText;
 
     public float CurrentHP
     {
@@ -148,6 +148,27 @@ public class MonsterBase : RecycleObject, IDamageable
 
     public bool IsBurning => burnStackCount > 0;
 
+    /// <summary>
+    /// 기믹 표시용 스프라이트 렌더러
+    /// </summary>
+    private SpriteRenderer gimmickObjectRenderer;
+
+    /// <summary>
+    /// 회복 기믹 스프라이트
+    /// </summary>
+    private Sprite healGimmickSprite;
+
+    /// <summary>
+    /// 배리어 기믹 스프라이트
+    /// </summary>
+    private Sprite barrierGimmickSprite;
+
+    /// <summary>
+    /// 배리어 기믹의 피해 감소율 (0.5 = 50% 감소)
+    /// </summary>
+    [SerializeField]
+    private float barrierReduction = 0.5f;
+
     protected virtual void Awake()
     {
         //currentHP = maxHP;    => 활성화 시 처리
@@ -178,6 +199,19 @@ public class MonsterBase : RecycleObject, IDamageable
 
         meshRenderer = GetComponent<MeshRenderer>();
         GameManager.Instance.onMaterialLoaded += ApplyMaterial;
+
+        // 기믹 표시용 오브젝트 처리 부분
+        gimmickObjectRenderer = transform.GetChild(2).GetComponent<SpriteRenderer>();
+
+        if (gimmickObjectRenderer != null)
+        {
+            gimmickObjectRenderer.sprite = null;
+            gimmickObjectRenderer.enabled = false;   // 기본은 꺼둠
+        }
+
+        // 기믹 스프라이트도 같은 방식으로 로드
+        healGimmickSprite = Resources.Load<Sprite>("Gimmick/Gimmick_Heal");
+        barrierGimmickSprite = Resources.Load<Sprite>("Gimmick/Gimmick_Barrier");
     }
 
     protected override void OnEnable()
@@ -221,6 +255,7 @@ public class MonsterBase : RecycleObject, IDamageable
         if (hpText != null)
             hpText.text = currentHP.ToString();
 
+        ApplyGimmickVisual();   // 기믹 표시 갱신
         ApplyMaterial();
     }
 
@@ -380,8 +415,27 @@ public class MonsterBase : RecycleObject, IDamageable
 
     public virtual void TakeDamage(float amount)
     {
-        CurrentHP -= amount;
-        Debug.Log($"{gameObject.name}이 {amount}의 데미지. 남은 HP: {CurrentHP}");
+        /*CurrentHP -= amount;
+        Debug.Log($"{gameObject.name}이 {amount}의 데미지. 남은 HP: {CurrentHP}");*/
+        TakeDamage(amount, false, 0f);   // 배리어 정상 적용
+    }
+
+    public virtual void TakeDamage(float amount, bool ignoreBarrier, float barrierIgnorePercent = 0f)
+    {
+        float finalAmount = amount;
+
+        if (!ignoreBarrier && monsterGimmick == MonsterGimmicks.Barrier)
+        {
+            // 와류 등으로 배리어 감소율 자체가 깎임 (0 밑으로는 안 내려가게)
+            float effectiveReduction =
+                Mathf.Clamp01(barrierReduction - barrierIgnorePercent);
+
+            finalAmount = amount * (1f - effectiveReduction);
+        }
+
+        CurrentHP -= finalAmount;
+
+        Debug.Log($"{gameObject.name}이 {finalAmount}의 데미지(원본 {amount}). 남은 HP: {CurrentHP}");
     }
 
     public virtual void TakeStatusEffect(StatusEffectData effect)
@@ -461,7 +515,7 @@ public class MonsterBase : RecycleObject, IDamageable
             case StatusEffectType.IgnoreDefense:
                 float bonusDamage = Mathf.Ceil(effect.baseDamage * effect.value);
                 
-                TakeDamage(bonusDamage);
+                TakeDamage(bonusDamage, true);
 
                 SoundManager.Instance.PlayIgnoreDefenseClip();
 
@@ -870,6 +924,34 @@ public class MonsterBase : RecycleObject, IDamageable
             other.CurrentHP += healAmount;
 
             Debug.Log($"{gameObject.name}의 회복 기믹 → {hit.name} 이(가) {healAmount} 회복");
+        }
+    }
+
+    /// <summary>
+    /// 몬스터가 가진 기믹에 맞는 스프라이트를 GimmickObject에 표시하는 함수
+    /// </summary>
+    private void ApplyGimmickVisual()
+    {
+        if (gimmickObjectRenderer == null)
+            return;
+
+        switch (monsterGimmick)
+        {
+            case MonsterGimmicks.Heal:
+                gimmickObjectRenderer.sprite = healGimmickSprite;
+                gimmickObjectRenderer.enabled = true;
+                break;
+
+            case MonsterGimmicks.Barrier:
+                gimmickObjectRenderer.sprite = barrierGimmickSprite;
+                gimmickObjectRenderer.enabled = true;
+                break;
+            // Barrier, Shield, Magnetic 스프라이트는 준비되는 대로 case 추가
+
+            default:
+                gimmickObjectRenderer.sprite = null;
+                gimmickObjectRenderer.enabled = false;
+                break;
         }
     }
 }

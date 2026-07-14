@@ -411,8 +411,19 @@ public class Ball : RecycleObject
         // 효과 적용 함수 실행
         ApplyElementalEffect(damageable);
 
+        // 배리어 관련 판정
+        bool ignoreBarrier = (ballElementals == BallElementals.Land);   // 땅 속성은 배리어 완전 무시
+        float barrierIgnorePercent = 0f;
+
+        // 와류 : 젖음 상태의 적에게 가하는 피해만 배리어 일부 무시
+        if (monster != null && monster.IsWet)
+        {
+            barrierIgnorePercent = ballShooter.vortex;
+        }
+
+
         // 최종적으로 계산된 데미지 적용
-        damageable.TakeDamage(finalDamage);
+        damageable.TakeDamage(finalDamage, ignoreBarrier, barrierIgnorePercent);
 
         if(ballElementals == BallElementals.Land)
         {
@@ -792,7 +803,7 @@ public class Ball : RecycleObject
             if (other == null)
                 continue;
 
-            other.TakeDamage(earthquakeDamage);
+            other.TakeDamage(earthquakeDamage, true);   // 땅 속성이므로 배리어 완전 무시
         }
     }
 
