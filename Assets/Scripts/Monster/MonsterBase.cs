@@ -49,6 +49,17 @@ public enum SpawnMonsterType
     Boss,
 }
 
+/// <summary>
+/// 쉴드의 방향
+/// </summary>
+public enum ShieldDirection
+{
+    //Up,      // +Z, 필드 위쪽(스폰 방향)
+    Down,    // -Z, 필드 아래쪽(플레이어 방향)
+    Left,    // -X
+    Right,   // +X
+}
+
 public class MonsterBase : RecycleObject, IDamageable
 {
     /// <summary>
@@ -78,6 +89,12 @@ public class MonsterBase : RecycleObject, IDamageable
     private SpawnMonsterType spawnMonsterType = SpawnMonsterType.Normal;
 
     public SpawnMonsterType SpawnType => spawnMonsterType;
+
+    /// <summary>
+    /// 실드가 향하고 있는 방향 (기믹이 Shield일 때만 사용)
+    /// </summary>
+    [SerializeField]
+    private ShieldDirection shieldDirection;
 
 
     [SerializeField] protected float maxHP = 100f;
@@ -169,6 +186,17 @@ public class MonsterBase : RecycleObject, IDamageable
     [SerializeField]
     private float barrierReduction = 0.5f;
 
+    /// <summary>
+    /// 쉴드 기믹 스프라이트
+    /// </summary>
+    private Sprite shieldGimmickSprite;
+
+    /// <summary>
+    /// GimmickObject의 원본 로컬 위치/회전 (Shield 등으로 변형 후 복구용)
+    /// </summary>
+    private Vector3 gimmickObjectOriginPosition;
+    private Quaternion gimmickObjectOriginRotation;
+
     protected virtual void Awake()
     {
         //currentHP = maxHP;    => 활성화 시 처리
@@ -205,6 +233,9 @@ public class MonsterBase : RecycleObject, IDamageable
 
         if (gimmickObjectRenderer != null)
         {
+            gimmickObjectOriginPosition = gimmickObjectRenderer.transform.localPosition;
+            gimmickObjectOriginRotation = gimmickObjectRenderer.transform.localRotation;
+
             gimmickObjectRenderer.sprite = null;
             gimmickObjectRenderer.enabled = false;   // 기본은 꺼둠
         }
@@ -212,6 +243,8 @@ public class MonsterBase : RecycleObject, IDamageable
         // 기믹 스프라이트도 같은 방식으로 로드
         healGimmickSprite = Resources.Load<Sprite>("Gimmick/Gimmick_Heal");
         barrierGimmickSprite = Resources.Load<Sprite>("Gimmick/Gimmick_Barrier");
+        shieldGimmickSprite = Resources.Load<Sprite>("Gimmick/Gimmick_Shield");
+        
     }
 
     protected override void OnEnable()
@@ -234,6 +267,12 @@ public class MonsterBase : RecycleObject, IDamageable
         monsterElementals = spawnData.element;
         monsterGimmick = spawnData.gimmick;
         spawnMonsterType = spawnData.spawnType;
+
+        // 실드 기믹이면 방향 랜덤 배정 => 위는 빼고
+        if (monsterGimmick == MonsterGimmicks.Shield)
+        {
+            shieldDirection = (ShieldDirection)Random.Range(0, 3);
+        }
 
         // 스폰 타입에 따라 체력 배수 적용
         switch (spawnMonsterType)
@@ -940,18 +979,106 @@ public class MonsterBase : RecycleObject, IDamageable
             case MonsterGimmicks.Heal:
                 gimmickObjectRenderer.sprite = healGimmickSprite;
                 gimmickObjectRenderer.enabled = true;
+                ResetGimmickObjectTransform();
                 break;
 
             case MonsterGimmicks.Barrier:
                 gimmickObjectRenderer.sprite = barrierGimmickSprite;
                 gimmickObjectRenderer.enabled = true;
+                ResetGimmickObjectTransform();
                 break;
-            // Barrier, Shield, Magnetic 스프라이트는 준비되는 대로 case 추가
+
+            case MonsterGimmicks.Shield:
+                gimmickObjectRenderer.sprite = shieldGimmickSprite;
+                gimmickObjectRenderer.enabled = true;
+                ApplyShieldTransform();
+                break;
+            // Magnetic 스프라이트는 준비되는 대로 case 추가
 
             default:
                 gimmickObjectRenderer.sprite = null;
                 gimmickObjectRenderer.enabled = false;
+                ResetGimmickObjectTransform();
                 break;
         }
+    }
+
+    /// <summary>
+    /// GimmickObject의 위치/회전을 프리팹 원본 값으로 복구
+    /// </summary>
+    private void ResetGimmickObjectTransform()
+    {
+        gimmickObjectRenderer.transform.localPosition = gimmickObjectOriginPosition;
+        gimmickObjectRenderer.transform.localRotation = gimmickObjectOriginRotation;
+    }
+
+    /// <summary>
+    /// 실드 방향에 맞춰 GimmickObject의 위치/회전을 적용
+    /// </summary>
+    private void ApplyShieldTransform()
+    {
+        Vector3 position;
+        Vector3 eulerRotation;
+
+        switch (shieldDirection)
+        {
+            /*case ShieldDirection.Up:
+                position = new Vector3(0f, 0.15f, 0.15f);
+                eulerRotation = new Vector3(-30f, 0f, 0f);
+                break;*/
+
+            case ShieldDirection.Down:
+                position = new Vector3(0f, 0.15f, -0.15f);
+                eulerRotation = new Vector3(30f, 0f, 0f);
+                break;
+
+            case ShieldDirection.Left:
+                position = new Vector3(-0.15f, 0.15f, 0f);
+                eulerRotation = new Vector3(30f, 90f, 0f);
+                break;
+
+            case ShieldDirection.Right:
+                position = new Vector3(0.15f, 0.15f, 0f);
+                eulerRotation = new Vector3(-30f, 90f, 0f);
+                break;
+
+            default:
+                position = gimmickObjectOriginPosition;
+                eulerRotation = gimmickObjectOriginRotation.eulerAngles;
+                break;
+        }
+
+        gimmickObjectRenderer.transform.localPosition = position;
+        gimmickObjectRenderer.transform.localRotation = Quaternion.Euler(eulerRotation);
+    }
+
+    /// <summary>
+    /// 주어진 공격 방향(충돌 노멀)이 실드 방향과 일치하는지 판정
+    /// </summary>
+    /// <param name="attackNormal">충돌 지점의 노멀 (몬스터 표면 → 공 방향)</param>
+    public bool IsShieldBlocking(Vector3 attackNormal)
+    {
+        if (monsterGimmick != MonsterGimmicks.Shield)
+            return false;
+
+        float horizontal = Vector3.Dot(attackNormal, Vector3.right);
+        float vertical = Vector3.Dot(attackNormal, Vector3.forward);
+
+        switch (shieldDirection)
+        {
+            case ShieldDirection.Right:
+                return horizontal > 0.9f;
+
+            case ShieldDirection.Left:
+                return horizontal < -0.9f;
+
+            /*case ShieldDirection.Up:
+                return vertical > 0.9f;*/
+
+            case ShieldDirection.Down:
+                return vertical < -0.9f;
+        }
+
+        return false;
     }
 }

@@ -230,19 +230,22 @@ public class Ball : RecycleObject
             // 반사 횟수++
             bounceCount++;
 
+            // 반사 처리
+            Vector3 normal = collision.contacts[0].normal;   // ← 여기로 이동
+
             IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
 
             // 충돌한 대상에게 damageable 인터페이스가 있으면
             if (damageable != null)
             {
                 // 데미지 적용 함수
-                CalculateDamage(damageable, damageable.MonsterElement);
+                CalculateDamage(damageable, damageable.MonsterElement, normal);
                 //damageable.TakeDamage(damage);
                 // 나중에 속성 상성 이런 것 별로 기능하도록 수정 필요
             }
             
-            // 반사 처리
-            Vector3 normal = collision.contacts[0].normal;
+            // 반사 처리 => 위로 위치 이동
+            //Vector3 normal = collision.contacts[0].normal;
 
             // 반사 공식
             direction = Vector3.Reflect(direction, normal);
@@ -348,7 +351,7 @@ public class Ball : RecycleObject
     /// 데미지 계산 함수
     /// </summary>
     /// <param name="damageable">IDamageable 인터페이스</param>
-    private void CalculateDamage(IDamageable damageable, MonsterElementals monsterElement)
+    private void CalculateDamage(IDamageable damageable, MonsterElementals monsterElement, Vector3 attackNormal)
     {
         // 충돌한 대상에게 damageable 인터페이스가 있으면 CalculateDamage 이 함수가 실행되는건데,
         // 일단 공의 속성은 쉽게 알 수 있고,
@@ -406,12 +409,13 @@ public class Ball : RecycleObject
         {
             finalDamage += ballShooter.normalBonusDamage;
         }
-        
 
+
+        // 화상/젖음/전이/관통/땅 추가피해 부여는 실드와 무관하게 항상 실행
         // 효과 적용 함수 실행
         ApplyElementalEffect(damageable);
 
-        // 배리어 관련 판정
+        /*// 배리어 관련 판정
         bool ignoreBarrier = (ballElementals == BallElementals.Land);   // 땅 속성은 배리어 완전 무시
         float barrierIgnorePercent = 0f;
 
@@ -423,9 +427,26 @@ public class Ball : RecycleObject
 
 
         // 최종적으로 계산된 데미지 적용
-        damageable.TakeDamage(finalDamage, ignoreBarrier, barrierIgnorePercent);
+        damageable.TakeDamage(finalDamage, ignoreBarrier, barrierIgnorePercent);*/
 
-        if(ballElementals == BallElementals.Land)
+        // 실드 판정 : 공의 '직접 타격'에만 적용
+        bool shieldBlocked = monster != null && monster.IsShieldBlocking(attackNormal);
+
+        if (!shieldBlocked)
+        {
+            bool ignoreBarrier = (ballElementals == BallElementals.Land);
+
+            float barrierIgnorePercent =
+                (monster != null && monster.IsWet) ? ballShooter.vortex : 0f;
+
+            damageable.TakeDamage(finalDamage, ignoreBarrier, barrierIgnorePercent);
+        }
+        else
+        {
+            Debug.Log($"{monster.name}의 실드가 직접 타격을 막았습니다.");
+        }
+
+        if (ballElementals == BallElementals.Land)
         {
             ApplyEarthquake(damageable, finalDamage);
         }
