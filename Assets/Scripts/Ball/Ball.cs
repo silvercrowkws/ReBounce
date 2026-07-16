@@ -145,6 +145,11 @@ public class Ball : RecycleObject
     /// </summary>
     private float basePierceRange = 0.31f;
 
+    /// <summary>
+    /// 현재 방향 조회를 위한 변수
+    /// </summary>
+    public Vector3 Direction => direction;
+
     private void Awake()
     {
         sphereCollider = GetComponent<SphereCollider>();
@@ -842,5 +847,13 @@ public class Ball : RecycleObject
         {
             target.TakeStatusEffect(chainLightning);
         }
+    }
+
+    /// <summary>
+    /// 진행 방향을 강제로 변경 (Magnetic 기믹 등에서 사용)
+    /// </summary>
+    public void Redirect(Vector3 newDirection)
+    {
+        direction = newDirection.normalized;
     }
 }

@@ -197,6 +197,19 @@ public class MonsterBase : RecycleObject, IDamageable
     private Vector3 gimmickObjectOriginPosition;
     private Quaternion gimmickObjectOriginRotation;
 
+    /// <summary>
+    /// 자석 기믹 효과 범위
+    /// </summary>
+    [SerializeField]
+    private float magnetGimmickRange = 1f;
+
+    /// <summary>
+    /// 자석 기믹이 원래 방향을 얼마나 자석 쪽으로 꺾을지 (0~1)
+    /// </summary>
+    [SerializeField]
+    [Range(0f, 1f)]
+    private float magnetPullStrength = 0.85f;
+
     protected virtual void Awake()
     {
         //currentHP = maxHP;    => 활성화 시 처리
@@ -461,6 +474,9 @@ public class MonsterBase : RecycleObject, IDamageable
 
     public virtual void TakeDamage(float amount, bool ignoreBarrier, float barrierIgnorePercent = 0f)
     {
+        if (!gameObject.activeInHierarchy)
+            return;
+
         float finalAmount = amount;
 
         if (!ignoreBarrier && monsterGimmick == MonsterGimmicks.Barrier)
@@ -479,6 +495,9 @@ public class MonsterBase : RecycleObject, IDamageable
 
     public virtual void TakeStatusEffect(StatusEffectData effect)
     {
+        if (!gameObject.activeInHierarchy)
+            return;
+
         switch (effect.effectType)
         {
             case StatusEffectType.Normal:
@@ -695,6 +714,8 @@ public class MonsterBase : RecycleObject, IDamageable
     {
         Debug.Log($"{gameObject.name} 사망!");
         StopAllCoroutines();
+
+        OnDieGimmick();   // 사망 시 발동하는 기믹 처리
 
         // 활성화된 몬스터 리스트에서 제거
         MonsterSpawner.Instance.UnregisterMonster(this);
@@ -1080,5 +1101,60 @@ public class MonsterBase : RecycleObject, IDamageable
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// 사망 시 발동하는 기믹 (예: Magnetic)
+    /// 해당 없는 기믹이면 아무 동작 없음
+    /// </summary>
+    public virtual void OnDieGimmick()
+    {
+        switch (monsterGimmick)
+        {
+            case MonsterGimmicks.Magnetic:
+                ApplyMagneticPull();
+                break;
+
+                // Heal, Barrier, Shield는 이 트리거를 쓰지 않으므로 여기 없음
+        }
+    }
+
+    /// <summary>
+    /// 자석 기믹 : 사망 시 주변 공들의 진행 방향을 자기 쪽으로 꺾음
+    /// </summary>
+    private void ApplyMagneticPull()
+    {
+        Collider[] hits = Physics.OverlapSphere(
+            transform.position,
+            magnetGimmickRange,
+            LayerMask.GetMask("Ball"));
+
+        foreach (Collider hit in hits)
+        {
+            Ball ball = hit.GetComponent<Ball>();
+
+            if (ball == null)
+                continue;
+
+            Vector3 toMonster = transform.position - ball.transform.position;
+
+            // 공과 몬스터가 거의 같은 위치라면 스킵 (방향 계산 불가능한 특이점)
+            if (toMonster.sqrMagnitude < 0.0001f)
+                continue;
+
+            Vector3 originalDirection = ball.Direction;
+            Vector3 pullDirection = toMonster.normalized;
+
+            Vector3 newDirection =
+                Vector3.Slerp(originalDirection, pullDirection, magnetPullStrength);
+
+            // 혹시 모를 이상치 방지 (0벡터가 나오면 원래 방향 유지)
+            if (newDirection.sqrMagnitude < 0.0001f)
+                newDirection = originalDirection;
+
+            ball.Redirect(newDirection);
+
+            Debug.Log($"{ball.name}의 방향이 {gameObject.name}의 자석 기믹으로 전환됨");
+        }
     }
 }

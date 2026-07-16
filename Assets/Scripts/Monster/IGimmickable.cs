@@ -13,6 +13,11 @@ public interface IGimmickable
     void OnTurnEndGimmick();
 
     /// <summary>
+    /// 사망 시 발동하는 기믹 (예 : Magnetic)
+    /// </summary>
+    void OnDieGimmick();
+
+    /// <summary>
     /// 피격 직전 발동하는 기믹 (예: Barrier)
     /// 데미지 값을 가공해서 반환 (해당 없으면 입력값 그대로 반환)
     /// </summary>
