@@ -149,6 +149,21 @@ public class Ball : RecycleObject
     /// 현재 방향 조회를 위한 변수
     /// </summary>
     public Vector3 Direction => direction;
+    
+    /// <summary>
+    /// 현재 활성화된 모든 공 목록 (자동 회수 버튼 판단용)
+    /// </summary>
+    public static readonly List<Ball> ActiveBalls = new List<Ball>();
+
+    /// <summary>
+    /// 활성화된 공들 중 어느 하나라도 Damageable과 마지막으로 충돌한 시각 (전역)
+    /// </summary>
+    public static float LastDamageableHitTime { get; private set; }
+
+    /// <summary>
+    /// 마지막 Damageable 충돌 이후 경과 시간 (전역 기준)
+    /// </summary>
+    public static float TimeSinceLastDamageableHit => Time.time - LastDamageableHitTime;
 
     private void Awake()
     {
@@ -173,7 +188,21 @@ public class Ball : RecycleObject
         ResetBallElementals();
 
         turnManager.RegisterBall();
+
+        // 이번 발사의 첫 번째 공이 스폰되는 시점 = 이번 발사의 타이머 시작점
+        if (ActiveBalls.Count == 0)
+        {
+            LastDamageableHitTime = Time.time;
+        }
+
+        if (!ActiveBalls.Contains(this))
+            ActiveBalls.Add(this);
     }
+
+    /*protected override void OnDisable()
+    {
+        ActiveBalls.Remove(this);
+    }*/
 
     /*protected override void OnDisable()
     {
@@ -209,7 +238,7 @@ public class Ball : RecycleObject
         // 바닥 체크
         if (collision.gameObject.CompareTag("DownBrick"))
         {
-            //Debug.Log("바닥 충돌");
+            /*//Debug.Log("바닥 충돌");
             // 물리 완전 정지
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
@@ -225,7 +254,10 @@ public class Ball : RecycleObject
             HandleGroundHit();
             
             turnManager.UnregisterBall();       // 땅에 닿은 공 카운팅에서 빼기
-            gameObject.SetActive(false);
+            gameObject.SetActive(false);*/
+            // => 함수 분리
+
+            ForceRecall();
             return;
         }
 
@@ -245,6 +277,8 @@ public class Ball : RecycleObject
             {
                 // 데미지 적용 함수
                 CalculateDamage(damageable, damageable.MonsterElement, normal);
+                LastDamageableHitTime = Time.time;   // ← 전역 타이머 갱신
+
                 //damageable.TakeDamage(damage);
                 // 나중에 속성 상성 이런 것 별로 기능하도록 수정 필요
             }
@@ -254,10 +288,34 @@ public class Ball : RecycleObject
 
             // 반사 공식
             direction = Vector3.Reflect(direction, normal);
-
+            
             // 살짝 밀어내기
             transform.position += normal * 0.02f;
         }
+    }
+
+    /// <summary>
+    /// 바닥에 닿았을 때와 동일한 처리를 수행.
+    /// 자동 회수 버튼에서도 이 함수를 그대로 호출한다.
+    /// </summary>
+    public void ForceRecall()
+    {
+        // 물리 완전 정지
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+        // 위치 고정 (살짝 밀리는 것 방지)
+        rb.isKinematic = true;      // 재활용시 false 필요
+
+        // 논리 이동도 정지
+        direction = Vector3.zero;
+
+        sphereCollider.enabled = false;     // 바닥에 닿으면 콜라이더 끄고
+
+        HandleGroundHit();
+
+        turnManager.UnregisterBall();       // 땅에 닿은 공 카운팅에서 빼기
+        gameObject.SetActive(false);
     }
 
     void HandleGroundHit()
@@ -854,6 +912,6 @@ public class Ball : RecycleObject
     /// </summary>
     public void Redirect(Vector3 newDirection)
     {
-        direction = newDirection.normalized;
+        direction = newDirection.normalized;        
     }
 }

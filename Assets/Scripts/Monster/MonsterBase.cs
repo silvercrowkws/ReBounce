@@ -198,6 +198,11 @@ public class MonsterBase : RecycleObject, IDamageable
     private Quaternion gimmickObjectOriginRotation;
 
     /// <summary>
+    /// 자석 기믹 스프라이트
+    /// </summary>
+    private Sprite magneticGimmickSprite;
+
+    /// <summary>
     /// 자석 기믹 효과 범위
     /// </summary>
     [SerializeField]
@@ -257,7 +262,7 @@ public class MonsterBase : RecycleObject, IDamageable
         healGimmickSprite = Resources.Load<Sprite>("Gimmick/Gimmick_Heal");
         barrierGimmickSprite = Resources.Load<Sprite>("Gimmick/Gimmick_Barrier");
         shieldGimmickSprite = Resources.Load<Sprite>("Gimmick/Gimmick_Shield");
-        
+        magneticGimmickSprite = Resources.Load<Sprite>("Gimmick/Gimmick_Magnetic");
     }
 
     protected override void OnEnable()
@@ -1014,7 +1019,12 @@ public class MonsterBase : RecycleObject, IDamageable
                 gimmickObjectRenderer.enabled = true;
                 ApplyShieldTransform();
                 break;
-            // Magnetic 스프라이트는 준비되는 대로 case 추가
+
+            case MonsterGimmicks.Magnetic:                
+                gimmickObjectRenderer.sprite = magneticGimmickSprite;
+                gimmickObjectRenderer.enabled = true;
+                ResetGimmickObjectTransform();
+                break;
 
             default:
                 gimmickObjectRenderer.sprite = null;
@@ -1137,13 +1147,14 @@ public class MonsterBase : RecycleObject, IDamageable
                 continue;
 
             Vector3 toMonster = transform.position - ball.transform.position;
+            toMonster.y = 0f; toMonster.z = 0f;     // 평면 방향만 사용하도록 Y 제거
 
             // 공과 몬스터가 거의 같은 위치라면 스킵 (방향 계산 불가능한 특이점)
             if (toMonster.sqrMagnitude < 0.0001f)
                 continue;
 
             Vector3 originalDirection = ball.Direction;
-            Vector3 pullDirection = toMonster.normalized;
+            Vector3 pullDirection = toMonster.normalized;       // 항상 XZ 평면 위의 단위 벡터
 
             Vector3 newDirection =
                 Vector3.Slerp(originalDirection, pullDirection, magnetPullStrength);
