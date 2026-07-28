@@ -461,13 +461,9 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
 
         switch (random)
         {
-            /*case 0: return MonsterGimmicks.Heal;
-            case 1: return MonsterGimmicks.Barrier;            
-            case 2: return MonsterGimmicks.Shield;*/
-
-            case 0: return MonsterGimmicks.Magnetic;
-            case 1: return MonsterGimmicks.Magnetic;
-            case 2: return MonsterGimmicks.Magnetic;
+            case 0: return MonsterGimmicks.Heal;
+            case 1: return MonsterGimmicks.Barrier;
+            case 2: return MonsterGimmicks.Shield;
             case 3: return MonsterGimmicks.Magnetic;
         }
 

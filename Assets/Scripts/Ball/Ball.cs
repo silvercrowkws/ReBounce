@@ -180,6 +180,9 @@ public class Ball : RecycleObject
         turnManager = TurnManager.Instance;
 
         ballShooter = FindAnyObjectByType<BallShooter>();
+
+        // OnDisable을 override하지 않고, 기존 델리게이트에 구독
+        onDisable += () => ActiveBalls.Remove(this);
     }
 
     protected override void OnEnable()
@@ -197,17 +200,7 @@ public class Ball : RecycleObject
 
         if (!ActiveBalls.Contains(this))
             ActiveBalls.Add(this);
-    }
-
-    /*protected override void OnDisable()
-    {
-        ActiveBalls.Remove(this);
-    }*/
-
-    /*protected override void OnDisable()
-    {
-        turnManager.UnregisterBall();
-    }*/
+    }    
 
     public void Init(Vector3 dir)
     {
@@ -257,6 +250,8 @@ public class Ball : RecycleObject
             gameObject.SetActive(false);*/
             // => 함수 분리
 
+
+            HandleGroundHit();   // 실제 바닥 충돌일 때만 기록
             ForceRecall();
             return;
         }
@@ -284,7 +279,7 @@ public class Ball : RecycleObject
             }
             
             // 반사 처리 => 위로 위치 이동
-            //Vector3 normal = collision.contacts[0].normal;
+            //Vector3 normal = collision.contacts[0].normal;        // => 위치 이동
 
             // 반사 공식
             direction = Vector3.Reflect(direction, normal);
@@ -312,7 +307,7 @@ public class Ball : RecycleObject
 
         sphereCollider.enabled = false;     // 바닥에 닿으면 콜라이더 끄고
 
-        HandleGroundHit();
+        //HandleGroundHit();        => 만약 모든 공이 한 번도 땅에 안닿은 상태라면 이전 턴의 기록 값 유지
 
         turnManager.UnregisterBall();       // 땅에 닿은 공 카운팅에서 빼기
         gameObject.SetActive(false);

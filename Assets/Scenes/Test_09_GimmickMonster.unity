@@ -1156,6 +1156,7 @@ GameObject:
   - component: {fileID: 317536366}
   - component: {fileID: 317536365}
   - component: {fileID: 317536368}
+  - component: {fileID: 317536369}
   m_Layer: 5
   m_Name: BallRecallUI
   m_TagString: Untagged
@@ -1276,8 +1277,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7291b750b1605734ab359160978809c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  recallButton: {fileID: 0}
-  stuckThreshold: 8
+  stuckThreshold: 2
+--- !u!225 &317536369
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 317536363}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &334975595
 GameObject:
   m_ObjectHideFlags: 0

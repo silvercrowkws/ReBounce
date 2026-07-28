@@ -29,6 +29,7 @@ public class BallShooter : MonoBehaviour
     /// 발사 중인지 체크하는 변수
     /// </summary>
     private bool isShooting = false;
+    public bool IsShooting => isShooting;
 
     /// <summary>
     /// 발사 횟수
