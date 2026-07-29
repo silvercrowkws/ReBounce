@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: "(\uBB3C)\uD574\uC77C"
   description: "\uBC94\uB78C\uC774 \uBAA8\uB4E0 \uC816\uC9C0 \uC54A\uC740 \uC801\uC5D0\uAC8C
-    \uC801\uC6A9"
+    \uC801\uC6A9(\uC911\uBCF5X)"
   icon: {fileID: 0}
   grade: 2
   elementals: 2

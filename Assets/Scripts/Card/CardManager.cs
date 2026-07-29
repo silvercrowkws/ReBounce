@@ -137,6 +137,11 @@ public class CardManager : Singleton<CardManager>
 
         for (int i = 0; i < selectedCards.Count; i++)
         {
+            // 모든 폴백을 거치고도 카드를 찾지 못한 극단적인 경우엔
+            // 백지 카드를 띄우지 않고 그 자리는 그냥 비워둔다
+            if (selectedCards[i] == null)
+                continue;
+
             SpawnCard(
                 selectedCards[i],
                 cardPositions[i]);
@@ -278,7 +283,8 @@ public class CardManager : Singleton<CardManager>
         /*List<CardData> pool =
         new List<CardData>(GetCardPool(grade));*/
 
-        // 현재 보유 속성에 해당하는 카드만 필터링
+        // => 신규 메서드로 분리
+        /*// 현재 보유 속성에 해당하는 카드만 필터링
         List<CardData> pool =
             new List<CardData>(
                 GetCardPool(grade).FindAll(IsAvailableCard));
@@ -297,6 +303,67 @@ public class CardManager : Singleton<CardManager>
             Debug.LogError($"{grade} 카드 풀이 부족합니다.");
             return null;
         }
+
+        // 중복이 제외되었으니 남은 카드 중에서 랜덤 선택
+        return pool[UnityEngine.Random.Range(0, pool.Count)];*/
+
+        // 원래 등급에서 먼저 시도
+        CardData card = GetRandomCardOfGrade(grade, selectedCards);
+
+        if (card != null)
+            return card;
+
+        // 원래 등급에 뽑을 카드가 없으면 한 단계씩 낮은 등급으로 대체
+        CardGrade fallbackGrade = grade;
+
+        while (card == null && fallbackGrade != CardGrade.Rare)
+        {
+            fallbackGrade -= 1;
+
+            Debug.LogWarning($"{grade} 카드 풀이 부족해서 {fallbackGrade} 등급으로 대체합니다.");
+
+            card = GetRandomCardOfGrade(fallbackGrade, selectedCards);
+        }
+
+        // 그래도 못 찾았다면(=Rare까지 전부 소진) 이번 선택지 내 중복 제거만 풀어서 재시도
+        if (card == null)
+        {
+            card = GetRandomCardOfGrade(grade, selectedCards, ignoreSelectedCards: true);
+
+            if (card == null)
+                card = GetRandomCardOfGrade(CardGrade.Rare, selectedCards, ignoreSelectedCards: true);
+        }
+
+        if (card == null)
+            Debug.LogError($"{grade} 카드 풀이 완전히 부족합니다. 표시할 카드가 없습니다.");
+
+        return card;
+    }
+
+    private CardData GetRandomCardOfGrade(
+    CardGrade grade,
+    List<CardData> selectedCards,
+    bool ignoreSelectedCards = false)
+    {
+        // 현재 보유 속성에 해당하는 카드만 필터링
+        List<CardData> pool =
+            new List<CardData>(
+                GetCardPool(grade).FindAll(IsAvailableCard));
+
+        // 중복 안되는 카드들 제거
+        pool.RemoveAll(card =>
+            !card.canDuplicate &&
+            ownedCards.Contains(card));
+
+        if (!ignoreSelectedCards)
+        {
+            // 이번 선택지 내 중복 제거
+            pool.RemoveAll(card =>
+                selectedCards.Contains(card));
+        }
+
+        if (pool.Count == 0)
+            return null;
 
         // 중복이 제외되었으니 남은 카드 중에서 랜덤 선택
         return pool[UnityEngine.Random.Range(0, pool.Count)];
