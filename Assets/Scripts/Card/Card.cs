@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 /********************************************************************************************
  * 각 카드 선택지에는 등급이 있는데
@@ -330,6 +331,16 @@ public class Card : MonoBehaviour
     //private void OnMouseDown()
     private void OnMouseUpAsButton()
     {
+        /*// 마우스가 UI(스크롤뷰 등) 위에 있으면 카드 선택 무시
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;*/
+
+        bool overUI = EventSystem.current.IsPointerOverGameObject();
+        Debug.Log($"UI 위에 있는가? {overUI}");
+
+        if (overUI)
+            return;
+
         CardManager.Instance.SelectCard(this);
     }
 }
