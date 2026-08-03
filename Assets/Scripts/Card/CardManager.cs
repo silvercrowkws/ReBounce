@@ -4,6 +4,19 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+public struct CardHistoryEntry
+{
+    public CardData data;
+    public int count;
+
+    public CardHistoryEntry(CardData data, int count)
+    {
+        this.data = data;
+        this.count = count;
+    }
+}
+
+
 public class CardManager : Singleton<CardManager>
 {
     TurnManager turnManager;
@@ -45,6 +58,29 @@ public class CardManager : Singleton<CardManager>
     public IReadOnlyList<CardData> SelectedCardHistory
         => selectedCardHistory;
 
+    public List<CardHistoryEntry> GetGroupedHistory()
+    {
+        Dictionary<CardData, int> counts = new();
+        List<CardData> order = new();   // 처음 뽑은 순서 유지용
+
+        foreach (CardData card in selectedCardHistory)
+        {
+            if (counts.ContainsKey(card))
+                counts[card]++;
+            else
+            {
+                counts[card] = 1;
+                order.Add(card);
+            }
+        }
+
+        List<CardHistoryEntry> result = new();
+        foreach (CardData card in order)
+            result.Add(new CardHistoryEntry(card, counts[card]));
+
+        return result;
+    }
+
     /// <summary>
     /// 이번 턴에 카드가 선택되었는지?(false : 카드 선택 안함, true : 카드 선택함)
     /// </summary>
@@ -60,6 +96,13 @@ public class CardManager : Singleton<CardManager>
     /// 중복을 허용하지 않는 이미 획득한 카드 목록
     /// </summary>
     private HashSet<CardData> ownedCards = new();
+
+    private bool isHistoryUIOpen;
+    public bool IsHistoryUIOpen
+    {
+        get => isHistoryUIOpen;
+        set => isHistoryUIOpen = value;
+    }
 
     private void Awake()
     {
@@ -396,6 +439,9 @@ public class CardManager : Singleton<CardManager>
     /// <param name="card"></param>
     public void SelectCard(Card card)
     {
+        if (isHistoryUIOpen)
+            return;
+
         // 이번 턴에 선택한 카드
         thisTurnSelectedCard = card;
 

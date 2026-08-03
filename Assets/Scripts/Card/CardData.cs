@@ -122,4 +122,38 @@ public class CardData : ScriptableObject
     [Header("중복 획득 가능 여부")]
     [Tooltip("true : 중복 획득 가능\nfalse : 1회만 획득 가능")]
     public bool canDuplicate = true;
+
+
+
+
+
+
+    /// <summary>
+    /// 같은 카드를 count번 획득했을 때의 합산 효과 설명을 생성
+    /// - description 안에서 value1 숫자를 찾아 (value1 * count)로 치환
+    /// - 숫자를 못 찾으면(치환 불가) 원본 description을 그대로 반환
+    /// </summary>
+    /// <param name="count">이 카드를 선택한 횟수</param>
+    public string GetAggregatedDescription(int count)
+    {
+        if (count <= 1)
+            return description;
+
+        string originalStr = FormatValue(value1);
+        string totalStr = FormatValue(value1 * count);
+
+        int index = description.IndexOf(originalStr);
+        if (index < 0)
+            return description;   // 숫자를 못 찾으면 원본 그대로
+
+        return description.Substring(0, index) + totalStr
+             + description.Substring(index + originalStr.Length);
+    }
+
+    private static string FormatValue(float value)
+    {
+        return Mathf.Approximately(value % 1f, 0f)
+            ? ((int)value).ToString()
+            : value.ToString("0.##");
+    }
 }

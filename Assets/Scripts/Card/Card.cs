@@ -336,7 +336,7 @@ public class Card : MonoBehaviour
             return;*/
 
         bool overUI = EventSystem.current.IsPointerOverGameObject();
-        Debug.Log($"UI 위에 있는가? {overUI}");
+        //Debug.Log($"UI 위에 있는가? {overUI}");
 
         if (overUI)
             return;
