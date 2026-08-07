@@ -1647,6 +1647,63 @@ Transform:
   - {fileID: 543450652232507787}
   m_Father: {fileID: 1186836922}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &436504701
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3731516473650256971, guid: 16335dfdb31fbaa478d35df49cc0d4d9, type: 3}
+      propertyPath: m_Name
+      value: Monster_Slime_Green_King
+      objectReference: {fileID: 0}
+    - target: {fileID: 6801418823664625558, guid: 16335dfdb31fbaa478d35df49cc0d4d9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.62
+      objectReference: {fileID: 0}
+    - target: {fileID: 6801418823664625558, guid: 16335dfdb31fbaa478d35df49cc0d4d9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.033
+      objectReference: {fileID: 0}
+    - target: {fileID: 6801418823664625558, guid: 16335dfdb31fbaa478d35df49cc0d4d9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.31
+      objectReference: {fileID: 0}
+    - target: {fileID: 6801418823664625558, guid: 16335dfdb31fbaa478d35df49cc0d4d9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6801418823664625558, guid: 16335dfdb31fbaa478d35df49cc0d4d9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6801418823664625558, guid: 16335dfdb31fbaa478d35df49cc0d4d9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6801418823664625558, guid: 16335dfdb31fbaa478d35df49cc0d4d9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6801418823664625558, guid: 16335dfdb31fbaa478d35df49cc0d4d9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6801418823664625558, guid: 16335dfdb31fbaa478d35df49cc0d4d9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6801418823664625558, guid: 16335dfdb31fbaa478d35df49cc0d4d9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 16335dfdb31fbaa478d35df49cc0d4d9, type: 3}
 --- !u!1 &439547060
 GameObject:
   m_ObjectHideFlags: 0
@@ -4429,6 +4486,75 @@ Transform:
   - {fileID: 543450651780931268}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1233089462
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3357700772334216056, guid: 69c6db8f22ffc1b43a613f324867e85a, type: 3}
+      propertyPath: m_Name
+      value: Monster_Slime_Green
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561822461785590214, guid: 69c6db8f22ffc1b43a613f324867e85a, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561822461785590214, guid: 69c6db8f22ffc1b43a613f324867e85a, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561822461785590214, guid: 69c6db8f22ffc1b43a613f324867e85a, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561822461785590214, guid: 69c6db8f22ffc1b43a613f324867e85a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.755
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561822461785590214, guid: 69c6db8f22ffc1b43a613f324867e85a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.033
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561822461785590214, guid: 69c6db8f22ffc1b43a613f324867e85a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.085
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561822461785590214, guid: 69c6db8f22ffc1b43a613f324867e85a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561822461785590214, guid: 69c6db8f22ffc1b43a613f324867e85a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561822461785590214, guid: 69c6db8f22ffc1b43a613f324867e85a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561822461785590214, guid: 69c6db8f22ffc1b43a613f324867e85a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561822461785590214, guid: 69c6db8f22ffc1b43a613f324867e85a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561822461785590214, guid: 69c6db8f22ffc1b43a613f324867e85a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5561822461785590214, guid: 69c6db8f22ffc1b43a613f324867e85a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 69c6db8f22ffc1b43a613f324867e85a, type: 3}
 --- !u!1 &1255710100
 GameObject:
   m_ObjectHideFlags: 0
@@ -5140,7 +5266,7 @@ GameObject:
   - component: {fileID: 1563828118}
   - component: {fileID: 1563828119}
   m_Layer: 5
-  m_Name: GameObject
+  m_Name: BottomUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15330,3 +15456,5 @@ SceneRoots:
   - {fileID: 870616224}
   - {fileID: 753333653}
   - {fileID: 1477555857}
+  - {fileID: 1233089462}
+  - {fileID: 436504701}
