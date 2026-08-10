@@ -24,6 +24,29 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
          0.93f
     };
 
+    /// <summary>
+    /// 보스가 스폰될 수 있는 X 위치 (일반 칸 사이사이 위치)
+    /// bossSpawnXPositions[i] 는 spawnXPositions[i], spawnXPositions[i+1] 두 칸을 점유
+    /// </summary>
+    private readonly float[] bossSpawnXPositions =
+    {
+        -0.775f,
+        -0.465f,
+        -0.155f,
+         0.155f,
+         0.465f,
+         0.775f
+    };
+
+    private const float NormalSpawnZ = 1.24f;
+    private const float BossSpawnZ = 1.395f;
+
+    /// <summary>
+    /// 보스가 아직 최상단 스폰 라인을 막고 있다고 판단하는 Z 오차 범위
+    /// (스폰 직후 diff = 0.155, 한 턴 이동 후 diff = 0.155, 두 턴 이동 후 diff = 0.465)
+    /// </summary>
+    private const float BossBlockZThreshold = 0.3f;
+
     TurnManager turnManager;
     
     private void Start()
@@ -79,7 +102,8 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
             pos.z -= 0.31f;
             monster.transform.position = pos;
 
-            if (pos.z <= -1.24f)
+            //if (pos.z <= -1.24f)
+            if (pos.z <= -1.085f)
             {
                 isGameOverCheck = true;
             }
@@ -110,7 +134,7 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
         return activeMonsters;
     }
 
-    /// <summary>
+    /*/// <summary>
     /// 턴 시작 시 몬스터 스폰 함수
     /// </summary>
     public void SpawnMonsters()
@@ -159,7 +183,97 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
 
             SpawnMonsterAt(spawnX, spawnType);
         }
+    }*/
+
+
+
+
+    public void SpawnMonsters()
+    {
+        Debug.Log("몬스터 스폰");
+
+        int turn = TurnManager.Instance.turnNumber + 1;
+
+        // 1. 이번 턴에 필요한 보스 수
+        int desiredBossCount = GetBossCount(turn);
+
+        // 2. 기존에 살아있는 보스가 아직 최상단 라인을 막고 있는지 계산
+        HashSet<int> blockedByExistingBoss = GetBossBlockedNormalIndices();
+
+        // 3. 새 보스가 쓸 수 있는 슬롯(기존 보스와 안 겹치는 것)
+        List<int> availableBossSlots = GetAvailableBossSlots(blockedByExistingBoss);
+
+        int actualBossCount = Mathf.Min(desiredBossCount, availableBossSlots.Count);
+
+        if (actualBossCount < desiredBossCount)
+        {
+            Debug.LogWarning($"보스 스폰 자리 부족 : 목표 {desiredBossCount}마리, 실제 {actualBossCount}마리");
+        }
+
+        // 4. 새로 스폰할 보스 슬롯을 서로 안 겹치게 랜덤 선택
+        List<int> chosenBossSlots = new List<int>();
+        List<int> slotPool = new List<int>(availableBossSlots);
+
+        for (int i = 0; i < actualBossCount; i++)
+        {
+            int r = Random.Range(0, slotPool.Count);
+            int slot = slotPool[r];
+
+            chosenBossSlots.Add(slot);
+            slotPool.RemoveAll(s => IsSlotOverlapping(s, slot));
+        }
+
+        // 5. 이번 턴 최종적으로 막히는 일반 칸 (기존 보스 + 새 보스)
+        HashSet<int> blockedThisTurn = new HashSet<int>(blockedByExistingBoss);
+        foreach (int slot in chosenBossSlots)
+        {
+            blockedThisTurn.Add(slot);
+            blockedThisTurn.Add(slot + 1);
+        }
+
+        // 6. 보스를 제외하고 실제 스폰 가능한 X좌표 목록
+        List<float> availablePositions = new List<float>();
+        for (int i = 0; i < spawnXPositions.Length; i++)
+        {
+            if (!blockedThisTurn.Contains(i))
+                availablePositions.Add(spawnXPositions[i]);
+        }
+
+        // 7. 보스 제외 스폰 수는 남은 칸 한도 안에서 결정
+        int spawnCount = Mathf.Min(GetSpawnCount(), availablePositions.Count);
+        int gimmickCount = GetGimmickCount(turn, spawnCount);
+
+        // 8. 보스 먼저 스폰 (자리 선점)
+        foreach (int slot in chosenBossSlots)
+        {
+            SpawnMonsterAt(bossSpawnXPositions[slot], SpawnMonsterType.Boss);
+        }
+
+        // 9. 남은 칸에 기믹/일반 몬스터 배치
+        for (int i = 0; i < spawnCount; i++)
+        {
+            if (availablePositions.Count <= 0)
+                break;
+
+            int randomIndex = Random.Range(0, availablePositions.Count);
+            float spawnX = availablePositions[randomIndex];
+            availablePositions.RemoveAt(randomIndex);
+
+            SpawnMonsterType spawnType = SpawnMonsterType.Normal;
+
+            if (gimmickCount > 0)
+            {
+                spawnType = SpawnMonsterType.Gimmick;
+                gimmickCount--;
+            }
+
+            SpawnMonsterAt(spawnX, spawnType);
+        }
     }
+
+
+
+
 
     /// <summary>
     /// 팩토리에서 몬스터를 스폰하는 함수
@@ -211,12 +325,18 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
             return;*/
 
 
-        
-        Vector3 spawnPos = new Vector3(xPos, 0.033f, 1.24f);
+        float z = (spawnType == SpawnMonsterType.Boss) ? BossSpawnZ : NormalSpawnZ;
+
+
+
+        Vector3 spawnPos = new Vector3(xPos, 0.033f, z);
 
         MonsterSpawnData spawnData = GetRandomMonster(spawnType);
 
         MonsterBase monster = spawnData.monster;
+
+        if (monster == null)
+            return;
 
         monster.Initialize(spawnData);
 
@@ -285,9 +405,16 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
     /// <returns></returns>
     private int GetBossCount(int turn)
     {
-        return (turn % 10 == 0) ? 1 : 0;
+        //return (turn % 10 == 0) ? 1 : 0;
 
-        // 50턴부터 보스 2마리
+        if(turn % 10 != 0)
+        {
+            return 0;
+        }
+        
+        // 50턴 이전에는 보스 1마리 이후부터 보스 2마리 동시 스폰
+        return turn >= 50 ? 2 : 1;
+
         // 100턴부터 보스 + 엘리트
         // 같은 규칙이 생겨도 여기서 처리하면 됨
     }
@@ -490,5 +617,87 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
             // 턴 종료 기믹이 있는 몬스터만 자기 자신의 OnTurnEndGimmick()을 실행
             monster.OnTurnEndGimmick();
         }
+    }
+
+
+
+
+
+
+
+
+
+
+
+    /// <summary>
+    /// 현재 필드에서, 아직 최상단 스폰 라인에 걸쳐있는 보스들이 막고 있는 일반 칸 인덱스 목록
+    /// </summary>
+    private HashSet<int> GetBossBlockedNormalIndices()
+    {
+        HashSet<int> blocked = new HashSet<int>();
+
+        foreach (MonsterBase monster in activeMonsters)
+        {
+            if (monster == null || !monster.gameObject.activeSelf)
+                continue;
+
+            if (monster.SpawnType != SpawnMonsterType.Boss)
+                continue;
+
+            float z = monster.transform.position.z;
+
+            if (Mathf.Abs(z - NormalSpawnZ) >= BossBlockZThreshold)
+                continue; // 이미 최상단 라인을 지나간 보스는 무시
+
+            int slotIndex = FindBossSlotIndex(monster.transform.position.x);
+
+            if (slotIndex < 0)
+                continue; // 안전장치
+
+            blocked.Add(slotIndex);
+            blocked.Add(slotIndex + 1);
+        }
+
+        return blocked;
+    }
+
+    /// <summary>
+    /// 보스의 X좌표로 bossSpawnXPositions 배열 상의 인덱스(0~5)를 찾는 함수
+    /// </summary>
+    private int FindBossSlotIndex(float xPos)
+    {
+        for (int i = 0; i < bossSpawnXPositions.Length; i++)
+        {
+            if (Mathf.Approximately(bossSpawnXPositions[i], xPos))
+                return i;
+        }
+
+        return -1;
+    }
+
+    /// <summary>
+    /// 아직 막히지 않은 보스 스폰 슬롯(0~5) 목록
+    /// </summary>
+    private List<int> GetAvailableBossSlots(HashSet<int> blockedNormalIndices)
+    {
+        List<int> available = new List<int>();
+
+        for (int slot = 0; slot < bossSpawnXPositions.Length; slot++)
+        {
+            if (blockedNormalIndices.Contains(slot) || blockedNormalIndices.Contains(slot + 1))
+                continue;
+
+            available.Add(slot);
+        }
+
+        return available;
+    }
+
+    /// <summary>
+    /// 두 보스 슬롯이 점유하는 일반 칸이 겹치는지 확인
+    /// </summary>
+    private bool IsSlotOverlapping(int slotA, int slotB)
+    {
+        return Mathf.Abs(slotA - slotB) <= 1;
     }
 }

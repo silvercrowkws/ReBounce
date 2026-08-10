@@ -532,7 +532,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.033, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 1, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2567072996330479287}
@@ -626,5 +626,9 @@ MonoBehaviour:
   monsterElementals: 0
   monsterGimmick: 0
   spawnMonsterType: 0
+  shieldDirection: 0
   maxHP: 100
+  barrierReduction: 0.5
+  magnetGimmickRange: 1
+  magnetPullStrength: 0.5
   healGimmickRange: 0.45
