@@ -55,6 +55,8 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
         turnManager.onTurnEnd += OnTurnEnd;
 
         SpawnMonsters(); // 첫 웨이브
+
+        BoardManager.Instance.Refresh(activeMonsters);      // 보드 갱신
     }
 
     private void OnDestroy()
@@ -67,7 +69,10 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
     {
         ExecuteTurnEndGimmicks();
         MoveMonstersDown();
+        BoardManager.Instance.Refresh(activeMonsters);   // 이동 반영
+
         SpawnMonsters();
+        BoardManager.Instance.Refresh(activeMonsters);   // 스폰 반영
     }
 
     private void MoveMonstersDown()
