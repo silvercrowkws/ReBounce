@@ -26,4 +26,9 @@ public class MonsterSpawnData
     /// 몬스터 기믹
     /// </summary>
     public MonsterGimmicks gimmick;
+
+    /// <summary>
+    /// 지정되면 이 값을 그대로 maxHP로 사용 (턴 기반 자동 계산/배수 적용을 건너뜀)
+    /// </summary>
+    public float? overrideMaxHP;
 }

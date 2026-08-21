@@ -7,6 +7,12 @@ public interface IGimmickable
     MonsterGimmicks MonsterGimmick { get; }     // 몬스터의 기믹
 
     /// <summary>
+    /// 턴 시작 시(공 발사 전) 발동하는 기믹 (예: Summon)
+    /// 해당 없는 기믹이면 아무 동작 없이 반환
+    /// </summary>
+    void OnTurnStartGimmick();
+
+    /// <summary>
     /// 턴 종료 시 발동하는 기믹 (예: Heal)
     /// 해당 없는 기믹이면 아무 동작 없이 반환
     /// </summary>

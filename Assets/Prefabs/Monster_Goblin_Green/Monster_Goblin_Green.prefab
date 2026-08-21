@@ -103,7 +103,12 @@ MonoBehaviour:
   monsterElementals: 0
   monsterGimmick: 0
   spawnMonsterType: 0
+  shieldDirection: 0
   maxHP: 100
+  barrierReduction: 0.5
+  magnetGimmickRange: 1
+  magnetPullStrength: 0.85
+  summonCount: 1
   healGimmickRange: 0.45
 --- !u!65 &6215963991905858358
 BoxCollider:

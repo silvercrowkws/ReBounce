@@ -48,11 +48,18 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
     private const float BossBlockZThreshold = 0.3f;
 
     TurnManager turnManager;
-    
+
+    /// <summary>
+    /// 강화소환된 몬스터의 체력 배율 (이번 턴 일반 몬스터 체력 대비)
+    /// </summary>
+    [SerializeField]
+    private float reinforceHPRatio = 1f / 3f;
+
     private void Start()
     {
         turnManager = TurnManager.Instance;
         turnManager.onTurnEnd += OnTurnEnd;
+        turnManager.onTurnStart += OnTurnStart;
 
         SpawnMonsters(); // 첫 웨이브
 
@@ -62,7 +69,19 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
     private void OnDestroy()
     {
         if (TurnManager.Instance != null)
+        {
             TurnManager.Instance.onTurnEnd -= OnTurnEnd;
+            TurnManager.Instance.onTurnStart -= OnTurnStart;
+        }
+    }
+
+    /// <summary>
+    /// 턴 시작 시(공 발사 전) 호출. 보스의 소환 기믹 등 턴 시작 기믹을 실행.
+    /// </summary>
+    private void OnTurnStart(int turnNumber)
+    {
+        ExecuteTurnStartGimmicks();
+        BoardManager.Instance.Refresh(activeMonsters);
     }
 
     private void OnTurnEnd()
@@ -448,7 +467,7 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
                 break;
 
             case SpawnMonsterType.Boss:
-                spawnData.gimmick = MonsterGimmicks.None;   // 일단 보스 기믹은 없는 상태(변경 예정)
+                spawnData.gimmick = GetRandomBossGimmick();   // 일단 보스 기믹은 없는 상태(변경 예정)
                 spawnData.monster = GetRandomBossMonster();
                 break;
         }
@@ -584,7 +603,6 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
 
 
     /// <summary>
-    /// 테스트 용이므로 나중에 수정 필요
     /// 랜덤 기믹을 결정하는 함수
     /// </summary>
     private MonsterGimmicks GetRandomGimmick()
@@ -600,6 +618,98 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
         }
 
         return MonsterGimmicks.None;
+    }
+
+    /// <summary>
+    /// 보스 기믹을 랜덤으로 결정하는 함수
+    /// </summary>
+    private MonsterGimmicks GetRandomBossGimmick()
+    {
+        int random = Random.Range (0, 4);
+
+        switch (random)
+        {
+            case 0: return MonsterGimmicks.Summon;
+            case 1: return MonsterGimmicks.Summon;
+            case 2: return MonsterGimmicks.Summon;
+            case 3: return MonsterGimmicks.Summon;
+        }
+
+        return MonsterGimmicks.None;
+    }
+
+    /// <summary>
+    /// 턴 시작 기믹을 가진 몬스터들을 찾아 실행.
+    /// 스냅샷을 떠서 순회하는 이유: 강화소환처럼 실행 도중 activeMonsters에
+    /// 새 몬스터가 추가될 수 있는데, foreach 중 원본 리스트를 수정하면
+    /// InvalidOperationException(컬렉션 변경 예외)이 발생하기 때문.
+    /// </summary>
+    private void ExecuteTurnStartGimmicks()
+    {
+        List<MonsterBase> snapshot = new List<MonsterBase>(activeMonsters);
+
+        foreach (MonsterBase monster in snapshot)
+        {
+            if (monster == null || !monster.gameObject.activeSelf)
+                continue;
+
+            if (monster.MonsterGimmick == MonsterGimmicks.None)
+                continue;
+
+            monster.OnTurnStartGimmick();
+        }
+    }
+
+    /// <summary>
+    /// 보스 강화소환 기믹 전용 함수.
+    /// 필드의 가장 아랫줄을 제외한 빈 칸 중에서 무작위로 count개를 골라
+    /// 그 자리에 직접 일반 몬스터를 스폰한다.
+    /// (최상단 스폰 라인이 아니라 필드 중간의 빈 칸에 바로 꽂아 넣는다는 점이
+    /// 기존 SpawnMonsters와 다름)
+    /// </summary>
+    public void SpawnReinforcements(int count)
+    {
+        HashSet<int> excludeRows = new HashSet<int>
+        {
+            BoardManager.Height - 1,        // 맨 아랫줄 제외
+            BoardManager.Height - 2,        // 아래에서 2번째 줄 제외
+
+        };
+        List<Vector2Int> emptyCells = BoardManager.Instance.GetEmptyCells(excludeRows);
+
+        for (int i = 0; i < count; i++)
+        {
+            if (emptyCells.Count <= 0)
+            {
+                Debug.LogWarning("강화소환 : 남은 빈 칸이 없어서 소환 중단");
+                break;
+            }
+
+            int randomIndex = Random.Range(0, emptyCells.Count);
+            Vector2Int cell = emptyCells[randomIndex];
+            emptyCells.RemoveAt(randomIndex);
+
+            Vector3 spawnPos = BoardManager.Instance.GetWorldPosition(cell.x, cell.y);
+
+            MonsterSpawnData spawnData = GetRandomMonster(SpawnMonsterType.Normal);     // 기믹 없음
+            spawnData.element = MonsterElementals.Normal;                               // 속성 노말
+
+            spawnData.overrideMaxHP =
+            Mathf.Floor(MonsterBase.CalculateHPForTurn(TurnManager.Instance.turnNumber) * reinforceHPRatio);
+            MonsterBase monster = spawnData.monster;
+
+            if (monster == null)
+                continue;
+
+            monster.Initialize(spawnData);
+            monster.transform.position = spawnPos;
+
+            RegisterMonster(monster);
+
+            Debug.Log($"강화소환 : ({cell.x},{cell.y}) 에 {monster.name} 스폰");
+        }
+
+        BoardManager.Instance.Refresh(activeMonsters);
     }
 
     /// <summary>

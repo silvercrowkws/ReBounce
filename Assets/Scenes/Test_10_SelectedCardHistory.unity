@@ -2047,6 +2047,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   activeMonsters: []
+  reinforceHPRatio: 0.33333334
 --- !u!1 &545264646
 GameObject:
   m_ObjectHideFlags: 0

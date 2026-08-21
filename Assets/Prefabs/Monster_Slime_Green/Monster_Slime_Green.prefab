@@ -338,6 +338,7 @@ MonoBehaviour:
   barrierReduction: 0.5
   magnetGimmickRange: 1
   magnetPullStrength: 0.5
+  summonCount: 1
   healGimmickRange: 0.45
 --- !u!1 &6502778030702208000
 GameObject:

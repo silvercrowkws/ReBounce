@@ -209,4 +209,15 @@ public class BoardManager : Singleton<BoardManager>
 
         return result;
     }
+
+    /// <summary>
+    /// 격자 인덱스 (x, z)를 실제 월드 좌표로 변환.
+    /// 소환 기믹처럼 필드 중간의 특정 빈 칸에 직접 몬스터를 배치해야 할 때 사용.
+    /// </summary>
+    public Vector3 GetWorldPosition(int x, int z)
+    {
+        float worldX = columnXPositions[x];
+        float worldZ = TopZ - (z * CellSize);
+        return new Vector3(worldX, 0.033f, worldZ);
+    }
 }

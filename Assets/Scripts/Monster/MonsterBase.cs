@@ -29,11 +29,16 @@ public enum MonsterElementals
 /// </summary>
 public enum MonsterGimmicks
 {
+    // 기믹 몬스터의 기믹들
     None,       // 기믹 없음
     Heal,       // 주위 몬스터를 회복하는 몬스터
     Barrier,    // 베리어를 가져 댐감을 받는 몬스터(땅 공이나 물속성 카드의 방어율 무시 같은게 유용하도록)
     Shield,     // 특정 방향에 방패가 있어서 그 방향으로 오는 공격은 피해를 받지 않는 몬스터
     Magnetic,   // 주위 공을 끌어당기고 튕기지 않게 하는 자석 같은 몬스터?
+
+
+    // 보스 몬스터의 기믹들
+    Summon,     // 턴 시작 시 빈 칸에 일반 몬스터 N마리 소환
 
     // 1. 보스 몬스터 기믹들
     // - 턴 시작 시(공 발사 전) 필드의 가장 아래줄을 제외하고 빈 공간에 일반 몬스터 N마리 스폰
@@ -235,6 +240,12 @@ public class MonsterBase : RecycleObject, IDamageable
     [Range(0f, 1f)]
     private float magnetPullStrength = 0.85f;
 
+    /// <summary>
+    /// Summon 보스 기믹으로 한 번에 소환할 일반 몬스터 수
+    /// </summary>
+    [SerializeField]
+    private int summonCount = 1;
+
     protected virtual void Awake()
     {
         //currentHP = maxHP;    => 활성화 시 처리
@@ -312,19 +323,27 @@ public class MonsterBase : RecycleObject, IDamageable
             shieldDirection = (ShieldDirection)Random.Range(0, 3);
         }
 
-        // 스폰 타입에 따라 체력 배수 적용
-        switch (spawnMonsterType)
+        // 체력 값을 정해놨으면 우선 적용
+        if (spawnData.overrideMaxHP.HasValue)
         {
-            case SpawnMonsterType.Normal:
-                break;
+            maxHP = spawnData.overrideMaxHP.Value;
+        }
+        else
+        {
+            // 스폰 타입에 따라 체력 배수 적용
+            switch (spawnMonsterType)
+            {
+                case SpawnMonsterType.Normal:
+                    break;
 
-            case SpawnMonsterType.Gimmick:
-                maxHP *= 2;
-                break;
+                case SpawnMonsterType.Gimmick:
+                    maxHP *= 2;
+                    break;
 
-            case SpawnMonsterType.Boss:
-                maxHP *= 5;
-                break;
+                case SpawnMonsterType.Boss:
+                    maxHP *= 5;
+                    break;
+            }
         }
 
         currentHP = maxHP;
@@ -396,7 +415,10 @@ public class MonsterBase : RecycleObject, IDamageable
         // 31턴 이후부터는 +50,55,60...씩 계속 증가
         int turn = TurnManager.Instance.turnNumber + 1;
 
-        // 1~6턴 : +8
+        // 계산 로직 분리
+        return CalculateHPForTurn(turn);
+
+        /*// 1~6턴 : +8
         if (turn <= 6)
             return 20f + (turn - 1) * 8f;
 
@@ -424,6 +446,44 @@ public class MonsterBase : RecycleObject, IDamageable
         float hp = 700f;
 
         // 31턴부터 증가량 : 50, 55, 60, 65...
+        for (int t = 31; t <= turn; t++)
+        {
+            hp += 50f + (t - 31) * 5f;
+        }
+
+        return hp;*/
+    }
+
+    /// <summary>
+    /// 주어진 "절대 턴 번호"에 대한 기준 체력을 계산하는 순수 함수.
+    /// 호출 시점에 따른 turnNumber 보정(+1 여부)은 호출하는 쪽 책임.
+    ///
+    /// 주의: 강화소환처럼 turnNumber가 이미 증가된 시점(OnTurnStart)에서 호출할 때는
+    /// +1 없이 이 함수를 직접 호출해야 함. 안 그러면 한 턴치 체력이 더 붙어버림
+    /// (실제로 발생했던 버그: 강화소환 몬스터가 이번 턴 몬스터보다 한 구간만큼 더 높게 나옴)
+    /// </summary>
+    public static float CalculateHPForTurn(int turn)
+    {
+        if (turn <= 6)
+            return 20f + (turn - 1) * 8f;
+
+        if (turn <= 10)
+            return 60f + (turn - 6) * 10f;
+
+        if (turn <= 15)
+            return 100f + (turn - 10) * 15f;
+
+        if (turn <= 20)
+            return 175f + (turn - 15) * 25f;
+
+        if (turn <= 25)
+            return 300f + (turn - 20) * 35f;
+
+        if (turn <= 30)
+            return 475f + (turn - 25) * 45f;
+
+        float hp = 700f;
+
         for (int t = 31; t <= turn; t++)
         {
             hp += 50f + (t - 31) * 5f;
@@ -918,13 +978,26 @@ public class MonsterBase : RecycleObject, IDamageable
     }
 
     /// <summary>
-    /// 기믹 수행의 감지 범위
+    /// Heal 기믹 수행의 감지 범위
     /// 상하좌우만 생각하면 0.31이면 충분한데,
     /// 대각선은 √가 들어가서 약 0.4384
     /// 넉넉히 0.45 함
     /// </summary>
     [SerializeField]
     private float healGimmickRange = 0.45f;
+
+    /// <summary>
+    /// 턴 시작 시(공 발사 전) 실행될 기믹
+    /// </summary>
+    public virtual void OnTurnStartGimmick()
+    {
+        switch (monsterGimmick)
+        {
+            case MonsterGimmicks.Summon:
+                ApplySummonGimmick();
+                break;
+        }
+    }
 
     /// <summary>
     /// 턴 종료 시 실행될 기믹
@@ -1022,6 +1095,7 @@ public class MonsterBase : RecycleObject, IDamageable
 
         switch (monsterGimmick)
         {
+            // 기믹 몬스터들
             case MonsterGimmicks.Heal:
                 gimmickObjectRenderer.sprite = healGimmickSprite;
                 gimmickObjectRenderer.enabled = true;
@@ -1042,6 +1116,14 @@ public class MonsterBase : RecycleObject, IDamageable
 
             case MonsterGimmicks.Magnetic:                
                 gimmickObjectRenderer.sprite = magneticGimmickSprite;
+                gimmickObjectRenderer.enabled = true;
+                ResetGimmickObjectTransform();
+                break;
+
+
+            // 보스 몬스터들
+            case MonsterGimmicks.Summon:
+                gimmickObjectRenderer.sprite = null; // Resources.Load("Gimmick/Gimmick_Summon") 등으로 별도 로드 필요
                 gimmickObjectRenderer.enabled = true;
                 ResetGimmickObjectTransform();
                 break;
@@ -1188,4 +1270,17 @@ public class MonsterBase : RecycleObject, IDamageable
             Debug.Log($"{ball.name}의 방향이 {gameObject.name}의 자석 기믹으로 전환됨");
         }
     }
+
+    /// <summary>
+    /// 소환 기믹 : 실제 스폰은 MonsterSpawner에 위임
+    /// (Factory/풀링/등록 로직이 전부 MonsterSpawner에 있으므로 재사용)
+    /// </summary>
+    private void ApplySummonGimmick()
+    {
+        MonsterSpawner.Instance.SpawnReinforcements(summonCount);
+
+        Debug.Log($"{gameObject.name}의 강화소환 기믹 발동 → {summonCount}마리 소환 요청");
+    }
+
+    
 }
