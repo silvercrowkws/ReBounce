@@ -591,10 +591,8 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
         switch (random)
         {
             case 0:
-                /*spawnData.gimmick = MonsterGimmicks.Summon;
-                spawnData.monster = Factory.Instance.GetMonster_Slime_Green_King();*/
-                spawnData.gimmick = MonsterGimmicks.MeatShield;
-                spawnData.monster = Factory.Instance.GetMonster_Slime_Green_Stone();
+                spawnData.gimmick = MonsterGimmicks.Summon;
+                spawnData.monster = Factory.Instance.GetMonster_Slime_Green_King();
                 break;
 
             case 1:
