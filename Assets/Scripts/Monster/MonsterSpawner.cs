@@ -389,9 +389,12 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
             return (turn + 1) / 2;
 
         if (turn <= 20)
-            return Random.Range(5, 7); // 5 ~ 6
+            return Random.Range(4, 6);      // 4 ~ 5
 
-        return 7;
+        if (turn <= 30)
+            return Random.Range(5, 7);      // 5 ~ 6
+
+        return Random.Range(6, 8);          // 30턴 이후부터는 6 ~ 7 마리 소환
     }
 
     /// <summary>
@@ -588,23 +591,29 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
         switch (random)
         {
             case 0:
-                spawnData.gimmick = MonsterGimmicks.Summon;
-                spawnData.monster = Factory.Instance.GetMonster_Slime_Green_King();
+                /*spawnData.gimmick = MonsterGimmicks.Summon;
+                spawnData.monster = Factory.Instance.GetMonster_Slime_Green_King();*/
+                spawnData.gimmick = MonsterGimmicks.MeatShield;
+                spawnData.monster = Factory.Instance.GetMonster_Slime_Green_Stone();
                 break;
 
             case 1:
-                spawnData.gimmick = MonsterGimmicks.Summon;
-                spawnData.monster = Factory.Instance.GetMonster_Slime_Green_King();
+                spawnData.gimmick = MonsterGimmicks.MeatShield;
+                spawnData.monster = Factory.Instance.GetMonster_Slime_Green_Stone();
                 break;
 
             case 2:
-                spawnData.gimmick = MonsterGimmicks.Summon;
-                spawnData.monster = Factory.Instance.GetMonster_Slime_Green_King();
+                /*spawnData.gimmick = MonsterGimmicks.Summon;
+                spawnData.monster = Factory.Instance.GetMonster_Slime_Green_King();*/
+                spawnData.gimmick = MonsterGimmicks.MeatShield;
+                spawnData.monster = Factory.Instance.GetMonster_Slime_Green_Stone();
                 break;
 
             case 3:
-                spawnData.gimmick = MonsterGimmicks.Summon;
-                spawnData.monster = Factory.Instance.GetMonster_Slime_Green_King();
+                /*spawnData.gimmick = MonsterGimmicks.Summon;
+                spawnData.monster = Factory.Instance.GetMonster_Slime_Green_King();*/
+                spawnData.gimmick = MonsterGimmicks.MeatShield;
+                spawnData.monster = Factory.Instance.GetMonster_Slime_Green_Stone();
                 break;
 
             default:
@@ -659,7 +668,7 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
         return MonsterGimmicks.None;
     }
 
-    /// <summary>
+    /*/// <summary>
     /// 보스 기믹을 랜덤으로 결정하는 함수
     /// </summary>
     private MonsterGimmicks GetRandomBossGimmick()
@@ -675,7 +684,7 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
         }
 
         return MonsterGimmicks.None;
-    }
+    }*/
 
     /// <summary>
     /// 턴 시작 기믹을 가진 몬스터들을 찾아 실행.
@@ -712,6 +721,7 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
         {
             BoardManager.Height - 1,        // 맨 아랫줄 제외
             BoardManager.Height - 2,        // 아래에서 2번째 줄 제외
+            BoardManager.Height - 3,        // 아래에서 3번째 줄 제외
 
         };
         List<Vector2Int> emptyCells = BoardManager.Instance.GetEmptyCells(excludeRows);
@@ -785,16 +795,6 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
         }
     }
 
-
-
-
-
-
-
-
-
-
-
     /// <summary>
     /// 현재 필드에서, 아직 최상단 스폰 라인에 걸쳐있는 보스들이 막고 있는 일반 칸 인덱스 목록
     /// </summary>
@@ -865,5 +865,151 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
     private bool IsSlotOverlapping(int slotA, int slotB)
     {
         return Mathf.Abs(slotA - slotB) <= 1;
+    }
+
+
+
+
+
+
+
+
+
+
+    /// <summary>
+    /// 보스의 고기방패 기믹.
+    /// 보스가 점유한 X범위 기준 바로 앞줄(Z+1)의 각 칸이 비어있으면,
+    /// 보스 범위 ±1칸(단, 보스 자신의 칸과 목적지인 앞칸 자체는 제외) 안에서
+    /// 몬스터를 하나씩 끌어와 그 앞자리를 채운다.
+    /// </summary>
+    public void PullMeatShield(MonsterBase boss)
+    {
+        List<Vector2Int> bossCells = BoardManager.Instance.GetCellsOf(boss);
+        if (bossCells.Count == 0)
+            return;
+
+        int minX = int.MaxValue, maxX = int.MinValue;
+        int minZ = int.MaxValue, maxZ = int.MinValue;
+
+        foreach (Vector2Int cell in bossCells)
+        {
+            minX = Mathf.Min(minX, cell.x);
+            maxX = Mathf.Max(maxX, cell.x);
+            minZ = Mathf.Min(minZ, cell.y);
+            maxZ = Mathf.Max(maxZ, cell.y);
+        }
+
+        // 보스가 게임오버 라인에 너무 가까워지면(앞쪽 줄이 z=5 이상) 고기방패 발동 안 함
+        if (maxZ >= 5)
+            return;
+
+        int frontZ = maxZ + 1;
+        int behindZ = minZ - 1;
+
+        // 실제로 비어있는 앞칸만 목적지 후보로
+        List<Vector2Int> emptyFrontCells = new List<Vector2Int>();
+        for (int x = minX; x <= maxX; x++)
+        {
+            if (BoardManager.Instance.IsEmpty(x, frontZ))
+                emptyFrontCells.Add(new Vector2Int(x, frontZ));
+        }
+
+        if (emptyFrontCells.Count == 0)
+            return;
+
+        // 보스가 벽면에 붙어서 한쪽 열(양옆+대각선 4칸)이 통째로 무효화되면,
+        // 반대쪽 범위를 1칸 더 늘려서 부족분을 보상
+        int leftCol = minX - 1;
+        int rightCol = maxX + 1;
+
+        if (leftCol < 0)
+            rightCol += 1;                              // 왼쪽 벽에 붙음 → 오른쪽으로 +1
+        else if (rightCol >= BoardManager.Width)
+            leftCol -= 1;                                // 오른쪽 벽에 붙음 → 왼쪽으로 -1
+
+        // 몬스터를 앞으로 끌고 오는 순서
+        // 1순위 : 양 옆 (보스 자신의 각 줄 좌우)
+        List<Vector2Int> sideCandidates = new List<Vector2Int>();
+        for (int z = minZ; z <= maxZ; z++)
+        {
+            AddCandidateIfValid(sideCandidates, leftCol, z);
+            AddCandidateIfValid(sideCandidates, rightCol, z);
+        }
+
+        // 2순위 : 대각선 (네 모서리)
+        List<Vector2Int> diagonalCandidates = new List<Vector2Int>();
+        AddCandidateIfValid(diagonalCandidates, leftCol, behindZ);
+        AddCandidateIfValid(diagonalCandidates, rightCol, behindZ);
+        AddCandidateIfValid(diagonalCandidates, leftCol, frontZ);
+        AddCandidateIfValid(diagonalCandidates, rightCol, frontZ);
+
+        // 3순위 : 바로 위 (보스 뒤, 같은 열)
+        List<Vector2Int> behindCandidates = new List<Vector2Int>();
+        for (int x = minX; x <= maxX; x++)
+        {
+            AddCandidateIfValid(behindCandidates, x, behindZ);
+        }
+
+        // 그룹 내부는 랜덤, 그룹 순서(양옆 → 대각선 → 위)는 고정
+        Shuffle(sideCandidates);
+        Shuffle(diagonalCandidates);
+        Shuffle(behindCandidates);
+
+        List<Vector2Int> priorityOrderedCandidates = new List<Vector2Int>();
+        priorityOrderedCandidates.AddRange(sideCandidates);
+        priorityOrderedCandidates.AddRange(diagonalCandidates);
+        priorityOrderedCandidates.AddRange(behindCandidates);
+
+        int candidateIndex = 0;
+
+        foreach (Vector2Int frontCell in emptyFrontCells)
+        {
+            if (candidateIndex >= priorityOrderedCandidates.Count)
+                break; // 끌어올 몬스터가 더 없음
+
+            Vector2Int sourceCell = priorityOrderedCandidates[candidateIndex];
+            candidateIndex++;
+
+            MonsterBase monster = BoardManager.Instance.GetMonsterAt(sourceCell.x, sourceCell.y);
+            if (monster == null)
+                continue;
+
+            monster.transform.position =
+                BoardManager.Instance.GetWorldPosition(frontCell.x, frontCell.y);
+
+            Debug.Log($"고기방패 : ({sourceCell.x},{sourceCell.y}) → ({frontCell.x},{frontCell.y}) 이동");
+        }
+
+        BoardManager.Instance.Refresh(activeMonsters);
+    }
+
+    /// <summary>
+    /// (x, z)가 유효한 칸이고, 보스가 아닌 몬스터가 있으면 후보 목록에 추가
+    /// </summary>
+    private void AddCandidateIfValid(List<Vector2Int> list, int x, int z)
+    {
+        if (!BoardManager.Instance.IsValidCell(x, z))
+            return;
+
+        MonsterBase monster = BoardManager.Instance.GetMonsterAt(x, z);
+        if (monster == null)
+            return;
+
+        if (monster.SpawnType == SpawnMonsterType.Boss)
+            return;
+
+        list.Add(new Vector2Int(x, z));
+    }
+
+    /// <summary>
+    /// 리스트를 제자리에서 무작위로 섞음 (Fisher-Yates)
+    /// </summary>
+    private void Shuffle(List<Vector2Int> list)
+    {
+        for (int i = list.Count - 1; i > 0; i--)
+        {
+            int j = Random.Range(0, i + 1);
+            (list[i], list[j]) = (list[j], list[i]);
+        }
     }
 }

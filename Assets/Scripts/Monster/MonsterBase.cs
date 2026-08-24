@@ -38,7 +38,8 @@ public enum MonsterGimmicks
 
 
     // 보스 몬스터의 기믹들
-    Summon,     // 턴 시작 시 빈 칸에 일반 몬스터 N마리 소환
+    Summon,         // 턴 시작 시 빈 칸에 일반 몬스터 N마리 소환
+    MeatShield,     // 고기 방패라는 어감이 좀 그렇긴 한데..
 
     // 1. 보스 몬스터 기믹들
     // - 턴 시작 시(공 발사 전) 필드의 가장 아래줄을 제외하고 빈 공간에 일반 몬스터 N마리 스폰
@@ -996,6 +997,10 @@ public class MonsterBase : RecycleObject, IDamageable
             case MonsterGimmicks.Summon:
                 ApplySummonGimmick();
                 break;
+
+            case MonsterGimmicks.MeatShield:
+                ApplyMeatShieldGimmick();
+                break;
         }
     }
 
@@ -1282,5 +1287,11 @@ public class MonsterBase : RecycleObject, IDamageable
         Debug.Log($"{gameObject.name}의 강화소환 기믹 발동 → {summonCount}마리 소환 요청");
     }
 
-    
+    /// <summary>
+    /// 고기 방패 기믹..? ㅋㅋㅋㅋㅋㅋㅋ
+    /// </summary>
+    private void ApplyMeatShieldGimmick()
+    {
+        MonsterSpawner.Instance.PullMeatShield(this);
+    }
 }

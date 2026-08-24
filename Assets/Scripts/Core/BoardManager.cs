@@ -17,6 +17,18 @@ public class BoardManager : Singleton<BoardManager>
     public const int Width = 7;
     public const int Height = 9;
 
+    // [7,9] 보드의 2차원 배열 인덱스
+    //                    X 인덱스
+    //      (0,0) (1,0) (2,0) (3,0) (4,0) (5,0) (6,0)
+    //      (0,1) (1,1) (2,1) (3,1) (4,1) (5,1) (6,1)
+    // Z    (0,2) (1,2) (2,2) (3,2) (4,2) (5,2) (6,2)
+    // 인   (0,3) (1,3) (2,3) (3,3) (4,3) (5,3) (6,3)
+    // 덱   (0,4) (1,4) (2,4) (3,4) (4,4) (5,4) (6,4)
+    // 스   (0,5) (1,5) (2,5) (3,5) (4,5) (5,5) (6,5)
+    //      (0,6) (1,6) (2,6) (3,6) (4,6) (5,6) (6,6)
+    //      (0,7) (1,7) (2,7) (3,7) (4,7) (5,7) (6,7)
+    //      (0,8) (1,8) (2,8) (3,8) (4,8) (5,8) (6,8)
+
     /// <summary>
     /// 칸 하나의 크기(월드 좌표 기준 간격)
     /// </summary>
@@ -219,5 +231,25 @@ public class BoardManager : Singleton<BoardManager>
         float worldX = columnXPositions[x];
         float worldZ = TopZ - (z * CellSize);
         return new Vector3(worldX, 0.033f, worldZ);
+    }
+
+    /// <summary>
+    /// 특정 몬스터가 현재 점유 중인 모든 칸 좌표를 반환.
+    /// 보스처럼 여러 칸을 차지하는 경우 그 칸 전부가 담김.
+    /// </summary>
+    public List<Vector2Int> GetCellsOf(MonsterBase monster)
+    {
+        List<Vector2Int> result = new List<Vector2Int>();
+
+        for (int z = 0; z < Height; z++)
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                if (cells[x, z] == monster)
+                    result.Add(new Vector2Int(x, z));
+            }
+        }
+
+        return result;
     }
 }
