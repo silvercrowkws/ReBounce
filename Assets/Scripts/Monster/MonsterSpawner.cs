@@ -462,13 +462,14 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
                 break;
 
             case SpawnMonsterType.Gimmick:
-                spawnData.gimmick = GetRandomGimmick();
+                spawnData.gimmick = GetRandomGimmick();         // 랜덤으로 기믹 결정
                 spawnData.monster = GetRandomGimmickMonster();
                 break;
 
             case SpawnMonsterType.Boss:
-                spawnData.gimmick = GetRandomBossGimmick();   // 일단 보스 기믹은 없는 상태(변경 예정)
-                spawnData.monster = GetRandomBossMonster();
+                /*spawnData.gimmick = GetRandomBossGimmick();     // 랜덤으로 보스 기믹 결정
+                spawnData.monster = GetRandomBossMonster();*/
+                AssignRandomBossType(spawnData);        // 기믹 + 생김새까지 한 번에 배정
                 break;
         }
 
@@ -573,6 +574,44 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// 보스 기믹과 그에 맞는 생김새(프리팹)를 함께 랜덤으로 결정하는 함수.
+    /// 기믹마다 정해진 생김새가 있어야 하므로, 기믹과 프리팹을 따로 뽑지 않고
+    /// 여기서 케이스별로 한 번에 묶어서 배정한다.
+    /// </summary>
+    private void AssignRandomBossType(MonsterSpawnData spawnData)
+    {
+        int random = Random.Range(0, 4);
+
+        switch (random)
+        {
+            case 0:
+                spawnData.gimmick = MonsterGimmicks.Summon;
+                spawnData.monster = Factory.Instance.GetMonster_Slime_Green_King();
+                break;
+
+            case 1:
+                spawnData.gimmick = MonsterGimmicks.Summon;
+                spawnData.monster = Factory.Instance.GetMonster_Slime_Green_King();
+                break;
+
+            case 2:
+                spawnData.gimmick = MonsterGimmicks.Summon;
+                spawnData.monster = Factory.Instance.GetMonster_Slime_Green_King();
+                break;
+
+            case 3:
+                spawnData.gimmick = MonsterGimmicks.Summon;
+                spawnData.monster = Factory.Instance.GetMonster_Slime_Green_King();
+                break;
+
+            default:
+                spawnData.gimmick = MonsterGimmicks.None;
+                spawnData.monster = GetRandomBossMonster();
+                break;
+        }
     }
 
     /// <summary>
@@ -691,11 +730,23 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
 
             Vector3 spawnPos = BoardManager.Instance.GetWorldPosition(cell.x, cell.y);
 
-            MonsterSpawnData spawnData = GetRandomMonster(SpawnMonsterType.Normal);     // 기믹 없음
+            /*MonsterSpawnData spawnData = GetRandomMonster(SpawnMonsterType.Normal);     // 기믹 없음            
             spawnData.element = MonsterElementals.Normal;                               // 속성 노말
 
             spawnData.overrideMaxHP =
-            Mathf.Floor(MonsterBase.CalculateHPForTurn(TurnManager.Instance.turnNumber) * reinforceHPRatio);
+            Mathf.Floor(MonsterBase.CalculateHPForTurn(TurnManager.Instance.turnNumber) * reinforceHPRatio);*/
+
+            // 강화소환 몬스터는 랜덤 없이 생김새/속성/기믹을 전부 고정
+            MonsterSpawnData spawnData = new MonsterSpawnData
+            {
+                spawnType = SpawnMonsterType.Normal,
+                element = MonsterElementals.Normal,
+                gimmick = MonsterGimmicks.None,
+                monster = Factory.Instance.GetMonster_Slime_Green(),
+                overrideMaxHP = Mathf.Floor(
+                    MonsterBase.CalculateHPForTurn(TurnManager.Instance.turnNumber) * reinforceHPRatio)
+            };
+
             MonsterBase monster = spawnData.monster;
 
             if (monster == null)
