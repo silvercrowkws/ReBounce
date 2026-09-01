@@ -139,7 +139,7 @@ public class CardData : ScriptableObject
         if (count <= 1)
             return description;
 
-        string originalStr = FormatValue(value1);
+        /*string originalStr = FormatValue(value1);
         string totalStr = FormatValue(value1 * count);
 
         int index = description.IndexOf(originalStr);
@@ -147,7 +147,39 @@ public class CardData : ScriptableObject
             return description;   // 숫자를 못 찾으면 원본 그대로
 
         return description.Substring(0, index) + totalStr
-             + description.Substring(index + originalStr.Length);
+             + description.Substring(index + originalStr.Length);*/
+
+        // 1차 시도 : 개수형 카드 (value1이 표시값 그대로, 예: +1개 → +2개)
+        if (TryReplace(value1, value1 * count, out string result))
+            return result;
+
+        // 2차 시도 : 퍼센트형 카드 (value1은 소수 배율, 표시는 ×100, 예: 0.15 → "15%")
+        if (TryReplace(value1 * 100f, value1 * count * 100f, out result))
+            return result;
+
+        return description;   // 둘 다 못 찾으면 원본 그대로
+    }
+
+    /// <summary>
+    /// description 안에서 displayValue 문자열을 찾아 totalDisplayValue로 치환 시도.
+    /// 성공하면 true와 결과 문자열 반환.
+    /// </summary>
+    private bool TryReplace(float displayValue, float totalDisplayValue, out string result)
+    {
+        string originalStr = FormatValue(displayValue);
+        int index = description.IndexOf(originalStr);
+
+        if (index < 0)
+        {
+            result = null;
+            return false;
+        }
+
+        string totalStr = FormatValue(totalDisplayValue);
+
+        result = description.Substring(0, index) + totalStr
+               + description.Substring(index + originalStr.Length);
+        return true;
     }
 
     private static string FormatValue(float value)

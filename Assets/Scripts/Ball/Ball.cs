@@ -497,7 +497,13 @@ public class Ball : RecycleObject
             float barrierIgnorePercent =
                 (monster != null && monster.IsWet) ? ballShooter.vortex : 0f;
 
-            damageable.TakeDamage(finalDamage, ignoreBarrier, barrierIgnorePercent);
+            //damageable.TakeDamage(finalDamage, ignoreBarrier, barrierIgnorePercent);
+            
+            damageable.TakeDamage(
+                finalDamage,
+                ignoreBarrier,
+                barrierIgnorePercent,
+                (MonsterElementals)(int)ballElementals);
         }
         else
         {
@@ -882,7 +888,7 @@ public class Ball : RecycleObject
             if (other == null)
                 continue;
 
-            other.TakeDamage(earthquakeDamage, true);   // 땅 속성이므로 배리어 완전 무시
+            other.TakeDamage(earthquakeDamage, true, 0f, MonsterElementals.Land);   // 땅 속성이므로 배리어 완전 무시
         }
     }
 

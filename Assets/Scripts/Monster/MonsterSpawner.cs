@@ -453,18 +453,20 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
         // 스폰 타입 저장
         spawnData.spawnType = spawnType;
 
-        // 속성 결정
-        spawnData.element = GetRandomElement();
+        // 속성 결정 => 보스 몬스터는 GetRandomElement 호출 안함으로 변경
+        //spawnData.element = GetRandomElement();
 
         // 기믹 결정
         switch (spawnType)
         {
             case SpawnMonsterType.Normal:
+                spawnData.element = GetRandomElement();
                 spawnData.gimmick = MonsterGimmicks.None;
                 spawnData.monster = GetRandomNormalMonster();
                 break;
 
             case SpawnMonsterType.Gimmick:
+                spawnData.element = GetRandomElement();
                 spawnData.gimmick = GetRandomGimmick();         // 랜덤으로 기믹 결정
                 spawnData.monster = GetRandomGimmickMonster();
                 break;
@@ -472,7 +474,7 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
             case SpawnMonsterType.Boss:
                 /*spawnData.gimmick = GetRandomBossGimmick();     // 랜덤으로 보스 기믹 결정
                 spawnData.monster = GetRandomBossMonster();*/
-                AssignRandomBossType(spawnData);        // 기믹 + 생김새까지 한 번에 배정
+                AssignRandomBossType(spawnData);        // 기믹 + 생김새 + 속성까지 한 번에 결정
                 break;
         }
 
@@ -593,32 +595,50 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
             case 0:
                 spawnData.gimmick = MonsterGimmicks.Summon;
                 spawnData.monster = Factory.Instance.GetMonster_Slime_Green_King();
+                spawnData.element = MonsterElementals.Normal;
                 break;
 
             case 1:
                 spawnData.gimmick = MonsterGimmicks.MeatShield;
                 spawnData.monster = Factory.Instance.GetMonster_Slime_Green_Stone();
+                spawnData.element = MonsterElementals.Normal;
                 break;
 
             case 2:
-                /*spawnData.gimmick = MonsterGimmicks.Summon;
-                spawnData.monster = Factory.Instance.GetMonster_Slime_Green_King();*/
-                spawnData.gimmick = MonsterGimmicks.MeatShield;
-                spawnData.monster = Factory.Instance.GetMonster_Slime_Green_Stone();
+                spawnData.gimmick = MonsterGimmicks.ElementImmune;
+                spawnData.monster = Factory.Instance.GetMonster_Slime_Orange_Stone();
+                spawnData.element = GetRandomImmuneElement();       // 속성 면역 보스는 속성 랜덤 결정
                 break;
 
             case 3:
-                /*spawnData.gimmick = MonsterGimmicks.Summon;
-                spawnData.monster = Factory.Instance.GetMonster_Slime_Green_King();*/
-                spawnData.gimmick = MonsterGimmicks.MeatShield;
+                /*spawnData.gimmick = MonsterGimmicks.MeatShield;
                 spawnData.monster = Factory.Instance.GetMonster_Slime_Green_Stone();
+                spawnData.element = MonsterElementals.Normal;*/
+                spawnData.gimmick = MonsterGimmicks.ElementImmune;
+                spawnData.monster = Factory.Instance.GetMonster_Slime_Orange_Stone();
+                spawnData.element = GetRandomImmuneElement();       // 속성 면역 보스는 속성 랜덤 결정
                 break;
 
             default:
                 spawnData.gimmick = MonsterGimmicks.None;
                 spawnData.monster = GetRandomBossMonster();
+                spawnData.element = MonsterElementals.Normal;
                 break;
         }
+    }
+
+    private MonsterElementals GetRandomImmuneElement()
+    {
+        MonsterElementals[] elements =
+        {
+            MonsterElementals.Fire,
+            MonsterElementals.Water,
+            MonsterElementals.Land,
+            MonsterElementals.Electric,
+            MonsterElementals.Wind,
+        };
+
+        return elements[Random.Range(0, elements.Length)];
     }
 
     /// <summary>

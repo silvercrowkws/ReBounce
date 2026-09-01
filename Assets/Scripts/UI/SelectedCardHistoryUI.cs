@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 //using UnityEngine.UIElements;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
+//using static UnityEditor.Progress;
 using static UnityEngine.EventSystems.EventTrigger;
 
 public class SelectedCardHistoryUI : MonoBehaviour

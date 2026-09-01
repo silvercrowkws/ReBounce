@@ -19,7 +19,7 @@ public interface IDamageable
     /// <param name="amount">원본 데미지</param>
     /// <param name="ignoreBarrier">true면 배리어를 완전히 무시 (땅 속성 공)</param>
     /// <param name="barrierIgnorePercent">배리어 감소율 중 추가로 무시할 비율 (와류)</param>
-    void TakeDamage(float amount, bool ignoreBarrier, float barrierIgnorePercent = 0f);
+    void TakeDamage(float amount, bool ignoreBarrier, float barrierIgnorePercent = 0f, MonsterElementals ballElement = MonsterElementals.Normal);
 
     void TakeStatusEffect(StatusEffectData effect);
 

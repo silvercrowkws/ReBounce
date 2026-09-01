@@ -40,6 +40,7 @@ public enum MonsterGimmicks
     // 보스 몬스터의 기믹들
     Summon,         // 턴 시작 시 빈 칸에 일반 몬스터 N마리 소환
     MeatShield,     // 고기 방패라는 어감이 좀 그렇긴 한데..
+    ElementImmune,  // 특정 속성 면역 보스
 
     // 1. 보스 몬스터 기믹들
     // - 턴 시작 시(공 발사 전) 필드의 가장 아래줄을 제외하고 빈 공간에 일반 몬스터 N마리 스폰
@@ -555,13 +556,20 @@ public class MonsterBase : RecycleObject, IDamageable
     {
         /*CurrentHP -= amount;
         Debug.Log($"{gameObject.name}이 {amount}의 데미지. 남은 HP: {CurrentHP}");*/
-        TakeDamage(amount, false, 0f);   // 배리어 정상 적용
+        TakeDamage(amount, false, 0f, MonsterElementals.Normal);   // 배리어 정상 적용
     }
 
-    public virtual void TakeDamage(float amount, bool ignoreBarrier, float barrierIgnorePercent = 0f)
+    public virtual void TakeDamage(float amount, bool ignoreBarrier, float barrierIgnorePercent = 0f, MonsterElementals ballElement = MonsterElementals.Normal)
     {
         if (!gameObject.activeInHierarchy)
             return;
+
+        // 속성 면역 보스 : 자신의 면역 속성과 정확히 일치하는 공격만 완전 무효화
+        if (monsterGimmick == MonsterGimmicks.ElementImmune && ballElement == monsterElementals)
+        {
+            Debug.Log($"{gameObject.name} 은 {ballElement} 속성 공격 면역 (데미지 무효)");
+            return;
+        }
 
         float finalAmount = amount;
 
@@ -583,6 +591,13 @@ public class MonsterBase : RecycleObject, IDamageable
     {
         if (!gameObject.activeInHierarchy)
             return;
+
+        if (IsImmuneToStatusEffect(effect.effectType))
+        {
+            PlayImmuneHitSound(effect.effectType);
+            Debug.Log($"{gameObject.name} 은 {effect.effectType} 상태이상 면역 (효과 무효, 타격음만 재생)");
+            return;
+        }
 
         switch (effect.effectType)
         {
@@ -676,6 +691,43 @@ public class MonsterBase : RecycleObject, IDamageable
                 ApplyPierce(effect);
                 break;
         }
+    }
+
+    /// <summary>
+    /// 면역으로 상태이상 자체는 무효화되지만, 맞았다는 반응(사운드)은 그대로 들려주기 위한 함수.
+    /// 각 속성이 정상 적중했을 때 나는 소리와 동일한 소리를 재생.
+    /// </summary>
+    private void PlayImmuneHitSound(StatusEffectType effectType)
+    {
+        switch (effectType)
+        {
+            case StatusEffectType.Burn: SoundManager.Instance.PlayBurn(); break;
+            case StatusEffectType.Wet: SoundManager.Instance.PlayWet(); break;
+            case StatusEffectType.IgnoreDefense: SoundManager.Instance.PlayIgnoreDefenseClip(); break;
+            case StatusEffectType.ChainLightning: SoundManager.Instance.PlayChainLightning(); break;
+            case StatusEffectType.Pierce: SoundManager.Instance.PlayPierce(); break;
+        }
+    }
+
+    /// <summary>
+    /// ElementImmune 기믹 보스가 특정 상태이상에 면역인지 확인.
+    /// 매핑 : Burn→Fire, Wet→Water, IgnoreDefense→Land, ChainLightning→Electric, Pierce→Wind
+    /// </summary>
+    private bool IsImmuneToStatusEffect(StatusEffectType effectType)
+    {
+        if (monsterGimmick != MonsterGimmicks.ElementImmune)
+            return false;
+
+        switch (effectType)
+        {
+            case StatusEffectType.Burn: return monsterElementals == MonsterElementals.Fire;
+            case StatusEffectType.Wet: return monsterElementals == MonsterElementals.Water;
+            case StatusEffectType.IgnoreDefense: return monsterElementals == MonsterElementals.Land;
+            case StatusEffectType.ChainLightning: return monsterElementals == MonsterElementals.Electric;
+            case StatusEffectType.Pierce: return monsterElementals == MonsterElementals.Wind;
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -881,7 +933,7 @@ public class MonsterBase : RecycleObject, IDamageable
                     hit.transform.position.z)
             ).transform.rotation = Quaternion.Euler(90f, 0f, 0f);
 
-            other.TakeDamage(chainDamage);
+            other.TakeDamage(chainDamage, false, 0f, MonsterElementals.Electric);
 
             Debug.Log(
                 $"{hit.name} 에게 번개 전이 피해 : {chainDamage}");
@@ -966,7 +1018,7 @@ public class MonsterBase : RecycleObject, IDamageable
                 ).transform.rotation = Quaternion.Euler(90f, 0f, 0f);
 
                 // 관통 피해 적용
-                other.TakeDamage(pierceDamage);
+                other.TakeDamage(pierceDamage, false, 0f, MonsterElementals.Wind);
 
                 Debug.Log(
                     $"{hit.name} 에게 관통 피해 : {pierceDamage}");
