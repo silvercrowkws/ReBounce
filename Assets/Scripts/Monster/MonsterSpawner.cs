@@ -613,7 +613,7 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
             case 3:
                 /*spawnData.gimmick = MonsterGimmicks.MeatShield;
                 spawnData.monster = Factory.Instance.GetMonster_Slime_Green_Stone();
-                spawnData.element = MonsterElementals.Normal;*/
+                spawnData.element = MonsterElementals.Normal;*/ 
                 spawnData.gimmick = MonsterGimmicks.ElementImmune;
                 spawnData.monster = Factory.Instance.GetMonster_Slime_Orange_Stone();
                 spawnData.element = GetRandomImmuneElement();       // 속성 면역 보스는 속성 랜덤 결정
