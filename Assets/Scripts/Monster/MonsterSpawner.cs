@@ -555,7 +555,7 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
                 // 속성 면역 보스
                 spawnData.gimmick = MonsterGimmicks.ElementImmune;
                 spawnData.monster = Factory.Instance.GetMonster_Slime_Orange_Stone();
-                spawnData.element = GetRandomImmuneElement();       // 속성 면역 보스는 속성 랜덤 결정
+                spawnData.element = GetRandomImmuneElement();       // 속성 면역 보스는 속성 랜덤 결정 
                 break;
 
             case 3:
