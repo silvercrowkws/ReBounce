@@ -157,61 +157,10 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
     {
         return activeMonsters;
     }
-
-    /*/// <summary>
+    
+    /// <summary>
     /// 턴 시작 시 몬스터 스폰 함수
     /// </summary>
-    public void SpawnMonsters()
-    {
-        Debug.Log("몬스터 스폰");
-
-        int turn = TurnManager.Instance.turnNumber + 1;     // 델리게이트로 받는게 몬스터를 스폰하는 시점보다 느려서 +1 처리
-
-        //int spawnCount = Random.Range(4, 7); // 4 ~ 6마리
-
-        // 이번 턴의 총 몬스터 스폰 수
-        int spawnCount = GetSpawnCount();
-
-        // 보스 / 기믹 / 일반 몬스터 수 계산
-        int bossCount = GetBossCount(turn);
-        int gimmickCount = GetGimmickCount(turn, spawnCount - bossCount);       // 기믹 몬스터 스폰 숫자 결정
-        int normalCount = spawnCount - bossCount - gimmickCount;                // 일반 몬스터 스폰 숫자 결정
-
-        List<float> availablePositions = new List<float>(spawnXPositions);
-
-        for (int i = 0; i < spawnCount; i++)
-        {
-            if (availablePositions.Count <= 0)
-                break;
-
-            int randomIndex = Random.Range(0, availablePositions.Count);
-
-            float spawnX = availablePositions[randomIndex];
-
-            availablePositions.RemoveAt(randomIndex);
-
-            //SpawnMonsterAt(spawnX);
-
-            SpawnMonsterType spawnType = SpawnMonsterType.Normal;
-
-            if (bossCount > 0)
-            {
-                spawnType = SpawnMonsterType.Boss;      // 보스 몬스터로 타입 변경
-                bossCount--;
-            }
-            else if (gimmickCount > 0)
-            {
-                spawnType = SpawnMonsterType.Gimmick;   // 기믹 몬스터로 타입 변경
-                gimmickCount--;
-            }
-
-            SpawnMonsterAt(spawnX, spawnType);
-        }
-    }*/
-
-
-
-
     public void SpawnMonsters()
     {
         Debug.Log("몬스터 스폰");
@@ -294,10 +243,6 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
             SpawnMonsterAt(spawnX, spawnType);
         }
     }
-
-
-
-
 
     /// <summary>
     /// 팩토리에서 몬스터를 스폰하는 함수
@@ -593,30 +538,31 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
         switch (random)
         {
             case 0:
+                // 소환 보스
                 spawnData.gimmick = MonsterGimmicks.Summon;
                 spawnData.monster = Factory.Instance.GetMonster_Slime_Green_King();
                 spawnData.element = MonsterElementals.Normal;
                 break;
 
             case 1:
+                // 고기 방패 보스
                 spawnData.gimmick = MonsterGimmicks.MeatShield;
                 spawnData.monster = Factory.Instance.GetMonster_Slime_Green_Stone();
                 spawnData.element = MonsterElementals.Normal;
                 break;
 
             case 2:
+                // 속성 면역 보스
                 spawnData.gimmick = MonsterGimmicks.ElementImmune;
                 spawnData.monster = Factory.Instance.GetMonster_Slime_Orange_Stone();
                 spawnData.element = GetRandomImmuneElement();       // 속성 면역 보스는 속성 랜덤 결정
                 break;
 
             case 3:
-                /*spawnData.gimmick = MonsterGimmicks.MeatShield;
-                spawnData.monster = Factory.Instance.GetMonster_Slime_Green_Stone();
-                spawnData.element = MonsterElementals.Normal;*/ 
-                spawnData.gimmick = MonsterGimmicks.ElementImmune;
-                spawnData.monster = Factory.Instance.GetMonster_Slime_Orange_Stone();
-                spawnData.element = GetRandomImmuneElement();       // 속성 면역 보스는 속성 랜덤 결정
+                // 최후의 발악 보스
+                spawnData.gimmick = MonsterGimmicks.AimReversal;
+                spawnData.monster = Factory.Instance.GetMonster_Slime_Orange_King();
+                spawnData.element = MonsterElementals.Normal;
                 break;
 
             default:

@@ -41,6 +41,7 @@ public enum MonsterGimmicks
     Summon,         // 턴 시작 시 빈 칸에 일반 몬스터 N마리 소환
     MeatShield,     // 고기 방패라는 어감이 좀 그렇긴 한데..
     ElementImmune,  // 특정 속성 면역 보스
+    AimReversal,    // 최후의 발악 : 다음 턴 조준 반전 + 가이드라인 숨김
 
     // 1. 보스 몬스터 기믹들
     // - 턴 시작 시(공 발사 전) 필드의 가장 아래줄을 제외하고 빈 공간에 일반 몬스터 N마리 스폰
@@ -248,6 +249,27 @@ public class MonsterBase : RecycleObject, IDamageable
     [SerializeField]
     private int summonCount = 1;
 
+    /// <summary>
+    /// 보스 소환 기믹 스프라이트
+    /// </summary>
+    private Sprite summonGimmickSprite;
+
+    /// <summary>
+    /// 보스 고기방패 기믹 스프라이트
+    /// </summary>
+    private Sprite meatShieldGimmickSprite;
+
+    /// <summary>
+    /// 보스 속성 면역 기믹 스프라이트
+    /// </summary>
+    private Sprite elementImmuneGimmickSprite;
+
+    /// <summary>
+    /// 보스 최후의 발악 기믹 스프라이트
+    /// </summary>
+    private Sprite aimReversalGimmickSprite;
+
+
     protected virtual void Awake()
     {
         //currentHP = maxHP;    => 활성화 시 처리
@@ -296,6 +318,11 @@ public class MonsterBase : RecycleObject, IDamageable
         barrierGimmickSprite = Resources.Load<Sprite>("Gimmick/Gimmick_Barrier");
         shieldGimmickSprite = Resources.Load<Sprite>("Gimmick/Gimmick_Shield");
         magneticGimmickSprite = Resources.Load<Sprite>("Gimmick/Gimmick_Magnetic");
+
+        summonGimmickSprite = Resources.Load<Sprite>("BossGimmick/Boss_Gimmick_Summon");
+        //meatShieldGimmickSprite = Resources.Load<Sprite>("BossGimmick/Boss_Gimmick_MeatShield");
+        elementImmuneGimmickSprite = Resources.Load<Sprite>("BossGimmick/Boss_Gimmick_ElementImmune");
+        //aimReversalGimmickSprite = Resources.Load<Sprite>("BossGimmick/Boss_Gimmick_AimReversal");
     }
 
     protected override void OnEnable()
@@ -494,6 +521,9 @@ public class MonsterBase : RecycleObject, IDamageable
         return hp;
     }
 
+    /// <summary>
+    /// 몬스터 속성에 따라 발판 변경
+    /// </summary>
     private void ApplyMaterial()
     {
         meshRenderer.sharedMaterial =
@@ -1053,6 +1083,10 @@ public class MonsterBase : RecycleObject, IDamageable
             case MonsterGimmicks.MeatShield:
                 ApplyMeatShieldGimmick();
                 break;
+
+            case MonsterGimmicks.ElementImmune:
+                ApplyElementRotationGimmick();
+                break;
         }
     }
 
@@ -1180,7 +1214,27 @@ public class MonsterBase : RecycleObject, IDamageable
 
             // 보스 몬스터들
             case MonsterGimmicks.Summon:
-                gimmickObjectRenderer.sprite = null; // Resources.Load("Gimmick/Gimmick_Summon") 등으로 별도 로드 필요
+                gimmickObjectRenderer.sprite = summonGimmickSprite;
+                gimmickObjectRenderer.enabled = true;
+                ResetGimmickObjectTransform();
+                break;
+
+            case MonsterGimmicks.MeatShield:
+                //gimmickObjectRenderer.sprite = meatShieldGimmickSprite;
+                gimmickObjectRenderer.sprite = null;
+                gimmickObjectRenderer.enabled = true;
+                ResetGimmickObjectTransform();
+                break;
+
+            case MonsterGimmicks.ElementImmune:
+                gimmickObjectRenderer.sprite = elementImmuneGimmickSprite;
+                gimmickObjectRenderer.enabled = true;
+                ResetGimmickObjectTransform();
+                break;
+
+            case MonsterGimmicks.AimReversal:
+                //gimmickObjectRenderer.sprite = aimReversalGimmickSprite;
+                gimmickObjectRenderer.sprite = null;
                 gimmickObjectRenderer.enabled = true;
                 ResetGimmickObjectTransform();
                 break;
@@ -1284,7 +1338,11 @@ public class MonsterBase : RecycleObject, IDamageable
                 ApplyMagneticPull();
                 break;
 
-                // Heal, Barrier, Shield는 이 트리거를 쓰지 않으므로 여기 없음
+            case MonsterGimmicks.AimReversal:
+                ApplyAimReversalGimmick();
+                break;
+
+            // Heal, Barrier, Shield는 이 트리거를 쓰지 않으므로 여기 없음
         }
     }
 
@@ -1345,5 +1403,56 @@ public class MonsterBase : RecycleObject, IDamageable
     private void ApplyMeatShieldGimmick()
     {
         MonsterSpawner.Instance.PullMeatShield(this);
+    }
+
+    /// <summary>
+    /// 속성 면역 보스의 면역 속성을 매 턴 무작위로 변경 (직전 속성은 제외).
+    /// 특정 속성 하나로만 육성한 플레이어가 그 속성 면역 보스를 만나면
+    /// 사실상 클리어가 불가능해지는 상황을 막기 위한 장치.
+    /// </summary>
+    private void ApplyElementRotationGimmick()
+    {
+        // 현재 속성 저장
+        MonsterElementals previousElement = monsterElementals;
+
+        monsterElementals = GetRandomImmuneElementExcept(previousElement);
+
+        ApplyMaterial();   // 발판 색상도 즉시 갱신
+
+        Debug.Log($"{gameObject.name} 면역 속성 변경 : {previousElement} → {monsterElementals}");
+    }
+
+    /// <summary>
+    /// 현재 속성을 제외한 4개 속성 중 랜덤 선택하는 함수
+    /// </summary>
+    private MonsterElementals GetRandomImmuneElementExcept(MonsterElementals exclude)
+    {
+        List<MonsterElementals> candidates = new List<MonsterElementals>
+        {
+            MonsterElementals.Fire,
+            MonsterElementals.Water,
+            MonsterElementals.Land,
+            MonsterElementals.Electric,
+            MonsterElementals.Wind,
+        };
+
+        candidates.Remove(exclude);     // 직전 속성 제거
+
+        // 남은 4개의 속성 중 랜덤 선택
+        return candidates[Random.Range(0, candidates.Count)];
+    }
+
+    /// <summary>
+    /// 보스 최후의 발악 패턴
+    /// </summary>
+    private void ApplyAimReversalGimmick()
+    {
+        BallShooter ballShooter = FindObjectOfType<BallShooter>();
+        if (ballShooter == null)
+            return;
+
+        ballShooter.ApplyAimInversion();
+
+        Debug.Log($"{gameObject.name} 최후의 발악 : 다음 턴 조준 반전 발동");
     }
 }

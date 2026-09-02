@@ -224,6 +224,16 @@ public class BallShooter : MonoBehaviour
     [Header("태풍 : 관통 거리 무제한")]
     public bool typhoon = false;
 
+    /// <summary>
+    /// 조준 역전 디버프가 남은 턴 수 (보스의 최후의 발악 기믹으로 예약됨)
+    /// </summary>
+    private int aimInvertedTurnsRemaining = 0;
+
+    /// <summary>
+    /// true면 이번 턴 좌우 조준이 반전되고, 가이드라인도 숨겨짐
+    /// </summary>
+    public bool isAimInverted { get; private set; }
+
     private void Awake()
     {
         inputActions = new PlayerInputActions();
@@ -261,6 +271,11 @@ public class BallShooter : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        TurnManager.Instance.onTurnStart += OnTurnStart;
+    }
+
     void OnEnable()
     {
         inputActions.Actions.Enable();
@@ -275,6 +290,9 @@ public class BallShooter : MonoBehaviour
         inputActions.Actions.Press.canceled -= OnPressCanceled;
 
         gameManager.onFirstGroundHitPos -= OnFirstGroundHitPos;
+
+        if (TurnManager.Instance != null)
+            TurnManager.Instance.onTurnStart -= OnTurnStart;
 
         inputActions.Actions.Disable();
     }
@@ -318,6 +336,13 @@ public class BallShooter : MonoBehaviour
     void DrawGuideLine()
     {
         if (lineRenderer == null || Camera.main == null) return;
+
+        // 보스 최후의 발악 패턴 적용 중이면
+        if (isAimInverted)
+        {
+            lineRenderer.enabled = false;   // 가이드라인 자체를 숨김
+            return;
+        }
 
         currentPos = inputActions.Actions.Touch.ReadValue<Vector2>();
         Ray ray = Camera.main.ScreenPointToRay(currentPos);
@@ -420,6 +445,11 @@ public class BallShooter : MonoBehaviour
 
             Vector3 dir = (hitPoint - firePoint.position);
             dir.y = 0;
+
+            // 보스 최후의 발악 패턴 적용 중이면
+            if (isAimInverted)
+                dir.x = -dir.x;   // 좌우 반전
+
             dir = ClampDirection(dir.normalized);       // 각도 제한 추가
 
             // 여기부터 공 발사 부분
@@ -531,5 +561,31 @@ public class BallShooter : MonoBehaviour
 
         // 만약 FireInfusion 카드 같은 것으로 공을 추가할 때는
         // ballShooter.AddBall(BallElementals.Fire); 이런 식으로 사용
+    }
+
+    /// <summary>
+    /// 매 턴 시작 시 디버프 상태를 갱신.
+    /// 보스 사망 시점엔 바로 켜지 않고 "다음 턴 1턴" 예약만 해두는 방식이라,
+    /// 이 함수가 실제로 켜고 끄는 타이밍을 담당함.
+    /// </summary>
+    private void OnTurnStart(int turn)
+    {
+        if (aimInvertedTurnsRemaining > 0)
+        {
+            isAimInverted = true;
+            aimInvertedTurnsRemaining--;
+        }
+        else
+        {
+            isAimInverted = false;
+        }
+    }
+
+    /// <summary>
+    /// 보스의 "최후의 발악" 기믹에서 호출. 다음 턴 1턴간 조준 반전을 예약.
+    /// </summary>
+    public void ApplyAimInversion()
+    {
+        aimInvertedTurnsRemaining = 1;
     }
 }
