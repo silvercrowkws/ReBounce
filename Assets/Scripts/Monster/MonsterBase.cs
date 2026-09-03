@@ -320,9 +320,9 @@ public class MonsterBase : RecycleObject, IDamageable
         magneticGimmickSprite = Resources.Load<Sprite>("Gimmick/Gimmick_Magnetic");
 
         summonGimmickSprite = Resources.Load<Sprite>("BossGimmick/Boss_Gimmick_Summon");
-        //meatShieldGimmickSprite = Resources.Load<Sprite>("BossGimmick/Boss_Gimmick_MeatShield");
+        meatShieldGimmickSprite = Resources.Load<Sprite>("BossGimmick/Boss_Gimmick_MeatShield");
         elementImmuneGimmickSprite = Resources.Load<Sprite>("BossGimmick/Boss_Gimmick_ElementImmune");
-        //aimReversalGimmickSprite = Resources.Load<Sprite>("BossGimmick/Boss_Gimmick_AimReversal");
+        aimReversalGimmickSprite = Resources.Load<Sprite>("BossGimmick/Boss_Gimmick_AimReversal");
     }
 
     protected override void OnEnable()
@@ -1220,8 +1220,8 @@ public class MonsterBase : RecycleObject, IDamageable
                 break;
 
             case MonsterGimmicks.MeatShield:
-                //gimmickObjectRenderer.sprite = meatShieldGimmickSprite;
-                gimmickObjectRenderer.sprite = null;
+                gimmickObjectRenderer.transform.localPosition += new Vector3(0f, 0f, -0.15f);
+                gimmickObjectRenderer.sprite = meatShieldGimmickSprite;
                 gimmickObjectRenderer.enabled = true;
                 ResetGimmickObjectTransform();
                 break;
@@ -1233,8 +1233,7 @@ public class MonsterBase : RecycleObject, IDamageable
                 break;
 
             case MonsterGimmicks.AimReversal:
-                //gimmickObjectRenderer.sprite = aimReversalGimmickSprite;
-                gimmickObjectRenderer.sprite = null;
+                gimmickObjectRenderer.sprite = aimReversalGimmickSprite;
                 gimmickObjectRenderer.enabled = true;
                 ResetGimmickObjectTransform();
                 break;
