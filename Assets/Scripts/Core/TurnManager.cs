@@ -82,10 +82,18 @@ public class TurnManager : Singleton<TurnManager>
     /// </summary>
     bool hasShotThisTurn = false;*/
 
+    /// <summary>
+    /// 턴 매니저가 준비 완료인지.
+    /// 게임 매니저의 SceneLoaded 가 호출 되는 시점이 턴 매너지의 Start 전이라 문제 있었음
+    /// </summary>
+    public bool turnManagerReady = false;
+
     private void Start()
     {
         gameManager = GameManager.Instance;
         turnNumber = 0;                         // OnTurnStart에서 turnNumber를 증가 시키기 때문에 0에서 시작
+
+        turnManagerReady = true;
     }
 
     /// <summary>
