@@ -15,7 +15,7 @@ MonoBehaviour:
   cardName: "(\uBD88)\uC810\uD654"
   description: "\uD654\uC0C1 \uC0C1\uD0DC\uC758 \uB300\uC0C1\uC5D0\uAC8C \uAC00\uD558\uB294
     \uD53C\uD574 +20%"
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 0e1ef88a6d12b444ab74d7ac7bb81e60, type: 3}
   grade: 0
   elementals: 1
   effectType: 11

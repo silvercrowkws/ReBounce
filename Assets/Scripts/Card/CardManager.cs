@@ -610,7 +610,7 @@ public class CardManager : Singleton<CardManager>
 
 
 
-            // 강한 화상 : 화상 피해 +2
+            // 강한 화상 : 화상 피해 +1
             case CardEffectType.StrongBurn:
                 ballShooter.bonusBurnDamage += cardData.value1;
                 break;
@@ -627,7 +627,7 @@ public class CardManager : Singleton<CardManager>
 
 
 
-            // 수분 축적 : 물 공 공격력 +5
+            // 수분 축적 : 물 공 공격력 +4
             case CardEffectType.WaterAccumulation:
                 ballShooter.waterBonusDamage += cardData.value1;
                 break;
