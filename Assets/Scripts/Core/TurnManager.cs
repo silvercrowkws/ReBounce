@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class TurnManager : Singleton<TurnManager>
 {
+    protected override bool IsPersistent => false;
+
     /// <summary>
     /// 현재 턴 진행상황 표시용 enum
     /// </summary>

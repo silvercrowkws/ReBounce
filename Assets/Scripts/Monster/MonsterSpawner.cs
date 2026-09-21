@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MonsterSpawner : Singleton<MonsterSpawner>
 {
+    protected override bool IsPersistent => false;
+
     /*private readonly List<MonsterBase> activeMonsters
         = new List<MonsterBase>();*/
 
@@ -68,10 +70,10 @@ public class MonsterSpawner : Singleton<MonsterSpawner>
 
     private void OnDestroy()
     {
-        if (TurnManager.Instance != null)
+        if (turnManager != null)
         {
-            TurnManager.Instance.onTurnEnd -= OnTurnEnd;
-            TurnManager.Instance.onTurnStart -= OnTurnStart;
+            turnManager.onTurnEnd -= OnTurnEnd;
+            turnManager.onTurnStart -= OnTurnStart;
         }
     }
 

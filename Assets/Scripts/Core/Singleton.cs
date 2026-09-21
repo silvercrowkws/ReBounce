@@ -5,6 +5,17 @@ using UnityEngine.SceneManagement;
 
 public class Singleton<T> : MonoBehaviour where T : Component
 {
+    // 새로 추가
+
+    protected virtual bool IsPersistent => true;   // 기본은 기존 동작 유지
+    // Awake에서 IsPersistent가 false면 DontDestroyOnLoad를 걸지 않음
+
+    // 새로 추가
+
+
+
+
+
     /// <summary>
     /// 이 싱글톤이 초기화되었는지 확인하기 위한 변수
     /// </summary>
@@ -39,11 +50,15 @@ public class Singleton<T> : MonoBehaviour where T : Component
                 if (singleton == null)                           // 다른 게임 오브젝트에도 이 싱글톤이 없으면
                 {
                     GameObject obj = new GameObject();          // 빈 게임 오브젝트 만들고
-                    obj.name = "Singleton";                     // 이름 지정한 다음
+                    obj.name = typeof(T).Name; //"Singleton";                     // 이름 지정한 다음
                     singleton = obj.AddComponent<T>();          // 싱글톤 컴포넌트 만들어서 추가
                 }
                 instance = singleton;   // 다른 게임오브젝트에 있는 싱글톤이나 새로만든 싱글톤을 저장
-                DontDestroyOnLoad(instance.gameObject);         // 씬이 사라질 때 게임오브젝트가 삭제되지 않도록 설정
+                //DontDestroyOnLoad(instance.gameObject);         // 씬이 사라질 때 게임오브젝트가 삭제되지 않도록 설정
+
+                // 위에꺼 지우고 새로 추가
+                if ((instance as Singleton<T>).IsPersistent)
+                    DontDestroyOnLoad(instance.gameObject);
             }
             return instance;
         }
@@ -54,7 +69,11 @@ public class Singleton<T> : MonoBehaviour where T : Component
         if (instance == null)        // 씬에 이미 배치된 다른 싱글톤이 없다.
         {
             instance = this as T;   // 첫번째를 저장
-            DontDestroyOnLoad(instance.gameObject); // 씬이 사라질 때 게임오브젝트가 삭제되지 않도록 설정
+            //DontDestroyOnLoad(instance.gameObject); // 씬이 사라질 때 게임오브젝트가 삭제되지 않도록 설정
+
+            // 위에꺼 지우고 새로 추가
+            if (IsPersistent)
+                DontDestroyOnLoad(instance.gameObject);
         }
         else
         {

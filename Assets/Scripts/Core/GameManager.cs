@@ -209,7 +209,11 @@ public class GameManager : Singleton<GameManager>
     {
         gameState = GameState.GameOver;
         Debug.LogError("게임 오버");
+
         // UI 처리하면서 재시작 같은 기능 추가해야 함
+        GameStartButton gameStartButton;
+        gameStartButton = FindAnyObjectByType<GameStartButton>();
+        gameStartButton.GameRestart();
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode arg1)
@@ -228,14 +232,18 @@ public class GameManager : Singleton<GameManager>
             case 1:
                 Debug.Log("게임 시작 씬");
                 gameState = GameState.GameStart;
-
-                StartCoroutine(YieldTurnManager());
-
+                sceneNumber = scene.buildIndex;
+                isGameOver = false;
+                ResetRound();
+                gameState = GameState.GameStart;
+                StartCoroutine(StartGameRoutine());
                 break;
         }
+
+        sceneNumber = scene.buildIndex;
     }
 
-    private IEnumerator YieldTurnManager()
+    /*private IEnumerator YieldTurnManager()
     {
         turnManager = TurnManager.Instance;
 
@@ -254,6 +262,28 @@ public class GameManager : Singleton<GameManager>
         else
         {
             Debug.LogError("턴 매니저를 못찾는다고?");
+        }
+    }*/
+
+    private IEnumerator StartGameRoutine()
+    {
+        RecallAllActiveBalls();   // 이전 판의 잔여 공 정리
+
+        yield return null;   // 씬 오브젝트들의 Start() 전부 완료 대기
+
+        TurnManager.Instance.OnTurnInitialize();
+    }
+
+    private void RecallAllActiveBalls()
+    {
+        List<Ball> snapshot = new List<Ball>(Ball.ActiveBalls);
+
+        foreach (Ball ball in snapshot)
+        {
+            if (ball == null || !ball.gameObject.activeSelf)
+                continue;
+
+            ball.ForceRecall();
         }
     }
 

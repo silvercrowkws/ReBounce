@@ -13,6 +13,8 @@ using UnityEngine;
 /// IsEmpty / GetMonsterAt / GetEmptyCells 로 조회 가능
 public class BoardManager : Singleton<BoardManager>
 {
+    protected override bool IsPersistent => false;
+
     // 보드의 가로 세로 칸 수
     public const int Width = 7;
     public const int Height = 9;

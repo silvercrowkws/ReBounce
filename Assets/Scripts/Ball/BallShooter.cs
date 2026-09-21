@@ -234,6 +234,8 @@ public class BallShooter : MonoBehaviour
     /// </summary>
     public bool isAimInverted { get; private set; }
 
+    TurnManager turnManager;
+
     private void Awake()
     {
         inputActions = new PlayerInputActions();
@@ -273,7 +275,8 @@ public class BallShooter : MonoBehaviour
 
     private void Start()
     {
-        TurnManager.Instance.onTurnStart += OnTurnStart;
+        turnManager = TurnManager.Instance;
+        turnManager.onTurnStart += OnTurnStart;
     }
 
     void OnEnable()
@@ -291,8 +294,8 @@ public class BallShooter : MonoBehaviour
 
         gameManager.onFirstGroundHitPos -= OnFirstGroundHitPos;
 
-        if (TurnManager.Instance != null)
-            TurnManager.Instance.onTurnStart -= OnTurnStart;
+        if (turnManager != null)
+            turnManager.onTurnStart -= OnTurnStart;
 
         inputActions.Actions.Disable();
     }
@@ -312,6 +315,9 @@ public class BallShooter : MonoBehaviour
             return;
 
         if (TurnManager.Instance.IsShotInProgress)
+            return;
+
+        if (gameManager.IsGameOver)   // 게임오버 중이면 입력 무시
             return;
 
         isPressing = true;
@@ -409,6 +415,9 @@ public class BallShooter : MonoBehaviour
             return;
 
         if (TurnManager.Instance.IsShotInProgress)
+            return;
+
+        if (gameManager.IsGameOver)
             return;
 
         //Debug.Log("Camera.main: " + Camera.main);

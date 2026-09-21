@@ -19,6 +19,8 @@ public struct CardHistoryEntry
 
 public class CardManager : Singleton<CardManager>
 {
+    protected override bool IsPersistent => false;
+
     TurnManager turnManager;
 
     /// <summary>
@@ -104,8 +106,11 @@ public class CardManager : Singleton<CardManager>
         set => isHistoryUIOpen = value;
     }
 
+    //protected virtual void Awake()
     private void Awake()
     {
+        //base.Awake();
+
         foreach (CardData card in allCards)
         {
             switch (card.grade)
@@ -134,8 +139,8 @@ public class CardManager : Singleton<CardManager>
 
     private void OnDestroy()
     {
-        if (TurnManager.Instance != null)
-            TurnManager.Instance.onTurnStart -= OnGenerateCardChoices;
+        if (turnManager != null)
+            turnManager.onTurnStart -= OnGenerateCardChoices;
     }
 
     /// <summary>

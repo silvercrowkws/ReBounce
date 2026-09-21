@@ -177,8 +177,7 @@ public class Ball : RecycleObject
 
         meshRenderer = GetComponent<MeshRenderer>();
 
-        turnManager = TurnManager.Instance;
-
+        //turnManager = TurnManager.Instance;
         ballShooter = FindAnyObjectByType<BallShooter>();
 
         // OnDisable을 override하지 않고, 기존 델리게이트에 구독
@@ -189,6 +188,9 @@ public class Ball : RecycleObject
     {
         ResetBall();
         ResetBallElementals();
+
+        turnManager = TurnManager.Instance;                 // 매번 현재 인스턴스 조회
+        ballShooter = FindAnyObjectByType<BallShooter>();   // 매번 새로 조회
 
         turnManager.RegisterBall();
 
@@ -309,7 +311,7 @@ public class Ball : RecycleObject
 
         //HandleGroundHit();        => 만약 모든 공이 한 번도 땅에 안닿은 상태라면 이전 턴의 기록 값 유지
 
-        turnManager.UnregisterBall();       // 땅에 닿은 공 카운팅에서 빼기
+        TurnManager.Instance.UnregisterBall();       // 땅에 닿은 공 카운팅에서 빼기
         gameObject.SetActive(false);
     }
 
