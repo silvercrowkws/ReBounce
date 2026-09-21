@@ -178,7 +178,7 @@ public class Ball : RecycleObject
         meshRenderer = GetComponent<MeshRenderer>();
 
         //turnManager = TurnManager.Instance;
-        ballShooter = FindAnyObjectByType<BallShooter>();
+        ballShooter = FindAnyObjectByType<BallShooter>(); 
 
         // OnDisable을 override하지 않고, 기존 델리게이트에 구독
         onDisable += () => ActiveBalls.Remove(this);
