@@ -54,7 +54,7 @@ public class BallShooter : MonoBehaviour
     /// </summary>
     [Header("모든 공의 보너스 대미지")]
     public float allBonusDamage = 0;
-
+     
     /// <summary>
     /// 공의 보너스 화상 대미지
     /// </summary>
