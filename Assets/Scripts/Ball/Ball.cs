@@ -186,11 +186,11 @@ public class Ball : RecycleObject
 
     protected override void OnEnable()
     {
-        ResetBall();
-        ResetBallElementals();
-
         turnManager = TurnManager.Instance;                 // 매번 현재 인스턴스 조회
         ballShooter = FindAnyObjectByType<BallShooter>();   // 매번 새로 조회
+
+        ResetBall();
+        ResetBallElementals();
 
         turnManager.RegisterBall();
 
