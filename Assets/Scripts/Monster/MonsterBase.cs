@@ -366,11 +366,13 @@ public class MonsterBase : RecycleObject, IDamageable
                     break;
 
                 case SpawnMonsterType.Gimmick:
-                    maxHP *= 2;
+                    //maxHP *= 2;
+                    maxHP = Mathf.RoundToInt(maxHP * 1.25f);     // 보스 몬스터가 2배가 됨에 따라 기믹 몬스터도 마찬가지로 감소(반올림)
                     break;
 
                 case SpawnMonsterType.Boss:
-                    maxHP *= 5;
+                    //maxHP *= 5;
+                    maxHP *= 2;     // 기존 5배가 사실상 너무 힘들어서 대폭 감소
                     break;
             }
         }
