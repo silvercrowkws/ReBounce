@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: "\uB2E4\uC911 \uC7A5\uC804"
   description: "\uB178\uB9D0 \uACF5 +3\uAC1C \uD68D\uB4DD"
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 9b13e0ced4c9f6d408ad9af1c7feaea8, type: 3}
   grade: 1
+  elementals: 0
   effectType: 24
   value1: 3
   value2: 0
   value3: 0
+  canDuplicate: 1
