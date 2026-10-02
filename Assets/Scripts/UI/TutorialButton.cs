@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,10 +10,10 @@ public class TutorialButton : MonoBehaviour
     Button button;
 
     /// <summary>
-    /// 듀토리얼 패널들 모아놓은 게임 오브젝트
+    /// 듀토리얼 패널들s
     /// </summary>
     [SerializeField]
-    GameObject tutorialPanels;
+    TutorialPanels tutorialPanels;
 
     private void Awake()
     {
@@ -26,5 +27,7 @@ public class TutorialButton : MonoBehaviour
     private void Tutorial()
     {
         Debug.Log("듀토리얼 실행");
+        tutorialPanels.gameObject.SetActive(true);
+        tutorialPanels.currentTutorialNumber = 1;
     }
 }
