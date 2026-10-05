@@ -68,7 +68,7 @@ public class GameStartButton : MonoBehaviour
         canvasGroup.blocksRaycasts = true;
     }
 
-    private void OnGameStartButton()
+    public void OnGameStartButton()
     {
         /*// 현재 씬 번호에 따라
         switch(SceneManager.GetActiveScene().buildIndex)
