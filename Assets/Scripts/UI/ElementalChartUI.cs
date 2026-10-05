@@ -20,6 +20,6 @@ public class ElementalChartUI : MonoBehaviour
 
     private void AAA()
     {
-        
+         
     }
 }
