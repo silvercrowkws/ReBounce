@@ -119,6 +119,9 @@ public class GameManager : Singleton<GameManager>
 
     private void Awake()
     {
+        QualitySettings.vSyncCount = 0;       // vSync 끄기 (먼저 설정)
+        Application.targetFrameRate = 60;     // 목표 프레임 60
+
         monsterElementMaterials =
             new Material[Enum.GetValues(typeof(MonsterElementals)).Length];
     }
