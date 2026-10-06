@@ -6,9 +6,8 @@ using UnityEngine.UI;
 
 public class ElementalChartUI : MonoBehaviour
 {
-    public Sprite elementalChartSprite;
-    public Sprite gmmickSprite;
-    public Sprite bossGmmickSprite;
+    [SerializeField]
+    Image elementalChart;
 
     Button aaaButton;
 
@@ -20,6 +19,9 @@ public class ElementalChartUI : MonoBehaviour
 
     private void AAA()
     {
-         
+        // 버튼으로 토글
+        elementalChart.gameObject.SetActive(
+           !elementalChart.gameObject.activeSelf
+       );
     }
 }
